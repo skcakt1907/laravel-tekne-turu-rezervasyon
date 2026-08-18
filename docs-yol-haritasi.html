@@ -1,0 +1,774 @@
+<title>Yat Kiralama Yol Haritası</title>
+
+<style>
+:root{
+  --paper:#EDF1F2;
+  --surface:#FFFFFF;
+  --surface-2:#F5F9FA;
+  --line:#D2DDE1;
+  --line-soft:#E3EAEC;
+  --text:#15313C;
+  --text-2:#54707C;
+  --text-3:#7A929C;
+  --brass:#96661A;
+  --brass-ink:#7A5314;
+  --brass-wash:#F4E8D2;
+  --ok:#2B6A51;
+  --ok-wash:#DCEBE3;
+  --warn:#8F6413;
+  --warn-wash:#F6E9CD;
+  --risk:#98392F;
+  --risk-wash:#F4DEDA;
+  --rule:1px solid var(--line);
+  --radius:4px;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Hoefler Text","Source Serif 4",Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,"Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0A1E26;
+    --surface:#102A34;
+    --surface-2:#14333E;
+    --line:#23434F;
+    --line-soft:#1B3742;
+    --text:#DAE7EA;
+    --text-2:#93ADB6;
+    --text-3:#6D8892;
+    --brass:#D6A24C;
+    --brass-ink:#E8BC74;
+    --brass-wash:#31281A;
+    --ok:#63BA92;
+    --ok-wash:#16342A;
+    --warn:#D7A854;
+    --warn-wash:#332916;
+    --risk:#E08579;
+    --risk-wash:#3A211E;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0A1E26;
+  --surface:#102A34;
+  --surface-2:#14333E;
+  --line:#23434F;
+  --line-soft:#1B3742;
+  --text:#DAE7EA;
+  --text-2:#93ADB6;
+  --text-3:#6D8892;
+  --brass:#D6A24C;
+  --brass-ink:#E8BC74;
+  --brass-wash:#31281A;
+  --ok:#63BA92;
+  --ok-wash:#16342A;
+  --warn:#D7A854;
+  --warn-wash:#332916;
+  --risk:#E08579;
+  --risk-wash:#3A211E;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{
+  max-width:1000px;
+  margin:0 auto;
+  padding:clamp(24px,5vw,64px) clamp(18px,4vw,40px) 96px;
+  display:flex;
+  flex-direction:column;
+  gap:44px;
+}
+
+/* ---------- masthead ---------- */
+.masthead{display:flex;flex-direction:column;gap:20px;padding-bottom:28px;border-bottom:2px solid var(--text)}
+.eyebrow{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--brass);margin:0;
+}
+.masthead h1{
+  font-family:var(--serif);font-weight:600;
+  font-size:clamp(32px,5.6vw,52px);line-height:1.08;letter-spacing:-.015em;
+  margin:0;text-wrap:balance;
+}
+.standfirst{
+  font-family:var(--serif);font-size:clamp(17px,2.1vw,20px);line-height:1.5;
+  color:var(--text-2);margin:0;max-width:60ch;
+}
+.meta-strip{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:16px 24px;padding-top:6px;
+}
+.meta-strip div{display:flex;flex-direction:column;gap:3px}
+.meta-strip dt,.meta-k{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);
+}
+.meta-v{font-size:15px;font-weight:600;color:var(--text)}
+
+/* ---------- toc ---------- */
+.toc{
+  background:var(--surface);border:var(--rule);border-radius:var(--radius);
+  padding:22px 26px;
+}
+.toc h2{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);margin:0 0 14px}
+.toc ol{margin:0;padding:0;list-style:none;columns:2;column-gap:36px}
+@media (max-width:620px){.toc ol{columns:1}}
+.toc li{break-inside:avoid;margin-bottom:7px;display:flex;gap:10px;font-size:14.5px}
+.toc li span{font-family:var(--mono);font-size:12.5px;color:var(--brass);min-width:20px}
+.toc a{color:var(--text);text-decoration:none;border-bottom:1px solid transparent}
+.toc a:hover,.toc a:focus-visible{border-bottom-color:var(--brass);color:var(--brass-ink)}
+
+/* ---------- sections ---------- */
+section{display:flex;flex-direction:column;gap:18px;scroll-margin-top:20px}
+.sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:var(--rule);padding-bottom:10px}
+.sec-num{font-family:var(--mono);font-size:13px;color:var(--brass);font-variant-numeric:tabular-nums;padding-top:2px}
+h2.sec-title{
+  font-family:var(--serif);font-weight:600;font-size:clamp(22px,3.2vw,29px);
+  line-height:1.2;letter-spacing:-.01em;margin:0;text-wrap:balance;
+}
+h3{
+  font-family:var(--sans);font-weight:650;font-size:15.5px;letter-spacing:.005em;
+  margin:10px 0 -4px;color:var(--text);
+}
+p{margin:0;max-width:70ch}
+ul,ol.plain{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px;max-width:70ch}
+li::marker{color:var(--text-3)}
+strong{font-weight:650}
+code{font-family:var(--mono);font-size:.88em;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:3px;padding:1px 5px;color:var(--brass-ink)}
+
+/* ---------- pills ---------- */
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  padding:3px 9px;border-radius:100px;white-space:nowrap;font-weight:600;
+}
+.pill.ok{background:var(--ok-wash);color:var(--ok)}
+.pill.warn{background:var(--warn-wash);color:var(--warn)}
+.pill.risk{background:var(--risk-wash);color:var(--risk)}
+.pill.brass{background:var(--brass-wash);color:var(--brass-ink)}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;border:var(--rule);border-radius:var(--radius);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:14.5px}
+th,td{text-align:left;padding:11px 16px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+thead th{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--text-3);font-weight:600;background:var(--surface-2);border-bottom:var(--rule);
+}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td:first-child{font-weight:600}
+
+/* ---------- callout ---------- */
+.callout{
+  background:var(--surface);border:var(--rule);border-left:3px solid var(--brass);
+  border-radius:var(--radius);padding:16px 20px;display:flex;flex-direction:column;gap:8px;
+}
+.callout.risk{border-left-color:var(--risk)}
+.callout.ok{border-left-color:var(--ok)}
+.callout .lbl{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--brass);font-weight:600;
+}
+.callout.risk .lbl{color:var(--risk)}
+.callout.ok .lbl{color:var(--ok)}
+.callout p{font-size:15px}
+
+/* ---------- flow ---------- */
+.flow{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+.flow-step{
+  flex:1 1 170px;background:var(--surface);border:var(--rule);border-radius:var(--radius);
+  padding:14px 16px;display:flex;flex-direction:column;gap:6px;
+}
+.flow-step .st{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)}
+.flow-step b{font-size:15px;font-weight:650;line-height:1.3}
+.flow-step small{font-size:13px;color:var(--text-2);line-height:1.45}
+.flow-step.hot{border-color:var(--brass);background:var(--brass-wash)}
+.flow-step.hot b,.flow-step.hot small,.flow-step.hot .st{color:var(--brass-ink)}
+
+/* ---------- phases ---------- */
+.phases{display:flex;flex-direction:column;gap:0}
+.phase{
+  display:grid;grid-template-columns:64px 1fr;gap:0 20px;
+  padding:20px 0;border-bottom:1px solid var(--line-soft);
+}
+.phase:last-child{border-bottom:none}
+.phase-n{
+  font-family:var(--mono);font-size:26px;font-weight:600;color:var(--brass);
+  line-height:1;font-variant-numeric:tabular-nums;padding-top:3px;
+}
+.phase-body{display:flex;flex-direction:column;gap:9px;min-width:0}
+.phase-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 14px}
+.phase-top h3{margin:0;font-size:18px;font-family:var(--serif);font-weight:600;letter-spacing:-.005em}
+.dur{font-family:var(--mono);font-size:12px;color:var(--text-3);font-variant-numeric:tabular-nums}
+.phase ul{padding-left:18px;gap:5px;font-size:14.5px;color:var(--text-2)}
+.deliver{
+  font-size:13.5px;color:var(--text);background:var(--surface-2);
+  border:1px solid var(--line-soft);border-radius:var(--radius);padding:8px 12px;
+}
+.deliver b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);font-weight:600;margin-right:8px}
+@media (max-width:560px){
+  .phase{grid-template-columns:1fr;gap:8px}
+  .phase-n{font-size:20px}
+}
+
+/* ---------- schema ---------- */
+.schema{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.tbl-card{background:var(--surface);border:var(--rule);border-radius:var(--radius);padding:14px 16px;display:flex;flex-direction:column;gap:7px}
+.tbl-card h4{margin:0;font-family:var(--mono);font-size:13px;color:var(--brass-ink);font-weight:650;letter-spacing:.01em}
+.tbl-card p{font-size:13.5px;color:var(--text-2);line-height:1.5}
+.tbl-card .cols{font-family:var(--mono);font-size:12px;color:var(--text-3);line-height:1.6;word-break:break-word}
+
+/* ---------- footer ---------- */
+footer{border-top:2px solid var(--text);padding-top:20px;display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between;align-items:baseline}
+footer p{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
+
+a{color:var(--brass-ink)}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px;border-radius:2px}
+@media (prefers-reduced-motion:no-preference){
+  .toc a{transition:color .15s ease,border-color .15s ease}
+}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">Proje Planı · Sürüm 1.0</p>
+  <h1>Yat Kiralama Platformu Yol Haritası</h1>
+  <p class="standfirst">Yat sahiplerinin kendi teknelerini yayınladığı, müşterilerin ödeme yapmadan rezervasyon talebi gönderdiği ve tüm iletişimin WhatsApp üzerinden yürüdüğü kiralama platformunun uçtan uca kurulum planı.</p>
+  <div class="meta-strip">
+    <div><span class="meta-k">Tarih</span><span class="meta-v">14 Ağustos 2026</span></div>
+    <div><span class="meta-k">Tahmini süre</span><span class="meta-v">28 iş günü</span></div>
+    <div><span class="meta-k">Teknoloji</span><span class="meta-v">Laravel + Filament</span></div>
+    <div><span class="meta-k">Ödeme altyapısı</span><span class="meta-v">Yok — talep bazlı</span></div>
+    <div><span class="meta-k">Durum</span><span class="meta-v"><span class="pill brass">Kararlar kilitlendi</span></span></div>
+  </div>
+</header>
+
+<nav class="toc">
+  <h2>İçindekiler</h2>
+  <ol>
+    <li><span>01</span><a href="#ozet">Yönetici özeti</a></li>
+    <li><span>02</span><a href="#kapsam">Kapsam: ne var, ne yok</a></li>
+    <li><span>03</span><a href="#kararlar">Kilitlenen kararlar</a></li>
+    <li><span>04</span><a href="#akis">Rezervasyon akışı</a></li>
+    <li><span>05</span><a href="#fiyat">Fiyatlandırma modeli</a></li>
+    <li><span>06</span><a href="#whatsapp">WhatsApp mimarisi</a></li>
+    <li><span>07</span><a href="#komisyon">Komisyon ve aylık tahsilat</a></li>
+    <li><span>08</span><a href="#paneller">Üç panel</a></li>
+    <li><span>09</span><a href="#site">Site önyüzü</a></li>
+    <li><span>10</span><a href="#dil">Çok dil</a></li>
+    <li><span>11</span><a href="#veri">Veri modeli</a></li>
+    <li><span>12</span><a href="#fazlar">Faz planı</a></li>
+    <li><span>13</span><a href="#risk">Riskler ve tuzaklar</a></li>
+    <li><span>14</span><a href="#maliyet">Maliyet kalemleri</a></li>
+    <li><span>15</span><a href="#acik">Açık konular</a></li>
+  </ol>
+</nav>
+
+<!-- 01 -->
+<section id="ozet">
+  <div class="sec-head"><span class="sec-num">01</span><h2 class="sec-title">Yönetici özeti</h2></div>
+  <ul>
+    <li><strong>İş modeli:</strong> Sitede ödeme alınmaz. Müşteri rezervasyon <em>talebi</em> gönderir, yat sahibi onaylar, tahsilat taraflar arasında yapılır. Platform komisyonunu ay sonunda faturalar.</li>
+    <li><strong>Ayırt edici özellik:</strong> Tüm bildirimler hem e-posta hem WhatsApp'tan gider. Yat sahibi, WhatsApp mesajındaki <strong>Onayla</strong> butonuna basarak rezervasyonu kapatabilir — panele girmesi gerekmez.</li>
+    <li><strong>Takvim yükü minimum:</strong> Yat sahibinin takvim doldurması zorunlu değil. Her yat için tek bir <em>Rezervasyona Açık / Kapalı</em> şalteri var; onaylanan rezervasyonlar tarihi otomatik kapatır.</li>
+    <li><strong>Kiralama esnek:</strong> Aynı yat saatlik, günlük ve haftalık olarak kiralanabilir. Fiyatları yat sahibi kendi panelinden girer, sezon bazlı fiyat verebilir.</li>
+    <li><strong>Süre:</strong> 28 iş günü (~6 hafta). Meta'nın WhatsApp onay süreci paralel yürür ve kritik yolun dışında tutulur.</li>
+  </ul>
+  <div class="callout risk">
+    <span class="lbl">İlk gün yapılacak</span>
+    <p><strong>Meta işletme doğrulaması bugün başlatılmalı.</strong> Onay 3 gün ile 2 hafta arasında sürebilir ve kod yazımıyla ilgisi yoktur. Geç başlatılırsa proje sonunda beklemeye girilir. Gereken evraklar: vergi levhası, faaliyet belgesi, imza sirküleri, işletme adresi ve telefonu.</p>
+  </div>
+</section>
+
+<!-- 02 -->
+<section id="kapsam">
+  <div class="sec-head"><span class="sec-num">02</span><h2 class="sec-title">Kapsam: ne var, ne yok</h2></div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Kapsamda</th><th>Kapsam dışı</th></tr></thead>
+      <tbody>
+        <tr><td>Yat sahibi kaydı, ilan girişi, fotoğraf galerisi</td><td>Online ödeme / sanal POS / 3D Secure</td></tr>
+        <tr><td>Saatlik, günlük ve haftalık fiyatlandırma + sezon fiyatı</td><td>Kapora, taksit, iade işlemleri</td></tr>
+        <tr><td>Rezervasyon talebi, onay/red, otomatik tarih bloğu</td><td>Otomatik sözleşme imzalama (e-imza)</td></tr>
+        <tr><td>E-posta + WhatsApp bildirimleri (butonla onay)</td><td>Mobil uygulama (site mobil uyumlu olacak)</td></tr>
+        <tr><td>Admin, yat sahibi ve müşteri ekranları</td><td>Muhasebe / e-fatura entegrasyonu</td></tr>
+        <tr><td>Komisyon ayarı + aylık tahsilat dökümü</td><td>Yat sahibine otomatik para transferi</td></tr>
+        <tr><td>Türkçe + İngilizce, SEO, konum/liman sayfaları</td><td>Kanal yöneticisi / dış acente entegrasyonu (iCal vb.)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Kapsam dışı kalemler teknik olarak imkânsız değil; ilk sürümü sade ve hızlı tutmak için sonraya bırakıldı. Veri modeli bunların hepsine sonradan yer açacak şekilde kurulacak.</p>
+</section>
+
+<!-- 03 -->
+<section id="kararlar">
+  <div class="sec-head"><span class="sec-num">03</span><h2 class="sec-title">Kilitlenen kararlar</h2></div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Konu</th><th>Karar</th><th>Gerekçe</th></tr></thead>
+      <tbody>
+        <tr><td>Kod tabanı</td><td>Sıfırdan Laravel + Filament</td><td>Mevcut Tatilimsensin kurulumundan şema ve fikir taşınır, kod taşınmaz. Bilinen tuzaklar (nested-set, çok katmanlı cache) bulaşmaz.</td></tr>
+        <tr><td>Tarih kilidi</td><td>Talep kilitlemez, onay kilitler</td><td>Ödeme yok, dolayısıyla taahhüt de yok. Talep anında kilitlense sahte talepler yatı boş yere satıştan düşürürdü.</td></tr>
+        <tr><td>WhatsApp sağlayıcı</td><td>Meta Cloud API — direkt</td><td>Aracı komisyonu yok, butonlu onay ve webhook tam destekli.</td></tr>
+        <tr><td>WhatsApp sohbeti</td><td>Tek numara + Chatwoot</td><td>API'ye kayıtlı numara telefondan kullanılamaz. Chatwoot ile personel aynı numaradan tarayıcı üzerinden yazışır, geçmiş kayıt altında kalır.</td></tr>
+        <tr><td>Kiralama birimi</td><td>Saatlik, günlük, haftalık — üçü de</td><td>Yat başına hangilerinin aktif olacağını yat sahibi seçer.</td></tr>
+        <tr><td>Fiyat</td><td>Sitede görünür, yat sahibi belirler</td><td>Ödeme alınmadığı için "tahmini tutar" olarak sunulur, kesin fiyat onayda netleşir.</td></tr>
+        <tr><td>Komisyon</td><td>Admin belirler</td><td>Genel oran + yat sahibi bazlı + yat bazlı istisna.</td></tr>
+        <tr><td>Yat sahibi kaydı</td><td>Kendisi kaydolur</td><td>Admin onayından sonra ilan yayına girer.</td></tr>
+        <tr><td>Dil</td><td>Türkçe + İngilizce</td><td>Altyapı üçüncü dile hazır kurulur.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 04 -->
+<section id="akis">
+  <div class="sec-head"><span class="sec-num">04</span><h2 class="sec-title">Rezervasyon akışı</h2></div>
+  <p>Rezervasyonun tek bir yaşam döngüsü var ve tarih kilidini yalnızca <strong>onay</strong> tetikler. Aşağıdaki adımlar sistemin durum makinesidir.</p>
+  <div class="flow">
+    <div class="flow-step"><span class="st">Adım 1</span><b>Talep geldi</b><small>Müşteri formu doldurur. Üyelik gerekmez. Takvimde hiçbir şey kapanmaz.</small></div>
+    <div class="flow-step"><span class="st">Adım 2</span><b>Bildirim gitti</b><small>Müşteri, yat sahibi ve admin'e aynı anda e-posta + WhatsApp.</small></div>
+    <div class="flow-step hot"><span class="st">Adım 3</span><b>Onaylandı</b><small>Yat sahibi WhatsApp butonundan veya panelden onaylar. <strong>Tarih burada kapanır.</strong></small></div>
+    <div class="flow-step"><span class="st">Adım 4</span><b>Tamamlandı</b><small>Gidiş tarihi geçince otomatik kapanır ve aylık tahsilat dökümüne düşer.</small></div>
+  </div>
+
+  <h3>Durumlar ve takvime etkisi</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Durum</th><th>Takvim</th><th>Kim değiştirebilir</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill warn">Talep alındı</span></td><td>Kapanmaz. Panelde "bu tarihte 2 talep var" uyarısı çıkar.</td><td>Müşteri (form)</td></tr>
+        <tr><td><span class="pill ok">Onaylandı</span></td><td><strong>Kesin kilit.</strong> Site o aralığı müsait göstermez.</td><td>Yat sahibi, admin</td></tr>
+        <tr><td><span class="pill risk">Reddedildi</span></td><td>Etkisi yok. Müşteriye gerekçeli bildirim gider.</td><td>Yat sahibi, admin</td></tr>
+        <tr><td><span class="pill risk">İptal edildi</span></td><td>Kilit kalkar, tarih tekrar satışa açılır.</td><td>Yat sahibi, admin</td></tr>
+        <tr><td><span class="pill brass">Tamamlandı</span></td><td>Geçmişe düşer, hakediş dökümüne girer.</td><td>Sistem (otomatik)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Çakışma ve boşluk kontrolü</h3>
+  <ul>
+    <li><strong>Tek zaman modeli:</strong> Saatlik, günlük ve haftalık rezervasyonların hepsi <code>starts_at</code> / <code>ends_at</code> olarak tarih+saat tutulur. Böylece üç kiralama tipi için tek çakışma sorgusu yeter: <code>starts_at &lt; :bitis AND ends_at &gt; :baslangic</code>.</li>
+    <li><strong>Hazırlık payı:</strong> Her yat için "iki kiralama arası boşluk" (temizlik, yakıt, teslim) dakika cinsinden tanımlanır ve çakışma kontrolüne dahil edilir.</li>
+    <li><strong>Kilitli onay:</strong> Onaylama işlemi veritabanı işlemi (transaction) içinde satır kilidiyle yapılır. İki kişi aynı anda onaylasa bile ikinci onay reddedilir.</li>
+    <li><strong>Manuel blok:</strong> Yat sahibi bakım, özel kullanım veya site dışı rezervasyon için takvimden elle aralık kapatabilir.</li>
+  </ul>
+
+  <div class="callout">
+    <span class="lbl">Cevapsız kalırsa</span>
+    <p>Yat sahibi <strong>4 saat</strong> içinde yanıt vermezse hatırlatma mesajı gider, <strong>12 saat</strong> sonra talep admin ekranında "müdahale gerekiyor" olarak işaretlenir ve admin onaylama yetkisini devralır. Ödeme olmayan bir modelde en büyük kayıp sebebi geç dönüştür; sistem bunu kendi takip eder.</p>
+  </div>
+</section>
+
+<!-- 05 -->
+<section id="fiyat">
+  <div class="sec-head"><span class="sec-num">05</span><h2 class="sec-title">Fiyatlandırma modeli</h2></div>
+  <p>Yat sahibi kendi yatı için hangi kiralama birimlerinin geçerli olduğunu seçer ve her biri için fiyat girer. Üçü aynı anda açık olabilir.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Birim</th><th class="num">Tipik kullanım</th><th>Ek ayarlar</th></tr></thead>
+      <tbody>
+        <tr><td>Saatlik</td><td class="num">Günübirlik tur, kutlama</td><td>En az kaç saat, gün içi çalışma aralığı (ör. 09:00–21:00)</td></tr>
+        <tr><td>Günlük</td><td class="num">1–6 gecelik kiralama</td><td>En az kaç gün, giriş/çıkış saati</td></tr>
+        <tr><td>Haftalık</td><td class="num">Mavi tur, charter</td><td>Sabit giriş günü (ör. yalnız cumartesi), en az kaç hafta</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Sezon fiyatı</h3>
+  <ul>
+    <li>Her yatın bir <strong>temel fiyatı</strong> vardır; üzerine tarih aralıklı sezon fiyatları eklenebilir (ör. 15 Haz – 15 Eyl yüksek sezon).</li>
+    <li>Sezonlar çakışırsa dar aralık geniş aralığı ezer; hiçbiri denk gelmezse temel fiyat uygulanır.</li>
+    <li>Para birimi yat bazında sabittir (₺ / € / $). Yat kiralamada € yaygın olduğu için varsayılan seçilebilir bırakılır.</li>
+  </ul>
+
+  <h3>Ek ücretler</h3>
+  <p>Yakıt, temizlik, kaptan/mürettebat, teslim limanı farkı, su sporları ekipmanı gibi kalemler yat bazında tanımlanır. Her kalem <em>zorunlu</em> veya <em>opsiyonel</em>, hesaplaması <em>sabit</em> / <em>kişi başı</em> / <em>gün başı</em> olabilir.</p>
+
+  <h3>Sitede gösterim</h3>
+  <ul>
+    <li><strong>Liste kartı:</strong> "Günlük 12.000 ₺'den başlayan fiyatlarla" — aktif birimlerin en düşüğü.</li>
+    <li><strong>Detay sayfası:</strong> Tam fiyat tablosu + seçilen tarihe göre anlık hesaplanan tahmini toplam.</li>
+    <li>Ödeme alınmadığı için tutarın yanında sabit ibare: <em>"Tahmini tutardır, kesin fiyat onay sırasında netleşir."</em> Bu, hem beklenti yönetimi hem hukuki koruma sağlar.</li>
+  </ul>
+</section>
+
+<!-- 06 -->
+<section id="whatsapp">
+  <div class="sec-head"><span class="sec-num">06</span><h2 class="sec-title">WhatsApp mimarisi</h2></div>
+  <p>Projenin en kritik ve en görünür parçası. Meta Cloud API'ye doğrudan bağlanılacak, arada sağlayıcı olmayacak.</p>
+
+  <h3>Kurulum zinciri</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th class="num">#</th><th>Adım</th><th>Süre</th><th>Kim yapar</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Meta Business Manager hesabı + işletme doğrulaması</td><td class="num">3 gün – 2 hafta</td><td>Müşteri (evrak) + biz</td></tr>
+        <tr><td class="num">2</td><td>WhatsApp Business hesabı (WABA) açılması</td><td class="num">1 gün</td><td>Biz</td></tr>
+        <tr><td class="num">3</td><td>Numara kaydı ve doğrulaması</td><td class="num">1 saat</td><td>Biz</td></tr>
+        <tr><td class="num">4</td><td>Mesaj şablonlarının onaya gönderilmesi</td><td class="num">Birkaç saat – 2 gün</td><td>Biz</td></tr>
+        <tr><td class="num">5</td><td>Webhook bağlantısı ve Chatwoot kurulumu</td><td class="num">1 gün</td><td>Biz</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout risk">
+    <span class="lbl">Numara kuralı</span>
+    <p>API'ye kaydedilen numara, normal WhatsApp veya WhatsApp Business <strong>uygulamasında artık kullanılamaz</strong>. Bu yüzden hiç kullanılmamış ya da kaydı silinebilecek temiz bir numara gerekiyor — sabit hat da olur. Elle yazışma ihtiyacı Chatwoot'un web arayüzünden aynı numara üzerinden karşılanacak.</p>
+  </div>
+
+  <h3>Mesaj şablonları</h3>
+  <p>WhatsApp'ta ilk yazan taraf siz iseniz serbest metin gönderemezsiniz; Meta'nın önceden onayladığı şablonları kullanmak zorunludur. Hepsi <strong>Utility</strong> (işlem bildirimi) kategorisinde yazılacak — bu hem en ucuz sınıf hem de onaydan geçme ihtimali en yüksek olanı.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th class="num">#</th><th>Şablon</th><th>Alıcı</th><th>Tetikleyici</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Talebiniz alındı</td><td>Müşteri</td><td>Form gönderildiğinde</td></tr>
+        <tr><td class="num">2</td><td>Yeni talep var <span class="pill brass">Onayla / Reddet butonlu</span></td><td>Yat sahibi</td><td>Form gönderildiğinde</td></tr>
+        <tr><td class="num">3</td><td>Yeni talep bildirimi</td><td>Admin</td><td>Form gönderildiğinde</td></tr>
+        <tr><td class="num">4</td><td>Rezervasyonunuz onaylandı</td><td>Müşteri</td><td>Onay verildiğinde</td></tr>
+        <tr><td class="num">5</td><td>Rezervasyon kesinleşti</td><td>Yat sahibi</td><td>Onay verildiğinde</td></tr>
+        <tr><td class="num">6</td><td>Talebiniz karşılanamadı</td><td>Müşteri</td><td>Reddedildiğinde</td></tr>
+        <tr><td class="num">7</td><td>Bekleyen talebiniz var</td><td>Yat sahibi</td><td>4 saat yanıtsız kalınca</td></tr>
+        <tr><td class="num">8</td><td>Gidişinize 3 gün kaldı</td><td>Müşteri</td><td>Kalkıştan 3 gün önce</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Butonla onay — akışın kalbi</h3>
+  <p>2 numaralı şablona hızlı yanıt butonu eklenir. Yat sahibi WhatsApp'ta <strong>Onayla</strong>'ya bastığı anda Meta bize webhook gönderir, sistem rezervasyonu onaylar ve tarihi kapatır. Yat sahibi panele hiç girmez. Yedek yol olarak mesaja tek kullanımlık güvenli bağlantı da eklenir; tıklandığında şifresiz onay ekranı açılır.</p>
+
+  <h3>Uyulacak kurallar</h3>
+  <ul>
+    <li><strong>Açık rıza zorunlu:</strong> Rezervasyon formunda "WhatsApp üzerinden bilgilendirilmeyi kabul ediyorum" kutucuğu bulunur; onay tarih ve IP ile kayıt altına alınır. Hem Meta hem KVKK bunu istiyor.</li>
+    <li><strong>24 saat kuralı:</strong> Müşteri size yazdıktan sonraki 24 saat boyunca serbest metin gönderilebilir. Bu pencere dışında yine şablon gerekir.</li>
+    <li><strong>Pazarlama yok:</strong> Kampanya/duyuru mesajı bu numaradan gönderilmez. Şikâyet oranı yükselirse numara kısıtlanır ve tüm bildirim akışı durur.</li>
+    <li><strong>Isınma:</strong> Yeni numaranın günlük gönderim limiti düşük başlar, kaliteli kullanımla kademeli yükselir. İlk haftalarda e-posta yedek kanal olarak kritik.</li>
+  </ul>
+
+  <h3>Chatwoot</h3>
+  <p>Sunucuya kurulacak açık kaynaklı ve ücretsiz destek yazılımı. Cloud API'ye bağlanır; personel tarayıcıdan aynı numara üzerinden müşteriyle yazışır. Birden fazla kişi aynı anda çalışabilir, tüm geçmiş kayıt altında kalır, rezervasyon koduyla eşleştirilebilir.</p>
+</section>
+
+<!-- 07 -->
+<section id="komisyon">
+  <div class="sec-head"><span class="sec-num">07</span><h2 class="sec-title">Komisyon ve aylık tahsilat</h2></div>
+  <p>Para siteden geçmediği için sistemin görevi <strong>alacağı doğru hesaplamak ve takip etmek</strong>. Platform ay sonunda yat sahibine komisyon faturası keser.</p>
+  <ul>
+    <li><strong>Üç kademeli oran:</strong> Genel varsayılan oran → yat sahibi bazlı istisna → yat bazlı istisna. En dar tanım geçerlidir.</li>
+    <li><strong>Anlık dondurma:</strong> Rezervasyon onaylandığı anda o günkü oran ve hesaplanan komisyon tutarı kayda yazılır. Oran sonradan değişse bile geçmiş rezervasyonlar etkilenmez.</li>
+    <li><strong>Aylık döküm:</strong> Yat sahibi bazında ay seçilir; tamamlanan rezervasyonlar, toplam ciro, komisyon tutarı ve tahsilat durumu listelenir. Excel çıktısı alınır.</li>
+    <li><strong>Tahsilat işareti:</strong> Admin "tahsil edildi" olarak işaretler, tarih ve not düşer. Yat sahibi kendi panelinden aynı dökümü görür — mutabakat tartışması bitmiş olur.</li>
+    <li><strong>İptal ve no-show:</strong> İptal edilen rezervasyon komisyon dökümüne girmez. Gerçekleşmeyen ama iptal edilmeyen kayıtlar için admin elle "gerçekleşmedi" işaretleyebilir.</li>
+  </ul>
+</section>
+
+<!-- 08 -->
+<section id="paneller">
+  <div class="sec-head"><span class="sec-num">08</span><h2 class="sec-title">Üç panel</h2></div>
+  <p>Her rol yalnızca kendini ilgilendiren veriyi görür. Admin ve yat sahibi panelleri Filament üzerinde ayrı iki panel olarak kurulur; müşteri tarafı site içinde sade bir ekrandır.</p>
+
+  <h3>Admin</h3>
+  <ul>
+    <li><strong>Özet ekranı:</strong> Bugünkü talepler, yanıt bekleyenler, onay bekleyen ilanlar, aylık ciro ve komisyon</li>
+    <li><strong>Yatlar:</strong> Tüm ilanlar + "onay bekliyor" sekmesi, yayına alma/geri çekme</li>
+    <li><strong>Rezervasyonlar:</strong> Tümü; duruma, yata, sahibe, tarihe göre filtre; elle onay/red/iptal</li>
+    <li><strong>Yat sahipleri</strong> ve <strong>müşteriler</strong></li>
+    <li><strong>Konumlar ve limanlar</strong>, <strong>özellik listesi</strong> (jakuzi, klima, dalış ekipmanı vb.)</li>
+    <li><strong>Komisyon ayarları</strong> ve <strong>aylık tahsilat raporu</strong></li>
+    <li><strong>Mesaj kaydı:</strong> Giden tüm e-posta ve WhatsApp mesajları, teslim durumu, hata sebebi</li>
+    <li><strong>Site ayarları:</strong> Sayfalar (hakkımızda, SSS, KVKK), iletişim bilgileri, ana sayfa vitrini</li>
+  </ul>
+
+  <h3>Yat sahibi</h3>
+  <ul>
+    <li><strong>Özet:</strong> Bu ayki talep, onay ve ciro rakamları</li>
+    <li><strong>Yatlarım:</strong> Ekle / düzenle / fotoğraf yükle, her yat kartında <strong>Rezervasyona Açık / Kapalı</strong> şalteri</li>
+    <li><strong>Fiyatlar:</strong> Birim seçimi, temel fiyat, sezon fiyatları, ek ücretler</li>
+    <li><strong>Takvim:</strong> Onaylı rezervasyonlar + elle blok ekleme</li>
+    <li><strong>Rezervasyonlarım:</strong> Onayla / reddet, müşteri iletişim bilgileri</li>
+    <li><strong>Hakedişim:</strong> Aylık ciro, komisyon ve tahsilat durumu</li>
+    <li><strong>Profil:</strong> Firma bilgileri, bildirim alacağı WhatsApp numarası</li>
+  </ul>
+
+  <h3>Müşteri</h3>
+  <ul>
+    <li>Üye olmadan rezervasyon talebi gönderebilir</li>
+    <li><strong>Rezervasyon sorgulama:</strong> Rezervasyon kodu + e-posta ile; sisteme giriş yapmadan durumunu görür</li>
+    <li>Bildirim mesajlarındaki güvenli bağlantı doğrudan bu ekranı açar</li>
+    <li>Üye olmayı seçerse: geçmiş rezervasyonları tek listede toplanır</li>
+    <li>İptal talebi gönderebilir — onayı yat sahibi verir</li>
+  </ul>
+</section>
+
+<!-- 09 -->
+<section id="site">
+  <div class="sec-head"><span class="sec-num">09</span><h2 class="sec-title">Site önyüzü</h2></div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Sayfa</th><th>İçerik</th></tr></thead>
+      <tbody>
+        <tr><td>Ana sayfa</td><td>Arama kutusu (liman, tarih, kişi sayısı), öne çıkan yatlar, yat tipleri, popüler limanlar, "nasıl çalışır" anlatımı, sık sorulanlar</td></tr>
+        <tr><td>Yat listesi</td><td>Filtreler: liman, tarih, kişi, yat tipi, kabin sayısı, fiyat aralığı, kaptanlı/kaptansız, özellikler. Sıralama ve sayfalama.</td></tr>
+        <tr><td>Yat detayı</td><td>Galeri, teknik bilgiler (boy, kabin, yatak, kapasite, yıl, motor), özellik listesi, fiyat tablosu, müsaitlik takvimi, rezervasyon formu, benzer yatlar</td></tr>
+        <tr><td>Liman / bölge sayfaları</td><td>SEO odaklı: "Bodrum yat kiralama" tipi sayfalar, açıklama metni ve o limandaki yatlar</td></tr>
+        <tr><td>Yat sahibi ol</td><td>Kazanç anlatımı, komisyon modeli, kayıt formu</td></tr>
+        <tr><td>Rezervasyon sorgula</td><td>Kod + e-posta ile durum görüntüleme</td></tr>
+        <tr><td>Kurumsal</td><td>Hakkımızda, iletişim, sık sorulanlar, KVKK aydınlatma metni, çerez politikası, kullanım koşulları</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 10 -->
+<section id="dil">
+  <div class="sec-head"><span class="sec-num">10</span><h2 class="sec-title">Çok dil</h2></div>
+  <ul>
+    <li><strong>Diller:</strong> Türkçe (varsayılan) ve İngilizce. Altyapı üçüncü dil eklenebilecek şekilde kurulur — yat kiralamada Rusça ve Almanca sonradan gündeme gelebilir.</li>
+    <li><strong>Adres yapısı:</strong> Türkçe öneksiz (<code>/bodrum-yat-kiralama</code>), İngilizce <code>/en/</code> önekiyle. Arama motoru için <code>hreflang</code> etiketleri kurulur.</li>
+    <li><strong>Çevrilen alanlar:</strong> Yat adı, açıklama, kurallar, özellik adları, konum adları, statik sayfalar ve arayüz metinleri.</li>
+    <li><strong>Yat sahibi tarafı:</strong> Türkçe zorunlu, İngilizce isteğe bağlı. İngilizce boş bırakılırsa Türkçe metin gösterilir — ilan asla boş görünmez.</li>
+    <li><strong>Bildirimler:</strong> Müşteriye siteyi hangi dilde kullandıysa o dilde gider. WhatsApp şablonları her dil için ayrı ayrı onaylatılır.</li>
+  </ul>
+</section>
+
+<!-- 11 -->
+<section id="veri">
+  <div class="sec-head"><span class="sec-num">11</span><h2 class="sec-title">Veri modeli</h2></div>
+  <p>Ana tablolar ve taşıdıkları bilgi. Konum yapısı bilerek <strong>basit tutuluyor</strong> — mevcut projede yaşanan iç içe ağaç yapısı sorunları tekrarlanmasın diye üç seviyeli düz tablo kullanılacak.</p>
+  <div class="schema">
+    <div class="tbl-card"><h4>users</h4><p>Tek kullanıcı tablosu, rol ile ayrışır.</p><span class="cols">rol (admin · yat_sahibi · musteri), ad, e-posta, telefon, whatsapp_no, firma bilgileri, dil tercihi</span></div>
+    <div class="tbl-card"><h4>yachts</h4><p>İlanın kendisi.</p><span class="cols">sahip, ad, slug, tip, boy, kabin, yatak, kapasite, yıl, kalkış_limanı, kaptanlı_mı, hazırlık_payı_dk, rezervasyona_acik, durum (taslak · onay_bekliyor · yayında)</span></div>
+    <div class="tbl-card"><h4>yacht_photos</h4><p>Sıralı galeri, kapak görseli işaretli.</p><span class="cols">yat, dosya, sıra, kapak_mı, alt_metin</span></div>
+    <div class="tbl-card"><h4>yacht_features</h4><p>Özellik havuzu ve yatla eşleşmesi.</p><span class="cols">özellik adı (çok dilli), ikon, grup, yat ↔ özellik bağı</span></div>
+    <div class="tbl-card"><h4>yacht_rates</h4><p>Fiyat kayıtları. Temel ve sezon fiyatları aynı tabloda.</p><span class="cols">yat, birim (saat · gün · hafta), sezon_başı, sezon_sonu, fiyat, para_birimi, en_az_süre, giriş_günü</span></div>
+    <div class="tbl-card"><h4>yacht_extras</h4><p>Ek ücret kalemleri.</p><span class="cols">yat, ad, tutar, hesaplama (sabit · kişi_başı · gün_başı), zorunlu_mu</span></div>
+    <div class="tbl-card"><h4>locations</h4><p>Ülke &gt; bölge &gt; liman. Düz ve basit.</p><span class="cols">ad (çok dilli), slug, seviye, üst_konum, enlem/boylam, açıklama, kapak_görseli</span></div>
+    <div class="tbl-card"><h4>reservations</h4><p>Talepten tamamlanmaya kadar tek kayıt.</p><span class="cols">kod, yat, müşteri bilgileri, starts_at, ends_at, kişi_sayısı, birim, durum, tahmini_tutar, komisyon_oranı, komisyon_tutarı, not, kaynak</span></div>
+    <div class="tbl-card"><h4>reservation_logs</h4><p>Denetim izi — kim ne zaman ne yaptı.</p><span class="cols">rezervasyon, kullanıcı, eylem, eski_durum, yeni_durum, kanal (panel · whatsapp · bağlantı), IP</span></div>
+    <div class="tbl-card"><h4>blocked_periods</h4><p>Takvimdeki tüm kapalı aralıklar.</p><span class="cols">yat, starts_at, ends_at, sebep (rezervasyon · manuel · bakım), ilgili_rezervasyon</span></div>
+    <div class="tbl-card"><h4>message_logs</h4><p>Giden her bildirimin kaydı.</p><span class="cols">kanal (mail · whatsapp), şablon, alıcı, gönderim_durumu, meta_mesaj_id, hata, tarih</span></div>
+    <div class="tbl-card"><h4>consents</h4><p>KVKK ve WhatsApp açık rıza kayıtları.</p><span class="cols">kişi, rıza_tipi, metin_sürümü, tarih, IP</span></div>
+    <div class="tbl-card"><h4>commission_settings</h4><p>Üç kademeli oran tanımı.</p><span class="cols">kapsam (genel · sahip · yat), hedef_id, oran, geçerlilik_başlangıcı</span></div>
+    <div class="tbl-card"><h4>collections</h4><p>Aylık tahsilat takibi.</p><span class="cols">yat_sahibi, dönem, ciro, komisyon, durum (bekliyor · tahsil_edildi), tahsil_tarihi, not</span></div>
+  </div>
+</section>
+
+<!-- 12 -->
+<section id="fazlar">
+  <div class="sec-head"><span class="sec-num">12</span><h2 class="sec-title">Faz planı</h2></div>
+  <p>Fazlar sıralıdır; her fazın sonunda gösterilebilir bir çıktı vardır. Meta'nın WhatsApp onay süreci 0. fazda başlar ve 4. faza kadar paralel bekler — bu sayede onay gecikmesi projeyi durdurmaz.</p>
+  <div class="phases">
+
+    <div class="phase">
+      <div class="phase-n">00</div>
+      <div class="phase-body">
+        <div class="phase-top"><h3>Hazırlık ve kurulum</h3><span class="dur">1 iş günü</span><span class="pill risk">Meta süreci burada başlar</span></div>
+        <ul>
+          <li>Alan adı, DNS, sunucu kurulumu; Laravel projesi ve sürüm takibi</li>
+          <li>Test (staging) ortamı, yedekleme ve hata takibi</li>
+          <li>Meta işletme doğrulama başvurusu ve WhatsApp numarasının temini</li>
+          <li>Marka kararları: isim, logo, renk ve tipografi</li>
+        </ul>
+        <div class="deliver"><b>Çıktı</b>Çalışan boş iskelet, Meta süreci başlatılmış</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-n">01</div>
+      <div class="phase-body">
+        <div class="phase-top"><h3>Veri modeli ve admin çekirdeği</h3><span class="dur">4 iş günü</span></div>
+        <ul>
+          <li>Tüm tabloların oluşturulması, roller ve yetkiler</li>
+          <li>Admin paneli: yat ekleme/düzenleme, galeri yükleme, özellik ve konum yönetimi</li>
+          <li>Fiyat ve sezon ekranı, ek ücret tanımları</li>
+          <li>Çok dil altyapısının en baştan kurulması</li>
+        </ul>
+        <div class="deliver"><b>Çıktı</b>Admin panelinden eksiksiz yat ilanı girilebiliyor</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-n">02</div>
+      <div class="phase-body">
+        <div class="phase-top"><h3>Site önyüzü</h3><span class="dur">5 iş günü</span></div>
+        <ul>
+          <li>Tasarım ve bileşen kütüphanesi, mobil uyum</li>
+          <li>Ana sayfa ve arama kutusu</li>
+          <li>Yat listesi: filtreler, sıralama, sayfalama</li>
+          <li>Yat detay sayfası: galeri, fiyat tablosu, müsaitlik takvimi</li>
+          <li>Liman/bölge sayfaları ve kurumsal sayfalar</li>
+        </ul>
+        <div class="deliver"><b>Çıktı</b>Yatlar sitede gezilebiliyor ve fiyat görünüyor</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-n">03</div>
+      <div class="phase-body">
+        <div class="phase-top"><h3>Rezervasyon motoru</h3><span class="dur">4 iş günü</span></div>
+        <ul>
+          <li>Üyeliksiz talep formu ve rezervasyon kodu üretimi</li>
+          <li>Durum makinesi, çakışma kontrolü, hazırlık payı, kilitli onay</li>
+          <li>Onay/red işlemleri ve otomatik takvim bloğu</li>
+          <li>E-posta bildirimleri (6 şablon) — WhatsApp'tan bağımsız çalışır</li>
+        </ul>
+        <div class="deliver"><b>Çıktı</b>Uçtan uca rezervasyon akışı e-posta ile çalışıyor</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-n">04</div>
+      <div class="phase-body">
+        <div class="phase-top"><h3>WhatsApp entegrasyonu</h3><span class="dur">4 iş günü</span><span class="pill warn">Meta onayına bağlı</span></div>
+        <ul>
+          <li>Cloud API bağlantısı ve gönderim kuyruğu</li>
+          <li>8 şablonun yazılması ve onaya gönderilmesi (TR + EN)</li>
+          <li>Webhook: buton yanıtı, teslim ve okundu bilgisi</li>
+          <li>Mesaj kaydı ekranı, hatırlatma ve devretme zamanlayıcısı</li>
+          <li>Chatwoot kurulumu ve numaranın bağlanması</li>
+        </ul>
+        <div class="deliver"><b>Çıktı</b>WhatsApp butonundan onay çalışıyor, ekip aynı numaradan yazışıyor</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-n">05</div>
+      <div class="phase-body">
+        <div class="phase-top"><h3>Yat sahibi paneli</h3><span class="dur">3 iş günü</span></div>
+        <ul>
+          <li>Kayıt, e-posta doğrulama, profil ve firma bilgileri</li>
+          <li>Yatlarım ekranı ve Rezervasyona Açık/Kapalı şalteri</li>
+          <li>Takvim: onaylı rezervasyonlar ve elle blok</li>
+          <li>Rezervasyonlarım: onayla / reddet</li>
+          <li>Hakediş dökümü</li>
+        </ul>
+        <div class="deliver"><b>Çıktı</b>Yat sahibi admin'e ihtiyaç duymadan çalışabiliyor</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-n">06</div>
+      <div class="phase-body">
+        <div class="phase-top"><h3>Müşteri ekranı</h3><span class="dur">2 iş günü</span></div>
+        <ul>
+          <li>Kod + e-posta ile rezervasyon sorgulama</li>
+          <li>Bildirimlerdeki güvenli bağlantıyla doğrudan erişim</li>
+          <li>İsteğe bağlı üyelik ve geçmiş rezervasyon listesi</li>
+          <li>İptal talebi gönderme</li>
+        </ul>
+        <div class="deliver"><b>Çıktı</b>Müşteri kendi kaydını görüyor, telefonla arama ihtiyacı azalıyor</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-n">07</div>
+      <div class="phase-body">
+        <div class="phase-top"><h3>Komisyon ve aylık tahsilat</h3><span class="dur">2 iş günü</span></div>
+        <ul>
+          <li>Üç kademeli komisyon ayarı</li>
+          <li>Aylık döküm ekranı ve Excel çıktısı</li>
+          <li>Tahsil edildi işaretleme, yat sahibi tarafında aynı dökümün görünmesi</li>
+        </ul>
+        <div class="deliver"><b>Çıktı</b>Ay sonu mutabakatı tek tıkla alınıyor</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-n">08</div>
+      <div class="phase-body">
+        <div class="phase-top"><h3>Dil, SEO, hız ve yayın</h3><span class="dur">3 iş günü</span></div>
+        <ul>
+          <li>İngilizce çeviriler, dil değiştirici, hreflang etiketleri</li>
+          <li>Site haritası, yapısal veri işaretlemesi, meta etiketleri</li>
+          <li>Görsel optimizasyonu, önbellek, hız testleri</li>
+          <li>KVKK aydınlatma metni, çerez bildirimi, kullanım koşulları</li>
+          <li>Uçtan uca test ve canlıya alma</li>
+        </ul>
+        <div class="deliver"><b>Çıktı</b>Site yayında</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="callout ok">
+    <span class="lbl">Toplam</span>
+    <p><strong>28 iş günü ≈ 6 hafta.</strong> Fazlar 0–3 ve 5–8 Meta onayından bağımsızdır; onay gecikirse yalnızca 4. faz kayar, geri kalan iş durmaz. İlk üç fazın sonunda (10. iş günü) site gezilebilir hâle gelir ve müşteriye ara gösterim yapılabilir.</p>
+  </div>
+</section>
+
+<!-- 13 -->
+<section id="risk">
+  <div class="sec-head"><span class="sec-num">13</span><h2 class="sec-title">Riskler ve tuzaklar</h2></div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Risk</th><th>Etki</th><th>Önlem</th></tr></thead>
+      <tbody>
+        <tr><td>Meta doğrulaması gecikir</td><td><span class="pill warn">Orta</span></td><td>Başvuru 1. gün yapılır; e-posta bildirimleri zaten bağımsız çalıştığı için site onaysız da yayına girebilir</td></tr>
+        <tr><td>Mesaj şablonu reddedilir</td><td><span class="pill warn">Orta</span></td><td>Utility kategorisinde, kısa ve tamamen bilgilendirici metin; pazarlama dili kullanılmaz</td></tr>
+        <tr><td>WhatsApp numarası kısıtlanır</td><td><span class="pill risk">Yüksek</span></td><td>Zorunlu açık rıza, yalnızca işlem mesajı, kademeli hacim artışı, şikâyet oranı takibi</td></tr>
+        <tr><td>Çift rezervasyon</td><td><span class="pill risk">Yüksek</span></td><td>Onay anında veritabanı işlemi + satır kilidi + çakışma sorgusu; ikinci onay reddedilir</td></tr>
+        <tr><td>Yat sahibi talebe dönmez</td><td><span class="pill risk">Yüksek</span></td><td>4 saatte hatırlatma, 12 saatte admin devralır; panelde yanıt süresi ölçülür</td></tr>
+        <tr><td>Saatlik ve haftalık kiralama karışır</td><td><span class="pill warn">Orta</span></td><td>Tek tarih-saat modeli ve hazırlık payı; her yatta hangi birimlerin açık olduğu tek yerden yönetilir</td></tr>
+        <tr><td>Ödeme yok → gelmeme (no-show)</td><td><span class="pill warn">Orta</span></td><td>Onay mesajında iptal politikası, kalkıştan 3 gün önce hatırlatma, tekrarlayan iptallerde müşteri işaretlenir</td></tr>
+        <tr><td>Fiyat ve para birimi karışıklığı</td><td><span class="pill warn">Orta</span></td><td>Para birimi yat bazında sabit; her tutarın yanında "tahmini" ibaresi</td></tr>
+        <tr><td>Kalitesiz veya sahte ilan</td><td><span class="pill warn">Orta</span></td><td>İlanlar admin onayından geçmeden yayına girmez; zorunlu alan ve minimum fotoğraf sayısı kontrolü</td></tr>
+        <tr><td>KVKK uyumsuzluğu</td><td><span class="pill risk">Yüksek</span></td><td>Aydınlatma metni, açık rıza kaydı (tarih + IP), veri saklama süresi, silme talebi akışı</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 14 -->
+<section id="maliyet">
+  <div class="sec-head"><span class="sec-num">14</span><h2 class="sec-title">Maliyet kalemleri</h2></div>
+  <p>Geliştirme bedeli hariç, sistemin çalışır durumda kalması için gereken düzenli giderler.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Kalem</th><th class="num">Tahmini tutar</th><th>Not</th></tr></thead>
+      <tbody>
+        <tr><td>Sunucu</td><td class="num">~10 € / ay</td><td>Site, veritabanı ve Chatwoot aynı makinede barınabilir</td></tr>
+        <tr><td>Alan adı</td><td class="num">~15 € / yıl</td><td></td></tr>
+        <tr><td>SSL sertifikası</td><td class="num">Ücretsiz</td><td>Let's Encrypt</td></tr>
+        <tr><td>WhatsApp mesajları</td><td class="num">Mesaj başı</td><td>Utility kategorisi, birim fiyat kuruşlar mertebesinde. Aylık 1.000 rezervasyon × ~5 mesaj için birkaç yüz ₺ beklenir; <strong>güncel Meta tarifesi kurulumdan önce teyit edilecek</strong></td></tr>
+        <tr><td>Chatwoot</td><td class="num">Ücretsiz</td><td>Açık kaynak, kendi sunucumuzda</td></tr>
+        <tr><td>E-posta gönderimi</td><td class="num">0 – 15 € / ay</td><td>Hacim düşükken ücretsiz katman yeterli</td></tr>
+        <tr><td>Meta işletme doğrulaması</td><td class="num">Ücretsiz</td><td>Yalnızca evrak ve zaman gerektirir</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 15 -->
+<section id="acik">
+  <div class="sec-head"><span class="sec-num">15</span><h2 class="sec-title">Açık konular</h2></div>
+  <p>Aşağıdakiler işi durdurmuyor, ancak ilgili faz başlamadan önce netleşmeli.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Konu</th><th>Ne zaman gerekli</th><th>Şu anki varsayım</th></tr></thead>
+      <tbody>
+        <tr><td>İlanlar admin onayından geçsin mi?</td><td>Faz 1</td><td><span class="pill brass">Evet</span> — tek ayarla kapatılabilir olacak</td></tr>
+        <tr><td>Site adı ve alan adı</td><td>Faz 0</td><td>Müşteri belirleyecek</td></tr>
+        <tr><td>Komisyon oranı</td><td>Faz 7</td><td>Admin panelinden ayarlanacak, başlangıç değeri bekleniyor</td></tr>
+        <tr><td>İptal politikası metni</td><td>Faz 3</td><td>Ödeme olmadığı için cezasız iptal varsayıldı</td></tr>
+        <tr><td>Yat sahibinden vergi/IBAN bilgisi alınacak mı?</td><td>Faz 5</td><td>Komisyon faturası için gerekli varsayıldı</td></tr>
+        <tr><td>İngilizce dışında dil</td><td>Faz 8</td><td>Yok — altyapı hazır bırakılacak</td></tr>
+        <tr><td>Limanların haritada gösterimi</td><td>Faz 2</td><td>İlk sürümde yok</td></tr>
+        <tr><td>Blog / içerik bölümü</td><td>Faz 8</td><td>İlk sürümde yok, SEO için sonradan önerilir</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <p>Yat Kiralama Platformu · Yol Haritası v1.0</p>
+  <p>14 Ağustos 2026</p>
+</footer>
+
+</div>
