@@ -82,15 +82,14 @@ class ReservationController extends Controller
 
         // TODO Faz 3/4: bildirim gönderimi (e-posta + WhatsApp)
 
-        return redirect()->route('reservation.show', [
-            'code' => $reservation->code,
-            'token' => $reservation->access_token,
-        ]);
+        return redirect()
+            ->to(lroute('reservation.show', ['code' => $reservation->code]).'?token='.$reservation->access_token)
+            ->with('status', __('site.booking.title').': '.$reservation->code);
     }
 
     public function lookupForm()
     {
-        return view('placeholder');
+        return view('reservations.lookup');
     }
 
     public function lookup(Request $request)
@@ -108,17 +107,16 @@ class ReservationController extends Controller
             throw ValidationException::withMessages(['code' => 'Rezervasyon bulunamadı.']);
         }
 
-        return redirect()->route('reservation.show', [
-            'code' => $reservation->code,
-            'token' => $reservation->access_token,
-        ]);
+        return redirect()->to(
+            lroute('reservation.show', ['code' => $reservation->code]).'?token='.$reservation->access_token
+        );
     }
 
     public function show(Request $request, string $code)
     {
         $reservation = $this->resolve($code, $request->query('token'));
 
-        return view('placeholder', compact('reservation'));
+        return view('reservations.show', compact('reservation'));
     }
 
     /** WhatsApp mesajındaki güvenli bağlantı — şifresiz onay ekranı. */
@@ -128,7 +126,7 @@ class ReservationController extends Controller
 
         abort_unless($reservation->status === ReservationStatus::Pending, 410, 'Bu talep zaten yanıtlanmış.');
 
-        return view('placeholder', compact('reservation'));
+        return view('reservations.decision', compact('reservation'));
     }
 
     public function ownerDecide(Request $request, string $code, string $token)

@@ -4,30 +4,28 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Dil secimi: /en/ oneki > oturum > varsayilan (tr).
+ * Dili YALNIZCA adres belirler: /en/... -> en, oneksiz -> varsayilan (tr).
+ *
+ * Oturumdan hatirlama bilerek yok; ayni adresin iki farkli dilde cevap vermesi
+ * hem arama motoru (hreflang/canonical catismasi) hem paylasilan link acisindan
+ * yanlis olurdu.
  */
 class SetLocale
 {
     public function handle(Request $request, Closure $next): Response
     {
         $supported = array_keys(config('yacht.locales', ['tr' => []]));
+        $default = $supported[0] ?? 'tr';
+
         $segment = $request->segment(1);
-
-        if (in_array($segment, $supported, true)) {
-            $locale = $segment;
-        } else {
-            $locale = session('locale', config('app.locale'));
-        }
-
-        if (! in_array($locale, $supported, true)) {
-            $locale = config('app.locale');
-        }
+        $locale = in_array($segment, $supported, true) ? $segment : $default;
 
         app()->setLocale($locale);
-        session(['locale' => $locale]);
+        Carbon::setLocale($locale);
 
         return $next($request);
     }

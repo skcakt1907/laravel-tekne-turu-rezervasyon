@@ -1,0 +1,291 @@
+/* Yat Kiralama — site önyüzü teması
+   Bootstrap 5.3 CDN üzerine biner. Build adımı yok (paylaşımlı hosting dostu). */
+
+:root {
+    --paper: #EDF1F2;
+    --surface: #FFFFFF;
+    --surface-2: #F5F9FA;
+    --line: #D2DDE1;
+    --line-soft: #E3EAEC;
+    --ink: #15313C;
+    --ink-2: #54707C;
+    --ink-3: #7A929C;
+    --brass: #96661A;
+    --brass-ink: #7A5314;
+    --brass-wash: #F4E8D2;
+    --sea: #15313C;
+    --ok: #2B6A51;
+    --risk: #98392F;
+    --radius: 6px;
+    --shadow-sm: 0 1px 2px rgba(21, 49, 60, .06);
+    --shadow: 0 6px 24px rgba(21, 49, 60, .08);
+    --serif: "Playfair Display", "Palatino Linotype", Georgia, serif;
+    --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .serif {
+    font-family: var(--serif);
+    letter-spacing: -.01em;
+}
+
+a { color: var(--brass-ink); }
+a:hover { color: var(--brass); }
+
+.text-muted-2 { color: var(--ink-2) !important; }
+.bg-sea { background: var(--sea) !important; }
+
+/* ---------- düğmeler ---------- */
+.btn-brass {
+    background: var(--brass);
+    border-color: var(--brass);
+    color: #fff;
+    font-weight: 600;
+}
+.btn-brass:hover, .btn-brass:focus {
+    background: var(--brass-ink);
+    border-color: var(--brass-ink);
+    color: #fff;
+}
+.btn-outline-sea {
+    border-color: var(--line);
+    color: var(--ink);
+    background: var(--surface);
+}
+.btn-outline-sea:hover { border-color: var(--brass); color: var(--brass-ink); background: var(--surface); }
+
+/* ---------- başlık ---------- */
+.site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+}
+.site-header .navbar-brand {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 1.35rem;
+    color: var(--ink);
+}
+.site-header .nav-link { color: var(--ink-2); font-weight: 500; }
+.site-header .nav-link:hover, .site-header .nav-link.active { color: var(--brass-ink); }
+.lang-switch a {
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--ink-3);
+    text-decoration: none;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+.lang-switch a.active { color: var(--brass-ink); background: var(--brass-wash); font-weight: 600; }
+
+/* ---------- hero ---------- */
+.hero {
+    position: relative;
+    background: linear-gradient(180deg, rgba(10,30,38,.72), rgba(10,30,38,.55)), var(--sea);
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    padding: clamp(56px, 10vw, 120px) 0 clamp(40px, 7vw, 88px);
+}
+.hero h1 { font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 700; text-wrap: balance; }
+.hero p.lead { color: rgba(255,255,255,.86); max-width: 56ch; }
+
+/* ---------- arama kutusu ---------- */
+.search-box {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 14px;
+}
+.search-box label {
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--ink-3);
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+.search-box .form-control, .search-box .form-select { border-color: var(--line-soft); }
+
+/* ---------- kartlar ---------- */
+.card-yacht {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    height: 100%;
+    transition: box-shadow .18s ease, transform .18s ease;
+}
+.card-yacht:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+.card-yacht .ratio img { object-fit: cover; width: 100%; height: 100%; }
+.card-yacht .card-title { font-size: 1.05rem; font-weight: 650; margin-bottom: 2px; }
+.card-yacht .specs {
+    font-size: .82rem;
+    color: var(--ink-2);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+}
+.card-yacht .price {
+    font-weight: 700;
+    color: var(--ink);
+}
+.card-yacht .price small { font-weight: 500; color: var(--ink-3); }
+
+.badge-soft {
+    background: var(--surface-2);
+    border: 1px solid var(--line-soft);
+    color: var(--ink-2);
+    font-weight: 500;
+    font-size: .74rem;
+}
+.badge-brass { background: var(--brass-wash); color: var(--brass-ink); font-weight: 600; }
+
+/* ---------- filtre paneli ---------- */
+.filter-panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px;
+}
+.filter-panel h6 {
+    font-size: .74rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--ink-3);
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+.filter-panel + .filter-panel { margin-top: 14px; }
+
+/* ---------- detay ---------- */
+.gallery-main {
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--surface-2);
+}
+.gallery-thumbs img {
+    width: 100%;
+    height: 74px;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+.gallery-thumbs img.active { border-color: var(--brass); }
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+}
+.panel + .panel { margin-top: 18px; }
+.panel h2 { font-size: 1.25rem; margin-bottom: 12px; }
+
+.spec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; }
+.spec-grid .k { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); }
+.spec-grid .v { font-weight: 600; }
+
+.estimate-note {
+    font-size: .82rem;
+    color: var(--ink-2);
+    background: var(--surface-2);
+    border: 1px solid var(--line-soft);
+    border-left: 3px solid var(--brass);
+    border-radius: 4px;
+    padding: 8px 12px;
+}
+
+.booking-box { position: sticky; top: 84px; }
+
+/* ---------- takvim ---------- */
+.cal { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
+.cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.cal-title { font-weight: 650; font-size: .95rem; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.cal-dow { font-size: .68rem; text-transform: uppercase; color: var(--ink-3); text-align: center; padding: 4px 0; }
+.cal-day {
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    font-size: .82rem;
+    border-radius: 4px;
+    background: var(--surface-2);
+    color: var(--ink);
+}
+.cal-day.empty { background: transparent; }
+.cal-day.past { color: var(--ink-3); background: transparent; }
+.cal-day.busy { background: var(--brass-wash); color: var(--brass-ink); text-decoration: line-through; }
+.cal-legend { display: flex; gap: 14px; font-size: .76rem; color: var(--ink-2); margin-top: 10px; }
+.cal-legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; vertical-align: -2px; margin-right: 5px; }
+
+/* ---------- bölümler ---------- */
+.section-title { font-size: clamp(1.4rem, 2.6vw, 2rem); font-weight: 700; }
+.section-sub { color: var(--ink-2); max-width: 62ch; }
+
+.step-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+    height: 100%;
+}
+.step-card .n {
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    color: var(--brass);
+    font-weight: 700;
+    line-height: 1;
+}
+
+.port-card {
+    position: relative;
+    display: block;
+    border-radius: var(--radius);
+    overflow: hidden;
+    color: #fff;
+    text-decoration: none;
+    min-height: 150px;
+    background: var(--sea);
+}
+.port-card img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; opacity: .62; }
+.port-card span {
+    position: relative;
+    display: block;
+    padding: 16px;
+    font-weight: 650;
+    text-shadow: 0 1px 8px rgba(0,0,0,.5);
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+}
+.port-card:hover img { opacity: .78; }
+
+/* ---------- alt bilgi ---------- */
+.site-footer {
+    background: var(--sea);
+    color: rgba(255,255,255,.72);
+    padding: 48px 0 28px;
+    margin-top: 64px;
+}
+.site-footer h6 { color: #fff; font-size: .78rem; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 12px; }
+.site-footer a { color: rgba(255,255,255,.72); text-decoration: none; }
+.site-footer a:hover { color: #fff; }
+.site-footer .foot-bottom { border-top: 1px solid rgba(255,255,255,.14); margin-top: 32px; padding-top: 18px; font-size: .82rem; }
+
+/* ---------- yardımcılar ---------- */
+.empty-state { text-align: center; padding: 56px 20px; color: var(--ink-2); }
+.empty-state i { font-size: 2.4rem; color: var(--ink-3); }
