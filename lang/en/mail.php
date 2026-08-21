@@ -10,6 +10,8 @@ return [
         'rejected_customer' => 'Your request could not be fulfilled — :code',
         'cancelled_customer' => 'Your booking has been cancelled — :code',
         'cancelled_owner' => 'A booking has been cancelled — :code',
+        'cancel_requested_owner' => 'The guest requested a cancellation — :code',
+        'cancel_requested_admin' => '[Cancellation request] :yacht — :code',
         'pending_reminder_owner' => 'You have a request awaiting reply — :code',
         'escalated_admin' => '[Action needed] Unanswered request — :code',
         'trip_reminder_customer' => '3 days until departure — :code',
@@ -65,6 +67,14 @@ return [
     'cancelled_owner' => [
         'intro' => 'A booking has been cancelled.',
         'body' => 'Those dates are open for booking again on your calendar.',
+    ],
+    'cancel_requested_owner' => [
+        'intro' => 'The guest has requested to cancel this booking.',
+        'body' => 'The decision is yours. If you accept, use "Cancel" in the panel; the dates go back on sale.',
+    ],
+    'cancel_requested_admin' => [
+        'intro' => 'A guest has requested a cancellation.',
+        'body' => 'If the owner does not respond you can cancel it from the admin panel.',
     ],
     'pending_reminder_owner' => [
         'intro' => 'You have a request awaiting your reply.',

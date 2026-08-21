@@ -49,6 +49,13 @@ class NotificationService
         $this->toOwner($reservation, 'cancelled_owner');
     }
 
+    /** Müşteri iptal talebi gönderdi — kararı yat sahibi verir. */
+    public function cancellationRequested(Reservation $reservation): void
+    {
+        $this->toOwner($reservation, 'cancel_requested_owner');
+        $this->toAdmins($reservation, 'cancel_requested_admin');
+    }
+
     /** 4 saat yanıtsız kalan talep. */
     public function pendingReminder(Reservation $reservation): void
     {

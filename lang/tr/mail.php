@@ -10,6 +10,8 @@ return [
         'rejected_customer' => 'Talebiniz karşılanamadı — :code',
         'cancelled_customer' => 'Rezervasyonunuz iptal edildi — :code',
         'cancelled_owner' => 'Rezervasyon iptal edildi — :code',
+        'cancel_requested_owner' => 'Müşteri iptal talebi gönderdi — :code',
+        'cancel_requested_admin' => '[İptal talebi] :yacht — :code',
         'pending_reminder_owner' => 'Yanıt bekleyen talebiniz var — :code',
         'escalated_admin' => '[Müdahale gerekiyor] Yanıtsız talep — :code',
         'trip_reminder_customer' => 'Gidişinize 3 gün kaldı — :code',
@@ -65,6 +67,14 @@ return [
     'cancelled_owner' => [
         'intro' => 'Bir rezervasyon iptal edildi.',
         'body' => 'İlgili tarih takviminizde yeniden satışa açıldı.',
+    ],
+    'cancel_requested_owner' => [
+        'intro' => 'Müşteri bu rezervasyon için iptal talebinde bulundu.',
+        'body' => 'Kararı siz veriyorsunuz. Kabul ederseniz panelden "İptal et" işlemini uygulayın; tarih tekrar satışa açılır.',
+    ],
+    'cancel_requested_admin' => [
+        'intro' => 'Bir rezervasyon için müşteri iptal talebi geldi.',
+        'body' => 'Yat sahibi karar vermezse yönetim panelinden siz de iptal edebilirsiniz.',
     ],
     'pending_reminder_owner' => [
         'intro' => 'Yanıtlanmayı bekleyen bir talebiniz var.',

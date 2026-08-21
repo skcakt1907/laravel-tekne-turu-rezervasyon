@@ -40,6 +40,7 @@ class Reservation extends Model
         'approved_at' => 'datetime',
         'cancelled_at' => 'datetime',
         'completed_at' => 'datetime',
+        'cancel_requested_at' => 'datetime',
     ];
 
     public function yacht(): BelongsTo
@@ -116,6 +117,20 @@ class Reservation extends Model
     public function isPending(): bool
     {
         return $this->status === ReservationStatus::Pending;
+    }
+
+    /** Müşteri iptal talebi bekliyor mu? */
+    public function hasCancelRequest(): bool
+    {
+        return $this->cancel_requested_at !== null
+            && in_array($this->status, [ReservationStatus::Pending, ReservationStatus::Approved], true);
+    }
+
+    /** Müşteri bu rezervasyon için iptal talebi gönderebilir mi? */
+    public function canRequestCancellation(): bool
+    {
+        return $this->cancel_requested_at === null
+            && in_array($this->status, [ReservationStatus::Pending, ReservationStatus::Approved], true);
     }
 
     /** Bildirimdeki güvenli bağlantı. */

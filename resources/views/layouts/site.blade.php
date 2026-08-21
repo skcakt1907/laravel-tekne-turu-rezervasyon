@@ -72,6 +72,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ lroute('contact') }}">{{ __('site.nav.contact') }}</a>
                     </li>
+                    <li class="nav-item">
+                        @auth
+                            <a class="nav-link {{ request()->routeIs('account*') ? 'active' : '' }}"
+                               href="{{ lroute('account') }}">
+                                <i class="bi bi-person-circle me-1"></i>{{ __('site.account.title') }}
+                            </a>
+                        @else
+                            <a class="nav-link" href="{{ lroute('account.login') }}">{{ __('site.account.login') }}</a>
+                        @endauth
+                    </li>
                     <li class="nav-item ms-lg-2 lang-switch d-flex align-items-center">
                         @foreach (config('yacht.locales') as $code => $cfg)
                             <a href="{{ locale_url($code) }}"

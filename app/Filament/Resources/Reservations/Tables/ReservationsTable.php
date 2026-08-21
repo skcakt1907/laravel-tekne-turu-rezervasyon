@@ -63,6 +63,9 @@ class ReservationsTable
                     ->badge()
                     ->formatStateUsing(fn (ReservationStatus $state) => $state->label())
                     ->color(fn (ReservationStatus $state) => $state->color())
+                    ->description(fn (Reservation $record) => $record->hasCancelRequest()
+                        ? 'Müşteri iptal talep etti'
+                        : null)
                     ->sortable(),
                 IconColumn::make('escalated_at')
                     ->label('Müdahale')
@@ -95,6 +98,11 @@ class ReservationsTable
                     ->query(fn (Builder $q) => $q
                         ->where('status', ReservationStatus::Pending)
                         ->whereNotNull('escalated_at'))
+                    ->toggle(),
+                Filter::make('cancel_requested')
+                    ->label('İptal talebi olanlar')
+                    ->query(fn (Builder $q) => $q->whereNotNull('cancel_requested_at')
+                        ->whereIn('status', [ReservationStatus::Pending, ReservationStatus::Approved]))
                     ->toggle(),
                 Filter::make('upcoming')
                     ->label('Yaklaşan gidişler')
@@ -136,6 +144,40 @@ class ReservationsTable
                                 Notification::make()->title($e->getMessage())->danger()->send();
                             }
                         }),
+                    Action::make('approveCancellation')
+                        ->label('İptal talebini kabul et')
+                        ->icon('heroicon-o-check')
+                        ->color('danger')
+                        ->visible(fn (Reservation $record) => $record->hasCancelRequest())
+                        ->requiresConfirmation()
+                        ->modalDescription('Rezervasyon iptal edilir ve tarih tekrar satışa açılır.')
+                        ->action(function (Reservation $record) {
+                        try {
+                            app(ReservationService::class)->cancel(
+                                $record,
+                                'Müşteri talebi: '.$record->cancel_request_reason,
+                                auth()->user(),
+                                'panel'
+                            );
+                            Notification::make()->title('Rezervasyon iptal edildi.')->success()->send();
+                        } catch (Throwable $e) {
+                            Notification::make()->title($e->getMessage())->danger()->send();
+                        }
+                    }),
+                    Action::make('dismissCancellation')
+                        ->label('İptal talebini reddet')
+                        ->icon('heroicon-o-x-mark')
+                        ->color('gray')
+                        ->visible(fn (Reservation $record) => $record->hasCancelRequest())
+                        ->requiresConfirmation()
+                        ->modalDescription('Rezervasyon aynen devam eder.')
+                        ->action(function (Reservation $record) {
+                        $record->forceFill([
+                            'cancel_requested_at' => null,
+                            'cancel_request_reason' => null,
+                        ])->save();
+                        Notification::make()->title('İptal talebi reddedildi.')->success()->send();
+                    }),
                     Action::make('cancelReservation')
                         ->label('İptal et')
                         ->icon('heroicon-o-arrow-uturn-left')

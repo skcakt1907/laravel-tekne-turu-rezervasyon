@@ -60,6 +60,30 @@
                 @endif
             </div>
 
+            @if ($reservation->hasCancelRequest())
+                <div class="panel">
+                    <h2 class="h6 mb-1">{{ __('site.booking.cancel_request') }}</h2>
+                    <p class="small text-muted-2 mb-0">
+                        <i class="bi bi-hourglass-split me-1"></i>{{ __('site.booking.cancel_pending') }}
+                    </p>
+                </div>
+            @elseif ($reservation->canRequestCancellation())
+                <div class="panel">
+                    <h2 class="h6">{{ __('site.booking.cancel_request') }}</h2>
+                    <form method="POST"
+                          action="{{ lroute('reservation.cancel-request', ['code' => $reservation->code]) }}"
+                          class="vstack gap-2">
+                        @csrf
+                        <input type="hidden" name="token" value="{{ $reservation->access_token }}">
+                        <textarea name="reason" rows="2" class="form-control form-control-sm"
+                                  placeholder="{{ __('site.booking.cancel_reason') }}" required></textarea>
+                        <button type="submit" class="btn btn-outline-danger btn-sm align-self-start">
+                            {{ __('site.booking.cancel_request') }}
+                        </button>
+                    </form>
+                </div>
+            @endif
+
             <div class="panel">
                 <h2 class="h6">{{ __('site.contact.title') }}</h2>
                 <p class="small text-muted-2 mb-0">

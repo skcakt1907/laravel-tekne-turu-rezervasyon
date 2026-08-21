@@ -7,6 +7,7 @@ use App\Models\Consent;
 use App\Models\Reservation;
 use App\Models\Yacht;
 use App\Services\AvailabilityService;
+use App\Services\NotificationService;
 use App\Services\ReservationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -21,6 +22,7 @@ class ReservationController extends Controller
     public function __construct(
         private ReservationService $reservations,
         private AvailabilityService $availability,
+        private NotificationService $notifications,
     ) {}
 
     public function store(Request $request)
@@ -105,6 +107,41 @@ class ReservationController extends Controller
         $reservation = $this->resolve($code, $request->query('token'));
 
         return view('reservations.show', compact('reservation'));
+    }
+
+    /**
+     * Müşteri iptal talebi. Müşteri rezervasyonu kendisi iptal EDEMEZ; talebi
+     * yat sahibine iletilir, kararı o verir (yol haritası bölüm 08).
+     */
+    public function requestCancellation(Request $request, string $code)
+    {
+        $reservation = $this->resolve($code, $request->input('token', $request->query('token')));
+
+        abort_unless($reservation->canRequestCancellation(), 410, 'Bu rezervasyon için iptal talebi gönderilemez.');
+
+        $data = $request->validate([
+            'reason' => ['required', 'string', 'max:500'],
+        ]);
+
+        $reservation->forceFill([
+            'cancel_requested_at' => now(),
+            'cancel_request_reason' => $data['reason'],
+        ])->save();
+
+        $this->reservations->log(
+            $reservation,
+            'cancel_requested',
+            $reservation->status,
+            $reservation->status,
+            'web',
+            $request->ip(),
+            null,
+            $data['reason']
+        );
+
+        $this->notifications->cancellationRequested($reservation);
+
+        return back()->with('status', __('site.booking.cancel_sent'));
     }
 
     /** WhatsApp mesajındaki güvenli bağlantı — şifresiz onay ekranı. */
