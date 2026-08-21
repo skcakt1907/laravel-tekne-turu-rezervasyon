@@ -28,7 +28,7 @@ class OwnerPanelProvider extends PanelProvider
             ->login()
             ->registration(\App\Filament\Owner\Pages\Auth\Register::class)
             ->passwordReset()
-            ->profile()
+            ->profile(\App\Filament\Owner\Pages\Auth\EditProfile::class)
             ->brandName('Yat Sahibi Paneli')
             ->sidebarCollapsibleOnDesktop()
             ->colors([
@@ -41,6 +41,7 @@ class OwnerPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Owner/Widgets'), for: 'App\Filament\Owner\Widgets')
             ->widgets([
+                \App\Filament\Owner\Widgets\OwnerOverview::class,
                 AccountWidget::class,
             ])
             ->middleware([
