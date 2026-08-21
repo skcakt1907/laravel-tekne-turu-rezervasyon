@@ -1,0 +1,56 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+/* Inter kendi sunucumuzdan — panel de disariya font istegi atmasin */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+/*
+| Panel teması — sitedeki deniz + pirinç paletinin koyu hâli.
+|
+| 21st.dev'deki "Elegant Luxury" ve "Amber Slate" temalarının yapısı örnek
+| alındı: nötr gri yerine hafif renkli derin yüzeyler, tek sıcak vurgu rengi,
+| belirgin ama sert olmayan kenarlar. Renkler bizim markamıza çevrildi.
+|
+| Filament tüm yüzeyleri `gray` ölçeğinden üretir; bu ölçeği deniz tonlarına
+| çekince panel düz gri yerine koyu petrol oluyor ve siteyle aynı dili konuşuyor.
+*/
+@theme {
+    --font-family-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+    --color-gray-50: #f2f7f8;
+    --color-gray-100: #e2ecef;
+    --color-gray-200: #c6d9de;
+    --color-gray-300: #9cbcc5;
+    --color-gray-400: #6b98a5;
+    --color-gray-500: #4d7c8a;
+    --color-gray-600: #3f6674;
+    --color-gray-700: #375561;
+    --color-gray-800: #223a44;
+    --color-gray-900: #16303a;
+    --color-gray-950: #0b1f27;
+}
+
+@layer components {
+    /* Yan menüdeki aktif kayıt koyu zeminde daha okunur olsun */
+    .dark .fi-sidebar-item-active .fi-sidebar-item-label {
+        color: #e8d1a4;
+    }
+
+    /* Kart, tablo ve istatistik yüzeylerine hafif derinlik */
+    .dark .fi-section,
+    .dark .fi-ta-ctn,
+    .dark .fi-wi-stats-overview-stat {
+        box-shadow: 0 1px 3px rgb(0 0 0 / 0.35);
+    }
+
+    /* Üst çubuk zeminden ayrışsın */
+    .dark .fi-topbar > nav {
+        background-color: #0e252e;
+        border-bottom: 1px solid rgb(255 255 255 / 0.06);
+    }
+}

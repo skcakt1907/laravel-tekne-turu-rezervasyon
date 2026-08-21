@@ -7,6 +7,7 @@ use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages\Dashboard;
+use Filament\Enums\ThemeMode;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -25,6 +26,7 @@ class OwnerPanelProvider extends PanelProvider
         return $panel
             ->id('owner')
             ->path('yat-sahibi')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
             ->registration(\App\Filament\Owner\Pages\Auth\Register::class)
             ->passwordReset()
@@ -32,8 +34,23 @@ class OwnerPanelProvider extends PanelProvider
             ->brandName('Yat Sahibi Paneli')
             ->sidebarCollapsibleOnDesktop()
             ->colors([
-                'primary' => Color::Cyan,
+                // Marka: pirinç vurgu + deniz tonlu nötrler (tema CSS'i ile birlikte)
+                'primary' => [
+                    50 => '#fbf7ef', 100 => '#f4e8d2', 200 => '#e8d1a4', 300 => '#dab472',
+                    400 => '#cd9749', 500 => '#c07f31', 600 => '#96661a', 700 => '#7a5314',
+                    800 => '#634315', 900 => '#543a16', 950 => '#2f1f0a',
+                ],
+                'gray' => [
+                    50 => '#f2f7f8', 100 => '#e2ecef', 200 => '#c6d9de', 300 => '#9cbcc5',
+                    400 => '#6b98a5', 500 => '#4d7c8a', 600 => '#3f6674', 700 => '#375561',
+                    800 => '#223a44', 900 => '#16303a', 950 => '#0b1f27',
+                ],
+                'danger' => Color::Red,
+                'success' => Color::Emerald,
+                'warning' => Color::Amber,
+                'info' => Color::Sky,
             ])
+            ->defaultThemeMode(ThemeMode::Dark)
             ->discoverResources(in: app_path('Filament/Owner/Resources'), for: 'App\Filament\Owner\Resources')
             ->discoverPages(in: app_path('Filament/Owner/Pages'), for: 'App\Filament\Owner\Pages')
             ->pages([
