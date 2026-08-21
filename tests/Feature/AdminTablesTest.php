@@ -186,4 +186,40 @@ class AdminTablesTest extends TestCase
         $this->assertSame(ReservationStatus::Approved, $reservation->refresh()->status);
         $this->assertSame(1, $reservation->blockedPeriod()->count());
     }
+
+    public function test_global_search_finds_yachts_reservations_and_users(): void
+    {
+        $yacht = Yacht::where('slug', 'demo-gulet-mavi-ruzgar')->firstOrFail();
+        $start = now()->addDays(15)->setTime(10, 0);
+
+        $reservation = app(\App\Services\ReservationService::class)->request($yacht, [
+            'customer_name' => 'Arama Testi',
+            'customer_email' => 'arama@example.com',
+            'customer_phone' => '+905551112233',
+            'unit' => 'day',
+            'starts_at' => $start,
+            'ends_at' => $start->copy()->addDays(2),
+            'guests' => 4,
+        ]);
+
+        // Yat adi (ceviri JSON'unda arar)
+        Livewire::test(\Filament\Livewire\GlobalSearch::class)
+            ->set('search', 'Mavi')
+            ->assertSee('Mavi Rüzgar');
+
+        // Rezervasyon kodu
+        Livewire::test(\Filament\Livewire\GlobalSearch::class)
+            ->set('search', $reservation->code)
+            ->assertSee($reservation->code);
+
+        // Musteri adi
+        Livewire::test(\Filament\Livewire\GlobalSearch::class)
+            ->set('search', 'Arama Testi')
+            ->assertSee('Arama Testi');
+
+        // Kullanici
+        Livewire::test(\Filament\Livewire\GlobalSearch::class)
+            ->set('search', 'Demo Yat Sahibi')
+            ->assertSee('Demo Yat Sahibi');
+    }
 }

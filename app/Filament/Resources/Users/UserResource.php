@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class UserResource extends Resource
 {
@@ -31,6 +32,27 @@ class UserResource extends Resource
     protected static ?string $navigationLabel = 'Kullanıcılar';
 
     protected static ?string $recordTitleAttribute = 'name';
+
+
+    /** @return array<int, string> */
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'email', 'phone', 'company_name'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return $record->name;
+    }
+
+    /** @return array<string, string> */
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return array_filter([
+            'Rol' => $record->role->label(),
+            'E-posta' => $record->email,
+        ]);
+    }
 
     public static function form(Schema $schema): Schema
     {

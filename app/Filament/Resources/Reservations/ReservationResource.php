@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class ReservationResource extends Resource
 {
@@ -43,6 +44,28 @@ class ReservationResource extends Resource
     {
         return static::getModel()::where('status', \App\Enums\ReservationStatus::Pending)
             ->whereNotNull('escalated_at')->exists() ? 'danger' : 'warning';
+    }
+
+
+    /** @return array<int, string> */
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['code', 'customer_name', 'customer_email', 'customer_phone'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return $record->code.' — '.$record->customer_name;
+    }
+
+    /** @return array<string, string> */
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return array_filter([
+            'Yat' => $record->yacht?->getTranslation('name', 'tr'),
+            'Tarih' => $record->starts_at?->format('d.m.Y'),
+            'Durum' => $record->status->label(),
+        ]);
     }
 
     public static function form(Schema $schema): Schema

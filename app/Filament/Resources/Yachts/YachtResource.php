@@ -17,6 +17,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class YachtResource extends Resource
@@ -36,6 +37,28 @@ class YachtResource extends Resource
     protected static ?string $navigationLabel = 'Yatlar';
 
     protected static ?string $recordTitleAttribute = 'slug';
+
+
+    /** @return array<int, string> */
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'slug', 'brand', 'model'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return $record->getTranslation('name', 'tr');
+    }
+
+    /** @return array<string, string> */
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return array_filter([
+            'Sahibi' => $record->owner?->name,
+            'Liman' => $record->location?->getTranslation('name', 'tr'),
+            'Durum' => $record->status->label(),
+        ]);
+    }
 
     public static function form(Schema $schema): Schema
     {
