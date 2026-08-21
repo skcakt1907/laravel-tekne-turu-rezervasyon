@@ -1,8 +1,10 @@
 # Yayın Rehberi
 
 Paylaşımlı hosting veya VPS fark etmez; kritik nokta **docroot'un `public/` klasörü
-olması**. Build adımı yoktur (Bootstrap CDN'den gelir, Filament varlıkları
-`public/` içinde hazır bekler).
+olması**.
+
+Önyüz Tailwind ile derlenir. Sunucuda Node kurulu olması **gerekmez**: varlıkları
+kendi makinenizde derleyip `public/build/` klasörünü de yükleyin (depoya dahildir).
 
 ## 1. Sunucu gereksinimleri
 
@@ -18,6 +20,15 @@ git clone <repo> /var/www/yat-kiralama
 cd /var/www/yat-kiralama
 composer install --no-dev --optimize-autoloader
 ```
+
+Önyüz varlıkları (yerel makinede, kod her değiştiğinde):
+
+```bash
+npm ci && npm run build
+```
+
+`public/build/` çıktısı sunucuya gitmeli. Sunucuda derlemek isterseniz Node 20+
+gerekir; paylaşımlı hostinglerde genelde yoktur, o yüzden yerel derleme önerilir.
 
 > **Tuzak:** `--no-dev` sonrası `bootstrap/cache/` içinde eski paket listesi kalırsa
 > "Class not found" hatası alırsınız. Şüphelenirseniz `bootstrap/cache/*.php`
@@ -47,6 +58,10 @@ MAIL_MAILER=smtp
 MAIL_HOST=... MAIL_PORT=587 MAIL_USERNAME=... MAIL_PASSWORD=...
 MAIL_FROM_ADDRESS=info@alan-adi
 MAIL_FROM_NAME="${APP_NAME}"
+
+# Site bir ALT KLASORDEN servis ediliyorsa (ornegin /proje/public) doldurun.
+# Docroot = public ise BOS birakin, yoksa CSS/font adresleri kayar.
+ASSET_URL=
 
 # WhatsApp: Meta onayı tamamlanınca (bkz. WHATSAPP.md)
 WHATSAPP_ENABLED=false
@@ -104,6 +119,8 @@ Kod veya `.env` değişince bu dördünü tekrar çalıştırın (`php artisan o
 - [ ] Komisyon oranı `/yonetim/commission-settings` içinde ayarlandı
 - [ ] Yasal metinler (KVKK, kullanım koşulları, iptal politikası) **avukat onayından geçti**
   ve `{{FİRMA UNVANI}}` yer tutucuları dolduruldu
+- [ ] `npm run build` çalıştırıldı, `public/build/` sunucuda güncel
+- [ ] `ASSET_URL` doğru (docroot=public ise boş) — CSS/ikon/font 404 vermiyor
 - [ ] `sitemap.xml` açılıyor, `robots.txt` doğru alan adını gösteriyor
 - [ ] Google Search Console'a site haritası bildirildi
 - [ ] Analytics ölçüm kimliği girildi (isteğe bağlı)

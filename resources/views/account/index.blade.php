@@ -7,75 +7,73 @@
 @section('title', __('site.account.title').' — '.setting('site_name', config('app.name')))
 
 @section('content')
-<div class="container py-5">
+<div class="mx-auto max-w-5xl px-4 py-14 sm:px-6">
 
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
-            <h1 class="h3 mb-1">{{ __('site.account.title') }}</h1>
-            <p class="text-muted-2 mb-0">{{ auth()->user()->name }} · {{ auth()->user()->email }}</p>
+            <h1 class="text-3xl font-bold">{{ __('site.account.title') }}</h1>
+            <p class="mt-1 text-sm text-sea-600">{{ auth()->user()->name }} · {{ auth()->user()->email }}</p>
         </div>
-        <div class="d-flex gap-2">
-            <a href="{{ lroute('account.profile') }}" class="btn btn-outline-sea btn-sm">
-                <i class="bi bi-person me-1"></i>{{ __('site.account.profile') }}
+        <div class="flex gap-2">
+            <a href="{{ lroute('account.profile') }}" class="btn btn-ghost btn-sm">
+                <i class="bi bi-person"></i>{{ __('site.account.profile') }}
             </a>
             <form method="POST" action="{{ lroute('account.logout') }}">
                 @csrf
-                <button type="submit" class="btn btn-outline-sea btn-sm">
-                    <i class="bi bi-box-arrow-right me-1"></i>{{ __('site.account.logout') }}
+                <button type="submit" class="btn btn-ghost btn-sm">
+                    <i class="bi bi-box-arrow-right"></i>{{ __('site.account.logout') }}
                 </button>
             </form>
         </div>
     </div>
 
     @if ($reservations->isEmpty())
-        <div class="panel empty-state">
-            <i class="bi bi-calendar-x d-block mb-2"></i>
-            <p class="fw-semibold mb-1">{{ __('site.account.empty') }}</p>
-            <p class="small mb-3">{{ __('site.account.empty_hint') }}</p>
-            <a href="{{ lroute('yachts.index') }}" class="btn btn-brass btn-sm">{{ __('site.home.all_yachts') }}</a>
+        <div class="panel py-16 text-center">
+            <i class="bi bi-calendar-x mb-3 block text-4xl text-sea-300"></i>
+            <p class="font-semibold">{{ __('site.account.empty') }}</p>
+            <p class="mt-1 text-sm text-sea-500">{{ __('site.account.empty_hint') }}</p>
+            <a href="{{ lroute('yachts.index') }}" class="btn btn-brass btn-sm mt-5">{{ __('site.home.all_yachts') }}</a>
         </div>
     @else
-        <div class="vstack gap-3">
+        <div class="space-y-4">
             @foreach ($reservations as $reservation)
-                <div class="panel">
-                    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
-                        <div>
-                            <div class="d-flex align-items-center gap-2 mb-1">
-                                <h2 class="h6 mb-0">
-                                    {{ $reservation->yacht->getTranslation('name', $locale) }}
-                                </h2>
-                                <span class="badge {{ match ($reservation->status->color()) {
-                                    'success' => 'text-bg-success',
-                                    'warning' => 'text-bg-warning',
-                                    'danger' => 'text-bg-danger',
-                                    default => 'text-bg-secondary',
-                                } }}">{{ $reservation->status->label() }}</span>
-                                @if ($reservation->hasCancelRequest())
-                                    <span class="badge badge-soft">{{ __('site.booking.cancel_pending') }}</span>
-                                @endif
-                            </div>
-                            <div class="small text-muted-2">
-                                <span class="font-monospace">{{ $reservation->code }}</span>
-                                <span class="mx-1">·</span>
-                                {{ $reservation->starts_at->format('d.m.Y H:i') }} — {{ $reservation->ends_at->format('d.m.Y H:i') }}
-                                <span class="mx-1">·</span>
-                                {{ __('site.card.guests', ['count' => $reservation->guests]) }}
-                            </div>
+                <div class="panel flex flex-wrap items-start justify-between gap-4">
+                    <div>
+                        <div class="mb-1.5 flex flex-wrap items-center gap-2">
+                            <h2 class="font-serif text-lg font-semibold">
+                                {{ $reservation->yacht->getTranslation('name', $locale) }}
+                            </h2>
+                            <span class="{{ match ($reservation->status->color()) {
+                                'success' => 'badge badge-ok',
+                                'warning' => 'badge badge-warn',
+                                'danger' => 'badge badge-danger',
+                                default => 'badge badge-soft',
+                            } }}">{{ $reservation->status->label() }}</span>
+                            @if ($reservation->hasCancelRequest())
+                                <span class="badge badge-soft">{{ __('site.booking.cancel_pending') }}</span>
+                            @endif
                         </div>
+                        <p class="text-sm text-sea-600">
+                            <span class="font-mono text-xs">{{ $reservation->code }}</span>
+                            <span class="mx-1 text-sea-300">·</span>
+                            {{ $reservation->starts_at->format('d.m.Y H:i') }} — {{ $reservation->ends_at->format('d.m.Y H:i') }}
+                            <span class="mx-1 text-sea-300">·</span>
+                            {{ __('site.card.guests', ['count' => $reservation->guests]) }}
+                        </p>
+                    </div>
 
-                        <div class="text-lg-end">
-                            <div class="fw-bold">{{ money($reservation->estimated_total, $reservation->currency) }}</div>
-                            <a class="small" href="{{ lroute('reservation.show', ['code' => $reservation->code]).'?token='.$reservation->access_token }}">
-                                {{ __('mail.common.view_reservation') }} <i class="bi bi-arrow-right"></i>
-                            </a>
-                        </div>
+                    <div class="text-right">
+                        <div class="font-semibold">{{ money($reservation->estimated_total, $reservation->currency) }}</div>
+                        <a class="text-sm text-brass-700 hover:underline"
+                           href="{{ lroute('reservation.show', ['code' => $reservation->code]).'?token='.$reservation->access_token }}">
+                            {{ __('mail.common.view_reservation') }} <i class="bi bi-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
             @endforeach
         </div>
 
-        <div class="mt-4">{{ $reservations->links() }}</div>
+        <div class="mt-8">{{ $reservations->links() }}</div>
     @endif
-
 </div>
 @endsection

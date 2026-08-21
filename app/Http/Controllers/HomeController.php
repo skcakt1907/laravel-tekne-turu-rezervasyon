@@ -20,6 +20,12 @@ class HomeController extends Controller
     public function __invoke()
     {
         return view('home', [
+            'stats' => [
+                'yachts' => Yacht::bookable()->count(),
+                'ports' => Location::where('level', Location::LEVEL_PORT)
+                    ->whereHas('yachts', fn ($q) => $q->bookable())
+                    ->count(),
+            ],
             'featured' => Yacht::bookable()
                 ->with(['photos', 'location'])
                 ->orderByDesc('is_featured')

@@ -1,9 +1,165 @@
 @import 'tailwindcss';
 
+/* Fontlar ve ikonlar kendi sunucumuzdan: sitede ucuncu taraf istegi yok.
+   (Google Fonts / CDN cagrisi KVKK acisindan da istenmiyor.) */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/playfair-display/600.css';
+@import '@fontsource/playfair-display/700.css';
+
+/* Ikonlar kendi sunucumuzdan: sitede hicbir ucuncu taraf istegi kalmasin
+   (fontlar da bunny uzerinden indirilip yerel servis ediliyor). */
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
 
+/*
+| Tema — yol haritası dokümanının paleti: derin deniz + pirinç.
+| Renkler burada tanımlanır, Blade tarafında `bg-sea-900`, `text-brass-600` gibi
+| normal Tailwind sınıflarıyla kullanılır.
+*/
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: 'Playfair Display', 'Palatino Linotype', Georgia, serif;
+
+    --color-paper: #edf1f2;
+
+    --color-sea-50: #f2f7f8;
+    --color-sea-100: #e2ecef;
+    --color-sea-200: #c6d9de;
+    --color-sea-300: #9cbcc5;
+    --color-sea-400: #6b98a5;
+    --color-sea-500: #4d7c8a;
+    --color-sea-600: #3f6674;
+    --color-sea-700: #375561;
+    --color-sea-800: #2c424c;
+    --color-sea-900: #15313c;
+    --color-sea-950: #0a1e26;
+
+    --color-brass-50: #fbf7ef;
+    --color-brass-100: #f4e8d2;
+    --color-brass-200: #e8d1a4;
+    --color-brass-300: #dab472;
+    --color-brass-400: #cd9749;
+    --color-brass-500: #c07f31;
+    --color-brass-600: #96661a;
+    --color-brass-700: #7a5314;
+    --color-brass-800: #634315;
+    --color-brass-900: #543a16;
+}
+
+@layer base {
+    /* Alpine hazir olmadan once x-show'lu ogeler bir an gorunmesin */
+    [x-cloak] {
+        display: none !important;
+    }
+
+    body {
+        background-color: var(--color-paper);
+        color: var(--color-sea-900);
+        -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3 {
+        font-family: var(--font-serif);
+        letter-spacing: -0.015em;
+        text-wrap: balance;
+    }
+
+    /* Sabit başlığın altına çapa ile inince başlık gizlenmesin */
+    [id] {
+        scroll-margin-top: 5rem;
+    }
+}
+
+@layer components {
+    /* ---------- düğmeler ---------- */
+    .btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5
+               text-sm font-semibold transition
+               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass-600;
+    }
+    .btn-brass {
+        @apply bg-brass-600 text-white hover:bg-brass-700 active:bg-brass-800;
+    }
+    .btn-sea {
+        @apply bg-sea-900 text-white hover:bg-sea-800;
+    }
+    .btn-ghost {
+        @apply border border-sea-200 bg-white text-sea-900 hover:border-brass-400 hover:text-brass-700;
+    }
+    .btn-sm {
+        @apply px-3 py-1.5 text-[13px];
+    }
+
+    /* ---------- yüzeyler ---------- */
+    .card {
+        @apply rounded-xl border border-sea-200 bg-white;
+    }
+    .panel {
+        @apply rounded-xl border border-sea-200 bg-white p-5 sm:p-6;
+    }
+
+    /* ---------- form ---------- */
+    .field {
+        @apply w-full rounded-lg border border-sea-200 bg-white px-3 py-2.5 text-sm text-sea-900
+               placeholder:text-sea-400
+               focus:border-brass-400 focus:ring-2 focus:ring-brass-200 focus:outline-none;
+    }
+    .label {
+        @apply mb-1 block text-[11px] font-semibold uppercase tracking-[0.08em] text-sea-500;
+    }
+
+    /* ---------- rozetler ---------- */
+    .badge {
+        @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold;
+    }
+    .badge-soft {
+        @apply bg-sea-100 text-sea-600;
+    }
+    .badge-brass {
+        @apply bg-brass-100 text-brass-700;
+    }
+    .badge-ok {
+        @apply bg-emerald-100 text-emerald-700;
+    }
+    .badge-warn {
+        @apply bg-amber-100 text-amber-800;
+    }
+    .badge-danger {
+        @apply bg-red-100 text-red-700;
+    }
+
+    /* ---------- metin ---------- */
+    .eyebrow {
+        @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-brass-600;
+    }
+    .prose-site {
+        @apply leading-relaxed text-sea-700 [&_a]:text-brass-700 [&_a]:underline [&_h3]:mt-6 [&_h3]:mb-2
+               [&_h3]:font-semibold [&_li]:mb-1 [&_p]:mb-4 [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-5;
+    }
+}
+
+@layer utilities {
+    /* Hero için derin deniz gradyanı + ince ışık dokusu */
+    .bg-hero {
+        background-color: var(--color-sea-950);
+        background-image:
+            radial-gradient(ellipse 80% 60% at 15% 0%, rgba(77, 124, 138, 0.45), transparent 60%),
+            radial-gradient(ellipse 60% 50% at 90% 20%, rgba(150, 102, 26, 0.28), transparent 65%),
+            linear-gradient(180deg, rgba(10, 30, 38, 0) 40%, rgba(10, 30, 38, 0.9) 100%);
+    }
+
+    /* Kart ızgarasında görsel yokken kullanılan sakin doku */
+    .bg-placeholder {
+        background-color: var(--color-sea-100);
+        background-image:
+            linear-gradient(135deg, rgba(21, 49, 60, 0.06) 25%, transparent 25%),
+            linear-gradient(225deg, rgba(21, 49, 60, 0.06) 25%, transparent 25%);
+        background-size: 24px 24px;
+    }
 }

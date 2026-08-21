@@ -3,138 +3,219 @@
 @php
     $siteName = setting('site_name', config('app.name'));
     $tagline = __('site.list.title');
+    // Hero'daki fotoğraf yelpazesi: gerçek kapak görselleri varsa onları kullanır,
+    // yoksa doku dolgusuna düşer. İçerik geldiğinde tasarım kendiliğinden zenginleşir.
+    $heroShots = $featured->take(3)->map(fn ($y) => $y->coverUrl());
 @endphp
 
 @section('title', str_contains(mb_strtolower($siteName), mb_strtolower($tagline)) ? $siteName : $siteName.' — '.$tagline)
 @section('meta_description', __('site.home.hero_sub'))
+@section('header_style', 'transparent')
 
 @section('content')
 
-<section class="hero">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8">
-                <h1 class="mb-3">{{ __('site.home.hero_title') }}</h1>
-                <p class="lead mb-0">{{ __('site.home.hero_sub') }}</p>
+{{-- ---------------- HERO ---------------- --}}
+<section class="bg-hero relative overflow-hidden pt-28 pb-40 sm:pt-32 lg:pt-40 lg:pb-48">
+    {{-- ince ızgara dokusu --}}
+    <div class="pointer-events-none absolute inset-0 opacity-[0.07]"
+         style="background-image:linear-gradient(rgba(255,255,255,.6) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.6) 1px,transparent 1px);background-size:72px 72px"></div>
+
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6">
+        <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+
+            <div class="text-white">
+                <p class="eyebrow mb-4 text-brass-300">
+                    <i class="bi bi-shield-check mr-1"></i>{{ __('site.home.eyebrow') }}
+                </p>
+
+                <h1 class="text-4xl font-bold leading-[1.05] sm:text-5xl lg:text-6xl">
+                    {{ __('site.home.hero_title') }}
+                </h1>
+
+                <p class="mt-5 max-w-xl text-lg leading-relaxed text-sea-200">
+                    {{ __('site.home.hero_sub') }}
+                </p>
+
+                <div class="mt-8 flex flex-wrap gap-3">
+                    <a href="{{ lroute('yachts.index') }}" class="btn btn-brass">
+                        {{ __('site.home.all_yachts') }}<i class="bi bi-arrow-right"></i>
+                    </a>
+                    <a href="{{ lroute('owner.landing') }}"
+                       class="btn border border-white/25 text-white hover:bg-white/10">
+                        {{ __('site.nav.list_your_yacht') }}
+                    </a>
+                </div>
+
+                <dl class="mt-10 grid max-w-lg grid-cols-3 gap-6 border-t border-white/15 pt-6">
+                    @foreach ([
+                        ['value' => $stats['yachts'], 'label' => __('site.home.stat_yachts')],
+                        ['value' => $stats['ports'], 'label' => __('site.home.stat_ports')],
+                        ['value' => '0 ₺', 'label' => __('site.home.stat_upfront')],
+                    ] as $stat)
+                        <div>
+                            <dt class="font-serif text-2xl font-bold text-white">{{ $stat['value'] }}</dt>
+                            <dd class="mt-1 text-xs uppercase tracking-wider text-sea-300">{{ $stat['label'] }}</dd>
+                        </div>
+                    @endforeach
+                </dl>
+            </div>
+
+            {{-- fotoğraf yelpazesi --}}
+            <div class="relative hidden lg:block" aria-hidden="true">
+                <div class="relative mx-auto h-[420px] w-full max-w-lg">
+                    @foreach ([
+                        ['rotate' => '-8deg', 'top' => '40px', 'left' => '0', 'z' => 10, 'w' => '58%'],
+                        ['rotate' => '4deg', 'top' => '0', 'left' => '30%', 'z' => 20, 'w' => '62%'],
+                        ['rotate' => '10deg', 'top' => '190px', 'left' => '16%', 'z' => 30, 'w' => '54%'],
+                    ] as $i => $shot)
+                        <div class="absolute overflow-hidden rounded-2xl border border-white/20 shadow-2xl shadow-sea-950/50"
+                             style="transform:rotate({{ $shot['rotate'] }});top:{{ $shot['top'] }};left:{{ $shot['left'] }};z-index:{{ $shot['z'] }};width:{{ $shot['w'] }}">
+                            <div class="aspect-4/3 {{ $heroShots[$i] ?? null ? '' : 'bg-sea-800' }}">
+                                @if ($heroShots[$i] ?? null)
+                                    <img src="{{ $heroShots[$i] }}" alt="" class="h-full w-full object-cover">
+                                @else
+                                    <div class="flex h-full items-center justify-center text-sea-600">
+                                        <i class="bi bi-water text-4xl"></i>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<div class="container" style="margin-top:-38px; position:relative; z-index:2;">
+{{-- ---------------- ARAMA ---------------- --}}
+<div class="relative z-10 mx-auto -mt-28 max-w-6xl px-4 sm:px-6">
     @include('partials.search-form')
 </div>
 
-{{-- Öne çıkan yatlar --}}
-<section class="container py-5">
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-4">
+{{-- ---------------- ÖNE ÇIKAN YATLAR ---------------- --}}
+<section class="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+    <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-            <h2 class="section-title mb-1">{{ __('site.home.featured') }}</h2>
-            <p class="section-sub mb-0">{{ __('site.home.featured_sub') }}</p>
+            <p class="eyebrow mb-2">{{ __('site.home.featured') }}</p>
+            <h2 class="text-3xl font-bold sm:text-4xl">{{ __('site.home.featured_title') }}</h2>
+            <p class="mt-2 max-w-xl text-sea-600">{{ __('site.home.featured_sub') }}</p>
         </div>
-        <a href="{{ lroute('yachts.index') }}" class="btn btn-outline-sea btn-sm">
-            {{ __('site.home.all_yachts') }} <i class="bi bi-arrow-right ms-1"></i>
+        <a href="{{ lroute('yachts.index') }}" class="btn btn-ghost btn-sm">
+            {{ __('site.home.all_yachts') }}<i class="bi bi-arrow-right"></i>
         </a>
     </div>
 
     @if ($featured->isEmpty())
-        <div class="empty-state">
-            <i class="bi bi-water d-block mb-2"></i>
-            <p class="mb-0">{{ __('site.list.no_results') }}</p>
+        <div class="panel py-16 text-center text-sea-500">
+            <i class="bi bi-water mb-3 block text-4xl text-sea-300"></i>
+            {{ __('site.list.no_results') }}
         </div>
     @else
-        <div class="row g-3 g-lg-4">
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             @foreach ($featured as $yacht)
-                <div class="col-12 col-sm-6 col-lg-4">
-                    @include('partials.yacht-card', ['yacht' => $yacht])
-                </div>
+                @include('partials.yacht-card', ['yacht' => $yacht])
             @endforeach
         </div>
     @endif
 </section>
 
-{{-- Nasıl çalışır --}}
-<section class="py-5" style="background:var(--surface);border-block:1px solid var(--line);">
-    <div class="container">
-        <div class="text-center mb-4">
-            <h2 class="section-title mb-1">{{ __('site.home.how') }}</h2>
-            <p class="section-sub mx-auto mb-0">{{ __('site.home.how_sub') }}</p>
+{{-- ---------------- NASIL ÇALIŞIR ---------------- --}}
+<section class="border-y border-sea-200 bg-white py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6">
+        <div class="mx-auto mb-12 max-w-2xl text-center">
+            <p class="eyebrow mb-2">{{ __('site.home.how') }}</p>
+            <h2 class="text-3xl font-bold sm:text-4xl">{{ __('site.home.how_title') }}</h2>
+            <p class="mt-3 text-sea-600">{{ __('site.home.how_sub') }}</p>
         </div>
 
-        <div class="row g-3">
+        <ol class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             @foreach (__('site.steps') as $i => $step)
-                <div class="col-12 col-sm-6 col-lg-3">
-                    <div class="step-card">
-                        <div class="n mb-2">0{{ $i + 1 }}</div>
-                        <h3 class="h6 fw-bold mb-1">{{ $step[0] }}</h3>
-                        <p class="small text-muted-2 mb-0">{{ $step[1] }}</p>
+                <li class="relative">
+                    <div class="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-brass-100 font-serif text-lg font-bold text-brass-700">
+                        {{ $i + 1 }}
                     </div>
-                </div>
+                    @if (! $loop->last)
+                        <span class="pointer-events-none absolute left-11 top-5 hidden h-px w-[calc(100%-2.75rem)] bg-sea-200 lg:block"></span>
+                    @endif
+                    <h3 class="mb-1.5 font-sans text-base font-semibold">{{ $step[0] }}</h3>
+                    <p class="text-sm leading-relaxed text-sea-600">{{ $step[1] }}</p>
+                </li>
             @endforeach
-        </div>
+        </ol>
     </div>
 </section>
 
-{{-- Popüler limanlar --}}
+{{-- ---------------- LİMANLAR ---------------- --}}
 @if ($ports->isNotEmpty())
-    <section class="container py-5">
-        <h2 class="section-title mb-4">{{ __('site.home.ports') }}</h2>
-        <div class="row g-3">
-            @foreach ($ports as $port)
-                <div class="col-6 col-md-4 col-lg-3">
-                    <a href="{{ lroute('locations.show', $port->slug) }}" class="port-card">
-                        @if ($port->cover)
-                            <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($port->cover) }}"
-                                 alt="{{ $port->getTranslation('name', app()->getLocale()) }}" loading="lazy">
-                        @endif
-                        <span>
-                            {{ $port->getTranslation('name', app()->getLocale()) }}
-                            <small class="ms-2 opacity-75">{{ $port->yachts_count }}</small>
-                        </span>
-                    </a>
-                </div>
-            @endforeach
+    <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+        <div class="mb-8">
+            <p class="eyebrow mb-2">{{ __('site.home.ports') }}</p>
+            <h2 class="text-3xl font-bold sm:text-4xl">{{ __('site.home.ports_title') }}</h2>
         </div>
-    </section>
-@endif
 
-{{-- Yat tipleri --}}
-@if ($types->isNotEmpty())
-    <section class="container pb-5">
-        <h2 class="section-title mb-3">{{ __('site.home.types') }}</h2>
-        <div class="d-flex flex-wrap gap-2">
-            @foreach ($types as $type)
-                <a href="{{ lroute('yachts.index', ['type' => $type['key']]) }}"
-                   class="btn btn-outline-sea btn-sm">
-                    {{ $type['label'] }}
-                    <span class="badge badge-soft ms-1">{{ $type['count'] }}</span>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            @foreach ($ports as $port)
+                <a href="{{ lroute('locations.show', $port->slug) }}"
+                   class="group relative flex min-h-44 flex-col justify-end overflow-hidden rounded-xl bg-sea-900 p-5 text-white transition hover:-translate-y-1 hover:shadow-xl hover:shadow-sea-900/20">
+                    @if ($port->cover)
+                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($port->cover) }}"
+                             alt="" loading="lazy"
+                             class="absolute inset-0 h-full w-full object-cover opacity-55 transition duration-500 group-hover:scale-105 group-hover:opacity-70">
+                    @else
+                        <div class="absolute inset-0 bg-gradient-to-br from-sea-700 via-sea-800 to-sea-950"></div>
+                    @endif
+                    <div class="absolute inset-0 bg-gradient-to-t from-sea-950/85 to-transparent"></div>
+
+                    <div class="relative">
+                        <h3 class="font-serif text-xl font-semibold">{{ $port->getTranslation('name', app()->getLocale()) }}</h3>
+                        <p class="mt-0.5 text-xs text-sea-300">
+                            {{ trans_choice('site.home.port_count', $port->yachts_count, ['count' => $port->yachts_count]) }}
+                        </p>
+                    </div>
                 </a>
             @endforeach
         </div>
     </section>
 @endif
 
-{{-- SSS --}}
-@if ($faqs->isNotEmpty())
-    <section class="container pb-5">
-        <h2 class="section-title mb-3">{{ __('site.home.faq') }}</h2>
-        <div class="accordion" id="faq">
-            @foreach ($faqs as $faq)
-                <div class="accordion-item">
-                    <h3 class="accordion-header">
-                        <button class="accordion-button {{ $loop->first ? '' : 'collapsed' }}" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#faq-{{ $faq->id }}">
-                            {{ $faq->getTranslation('question', app()->getLocale()) }}
-                        </button>
-                    </h3>
-                    <div id="faq-{{ $faq->id }}" class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}"
-                         data-bs-parent="#faq">
-                        <div class="accordion-body text-muted-2">
-                            {{ $faq->getTranslation('answer', app()->getLocale()) }}
-                        </div>
-                    </div>
-                </div>
+{{-- ---------------- YAT TİPLERİ ---------------- --}}
+@if ($types->isNotEmpty())
+    <section class="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
+        <h2 class="mb-5 text-2xl font-bold">{{ __('site.home.types') }}</h2>
+        <div class="flex flex-wrap gap-2.5">
+            @foreach ($types as $type)
+                <a href="{{ lroute('yachts.index', ['type' => $type['key']]) }}"
+                   class="btn btn-ghost btn-sm">
+                    {{ $type['label'] }}
+                    <span class="badge badge-soft">{{ $type['count'] }}</span>
+                </a>
             @endforeach
+        </div>
+    </section>
+@endif
+
+{{-- ---------------- SSS ---------------- --}}
+@if ($faqs->isNotEmpty())
+    <section class="border-t border-sea-200 bg-white py-20">
+        <div class="mx-auto max-w-3xl px-4 sm:px-6">
+            <div class="mb-8 text-center">
+                <p class="eyebrow mb-2">{{ __('site.home.faq') }}</p>
+                <h2 class="text-3xl font-bold">{{ __('site.home.faq_title') }}</h2>
+            </div>
+
+            <div class="divide-y divide-sea-200 border-y border-sea-200">
+                @foreach ($faqs as $faq)
+                    <details class="group py-4" @if ($loop->first) open @endif>
+                        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold">
+                            {{ $faq->getTranslation('question', app()->getLocale()) }}
+                            <i class="bi bi-plus-lg shrink-0 text-brass-600 transition group-open:rotate-45"></i>
+                        </summary>
+                        <p class="mt-3 text-sm leading-relaxed text-sea-600">
+                            {{ $faq->getTranslation('answer', app()->getLocale()) }}
+                        </p>
+                    </details>
+                @endforeach
+            </div>
         </div>
     </section>
 @endif

@@ -1,19 +1,15 @@
-{{-- Cerez bildirimi. Sunucuya kayit tutmaz; tercih tarayicida saklanir.
-     Analitik betigi yalnizca onay verilirse yuklenir (KVKK/GDPR). --}}
-<div id="cookie-banner" class="position-fixed bottom-0 start-0 end-0 p-3" style="z-index:1080; display:none;">
-    <div class="panel shadow d-flex flex-wrap align-items-center justify-content-between gap-3 mx-auto"
-         style="max-width:900px;">
-        <p class="small mb-0 text-muted-2" style="max-width:60ch;">
+{{-- Cerez bildirimi. Tercih tarayicida saklanir, sunucuya kayit tutulmaz.
+     Analitik betigi yalnizca olcum kimligi tanimliysa basilir ve yalnizca
+     onay verilirse yuklenir (KVKK/GDPR). --}}
+<div id="cookie-banner" class="fixed inset-x-0 bottom-0 z-50 hidden p-3 sm:p-4">
+    <div class="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 rounded-xl border border-sea-200 bg-white p-4 shadow-2xl shadow-sea-900/15">
+        <p class="max-w-xl text-sm text-sea-600">
             {{ __('site.cookie.text') }}
-            <a href="{{ lroute('pages.show', 'cerez-politikasi') }}">{{ __('site.cookie.policy') }}</a>
+            <a href="{{ lroute('pages.show', 'cerez-politikasi') }}" class="text-brass-700 underline">{{ __('site.cookie.policy') }}</a>
         </p>
-        <div class="d-flex gap-2 flex-shrink-0">
-            <button type="button" class="btn btn-outline-sea btn-sm" data-cookie="reject">
-                {{ __('site.cookie.reject') }}
-            </button>
-            <button type="button" class="btn btn-brass btn-sm" data-cookie="accept">
-                {{ __('site.cookie.accept') }}
-            </button>
+        <div class="flex shrink-0 gap-2">
+            <button type="button" class="btn btn-ghost btn-sm" data-cookie="reject">{{ __('site.cookie.reject') }}</button>
+            <button type="button" class="btn btn-brass btn-sm" data-cookie="accept">{{ __('site.cookie.accept') }}</button>
         </div>
     </div>
 </div>
@@ -27,7 +23,7 @@
     try { choice = localStorage.getItem(KEY); } catch (e) { choice = 'reject'; }
 
     if (!choice) {
-        banner.style.display = 'block';
+        banner.classList.remove('hidden');
     } else if (choice === 'accept') {
         loadAnalytics();
     }
@@ -36,13 +32,11 @@
         button.addEventListener('click', function () {
             var value = this.dataset.cookie;
             try { localStorage.setItem(KEY, value); } catch (e) {}
-            banner.style.display = 'none';
+            banner.classList.add('hidden');
             if (value === 'accept') { loadAnalytics(); }
         });
     });
 
-    // Olcum kimligi yoksa yukleyici hic basilmaz: olu kod ve gereksiz ucuncu
-    // taraf adresi sayfada durmasin.
     function loadAnalytics() {
 @if (setting('google_analytics_id'))
         if (window.__gaLoaded) { return; }

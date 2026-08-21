@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="{{ app()->getLocale() }}" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,128 +24,177 @@
 
     <link rel="icon" href="{{ asset('images/favicon.svg') }}" type="image/svg+xml">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-    <link href="{{ asset('css/site.css') }}?v={{ @filemtime(public_path('css/site.css')) }}" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @include('partials.schema-organization')
     @stack('head')
 </head>
-<body>
+<body class="min-h-screen font-sans antialiased">
 
-<header class="site-header">
-    <nav class="navbar navbar-expand-lg py-2">
-        <div class="container">
-            <a class="navbar-brand" href="{{ lroute('home') }}">
-                <i class="bi bi-life-preserver text-warning me-1"></i>{{ setting('site_name', config('app.name')) }}
+<a href="#content" class="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 btn btn-brass">
+    {{ __('site.nav.skip') }}
+</a>
+
+@php
+    $transparentHeader = trim($__env->yieldContent('header_style')) === 'transparent';
+@endphp
+
+<header x-data="{ open: false, scrolled: false }"
+        x-init="scrolled = window.scrollY > 8; window.addEventListener('scroll', () => scrolled = window.scrollY > 8)"
+        :class="(scrolled || open || {{ $transparentHeader ? 'false' : 'true' }})
+            ? 'bg-white/95 backdrop-blur border-sea-200 text-sea-900'
+            : 'bg-transparent border-transparent text-white'"
+        class="fixed inset-x-0 top-0 z-40 border-b transition-colors duration-300">
+    <div class="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6">
+        <a href="{{ lroute('home') }}" class="flex items-center gap-2 font-serif text-lg font-bold">
+            <i class="bi bi-life-preserver text-brass-500"></i>
+            {{ setting('site_name', config('app.name')) }}
+        </a>
+
+        <nav class="ml-auto hidden items-center gap-1 lg:flex">
+            <a href="{{ lroute('yachts.index') }}"
+               class="rounded-lg px-3 py-2 text-sm font-medium transition hover:text-brass-500 {{ request()->routeIs('*yachts.*') ? 'text-brass-500' : '' }}">
+                {{ __('site.nav.yachts') }}
             </a>
 
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="nav">
-                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('yachts.*') ? 'active' : '' }}"
-                           href="{{ lroute('yachts.index') }}">{{ __('site.nav.yachts') }}</a>
-                    </li>
-                    @foreach ($navPorts as $port)
-                        @if ($loop->first)
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">{{ __('site.nav.destinations') }}</a>
-                                <ul class="dropdown-menu">
-                        @endif
-                                    <li>
-                                        <a class="dropdown-item" href="{{ lroute('locations.show', $port->slug) }}">
-                                            {{ $port->getTranslation('name', app()->getLocale()) }}
-                                        </a>
-                                    </li>
-                        @if ($loop->last)
-                                </ul>
-                            </li>
-                        @endif
-                    @endforeach
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('reservation.lookup') ? 'active' : '' }}"
-                           href="{{ lroute('reservation.lookup') }}">{{ __('site.nav.lookup') }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ lroute('contact') }}">{{ __('site.nav.contact') }}</a>
-                    </li>
-                    <li class="nav-item">
-                        @auth
-                            <a class="nav-link {{ request()->routeIs('account*') ? 'active' : '' }}"
-                               href="{{ lroute('account') }}">
-                                <i class="bi bi-person-circle me-1"></i>{{ __('site.account.title') }}
+            @if ($navPorts->isNotEmpty())
+                <div class="relative" x-data="{ open: false }" @mouseleave="open = false">
+                    <button type="button" @click="open = !open" @mouseenter="open = true"
+                            class="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition hover:text-brass-500">
+                        {{ __('site.nav.destinations') }}
+                        <i class="bi bi-chevron-down text-[10px]"></i>
+                    </button>
+                    <div x-show="open" x-transition x-cloak
+                         class="absolute left-0 top-full w-52 overflow-hidden rounded-xl border border-sea-200 bg-white py-1 text-sea-900 shadow-lg">
+                        @foreach ($navPorts as $port)
+                            <a href="{{ lroute('locations.show', $port->slug) }}"
+                               class="block px-4 py-2 text-sm hover:bg-sea-50 hover:text-brass-700">
+                                {{ $port->getTranslation('name', app()->getLocale()) }}
                             </a>
-                        @else
-                            <a class="nav-link" href="{{ lroute('account.login') }}">{{ __('site.account.login') }}</a>
-                        @endauth
-                    </li>
-                    <li class="nav-item ms-lg-2 lang-switch d-flex align-items-center">
-                        @foreach (config('yacht.locales') as $code => $cfg)
-                            <a href="{{ locale_url($code) }}"
-                               class="{{ app()->getLocale() === $code ? 'active' : '' }}"
-                               hreflang="{{ $code }}">{{ $code }}</a>
                         @endforeach
-                    </li>
-                    <li class="nav-item ms-lg-2">
-                        <a class="btn btn-brass btn-sm px-3" href="{{ lroute('owner.landing') }}">
-                            {{ __('site.nav.list_your_yacht') }}
-                        </a>
-                    </li>
+                    </div>
+                </div>
+            @endif
+
+            <a href="{{ lroute('reservation.lookup') }}"
+               class="rounded-lg px-3 py-2 text-sm font-medium transition hover:text-brass-500">
+                {{ __('site.nav.lookup') }}
+            </a>
+            <a href="{{ lroute('contact') }}"
+               class="rounded-lg px-3 py-2 text-sm font-medium transition hover:text-brass-500">
+                {{ __('site.nav.contact') }}
+            </a>
+
+            @auth
+                <a href="{{ lroute('account') }}"
+                   class="rounded-lg px-3 py-2 text-sm font-medium transition hover:text-brass-500">
+                    <i class="bi bi-person-circle"></i> {{ __('site.account.title') }}
+                </a>
+            @else
+                <a href="{{ lroute('account.login') }}"
+                   class="rounded-lg px-3 py-2 text-sm font-medium transition hover:text-brass-500">
+                    {{ __('site.account.login') }}
+                </a>
+            @endauth
+
+            <span class="mx-1 flex items-center gap-1 text-xs">
+                @foreach (config('yacht.locales') as $code => $cfg)
+                    <a href="{{ locale_url($code) }}" hreflang="{{ $code }}"
+                       class="rounded px-1.5 py-1 uppercase tracking-wider transition {{ app()->getLocale() === $code ? 'bg-brass-100 font-semibold text-brass-700' : 'opacity-70 hover:opacity-100' }}">
+                        {{ $code }}
+                    </a>
+                @endforeach
+            </span>
+
+            <a href="{{ lroute('owner.landing') }}" class="btn btn-brass btn-sm ml-1">
+                {{ __('site.nav.list_your_yacht') }}
+            </a>
+        </nav>
+
+        <button type="button" @click="open = !open"
+                class="ml-auto rounded-lg p-2 text-xl lg:hidden" aria-label="Menü">
+            <i class="bi" :class="open ? 'bi-x' : 'bi-list'"></i>
+        </button>
+    </div>
+
+    {{-- Mobil menü --}}
+    <div x-show="open" x-transition x-cloak class="border-t border-sea-200 bg-white text-sea-900 lg:hidden">
+        <div class="space-y-1 px-4 py-3">
+            <a href="{{ lroute('yachts.index') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.yachts') }}</a>
+            @foreach ($navPorts as $port)
+                <a href="{{ lroute('locations.show', $port->slug) }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">
+                    {{ $port->getTranslation('name', app()->getLocale()) }}
+                </a>
+            @endforeach
+            <a href="{{ lroute('reservation.lookup') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.lookup') }}</a>
+            <a href="{{ lroute('contact') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.contact') }}</a>
+            @auth
+                <a href="{{ lroute('account') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.account.title') }}</a>
+            @else
+                <a href="{{ lroute('account.login') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.account.login') }}</a>
+            @endauth
+            <div class="flex items-center gap-2 px-3 py-2">
+                @foreach (config('yacht.locales') as $code => $cfg)
+                    <a href="{{ locale_url($code) }}"
+                       class="rounded px-2 py-1 text-xs uppercase {{ app()->getLocale() === $code ? 'bg-brass-100 font-semibold text-brass-700' : 'bg-sea-100 text-sea-600' }}">{{ $code }}</a>
+                @endforeach
+            </div>
+            <a href="{{ lroute('owner.landing') }}" class="btn btn-brass btn-sm w-full">{{ __('site.nav.list_your_yacht') }}</a>
+        </div>
+    </div>
+</header>
+
+<main id="content" class="{{ $transparentHeader ? '' : 'pt-16' }}">
+    @if (session('status'))
+        <div class="mx-auto max-w-7xl px-4 pt-6 sm:px-6">
+            <div class="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                <i class="bi bi-check-circle"></i>{{ session('status') }}
+            </div>
+        </div>
+    @endif
+
+    @if ($errors->any() && ! request()->routeIs('*yachts.show'))
+        <div class="mx-auto max-w-7xl px-4 pt-6 sm:px-6">
+            <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                <ul class="list-disc space-y-1 pl-5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
                 </ul>
             </div>
         </div>
-    </nav>
-</header>
+    @endif
 
-@if (session('status'))
-    <div class="container mt-3">
-        <div class="alert alert-success d-flex align-items-center gap-2 mb-0">
-            <i class="bi bi-check-circle"></i>{{ session('status') }}
-        </div>
-    </div>
-@endif
-
-@if ($errors->any() && ! request()->routeIs('yachts.show'))
-    <div class="container mt-3">
-        <div class="alert alert-danger mb-0">
-            <ul class="mb-0 ps-3">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    </div>
-@endif
-
-<main>
     @yield('content')
 </main>
 
-<footer class="site-footer">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <h6>{{ setting('site_name', config('app.name')) }}</h6>
-                <p class="mb-2 small">{{ __('site.footer.tagline') }}</p>
-                @if (setting('site_phone'))
-                    <p class="mb-1 small"><i class="bi bi-telephone me-2"></i>{{ setting('site_phone') }}</p>
-                @endif
-                @if (setting('site_email'))
-                    <p class="mb-0 small"><i class="bi bi-envelope me-2"></i>{{ setting('site_email') }}</p>
-                @endif
+<footer class="mt-24 bg-sea-950 text-sea-300">
+    <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+        <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+            <div>
+                <div class="mb-3 flex items-center gap-2 font-serif text-lg font-bold text-white">
+                    <i class="bi bi-life-preserver text-brass-500"></i>
+                    {{ setting('site_name', config('app.name')) }}
+                </div>
+                <p class="text-sm leading-relaxed">{{ __('site.footer.tagline') }}</p>
+                <div class="mt-4 space-y-1 text-sm">
+                    @if (setting('site_phone'))
+                        <p><i class="bi bi-telephone mr-2 text-brass-500"></i>{{ setting('site_phone') }}</p>
+                    @endif
+                    @if (setting('site_email'))
+                        <p><i class="bi bi-envelope mr-2 text-brass-500"></i>{{ setting('site_email') }}</p>
+                    @endif
+                </div>
             </div>
 
-            <div class="col-6 col-lg-3">
-                <h6>{{ __('site.footer.ports') }}</h6>
-                <ul class="list-unstyled small mb-0">
+            <div>
+                <h2 class="mb-3 font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-white">
+                    {{ __('site.footer.ports') }}
+                </h2>
+                <ul class="space-y-2 text-sm">
                     @foreach ($navPorts as $port)
-                        <li class="mb-1">
-                            <a href="{{ lroute('locations.show', $port->slug) }}">
+                        <li>
+                            <a href="{{ lroute('locations.show', $port->slug) }}" class="transition hover:text-white">
                                 {{ $port->getTranslation('name', app()->getLocale()) }}
                             </a>
                         </li>
@@ -153,12 +202,14 @@
                 </ul>
             </div>
 
-            <div class="col-6 col-lg-2">
-                <h6>{{ __('site.footer.company') }}</h6>
-                <ul class="list-unstyled small mb-0">
+            <div>
+                <h2 class="mb-3 font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-white">
+                    {{ __('site.footer.company') }}
+                </h2>
+                <ul class="space-y-2 text-sm">
                     @foreach ($footerPages as $page)
-                        <li class="mb-1">
-                            <a href="{{ lroute('pages.show', $page->slug) }}">
+                        <li>
+                            <a href="{{ lroute('pages.show', $page->slug) }}" class="transition hover:text-white">
                                 {{ $page->getTranslation('title', app()->getLocale()) }}
                             </a>
                         </li>
@@ -166,26 +217,26 @@
                 </ul>
             </div>
 
-            <div class="col-lg-3">
-                <h6>{{ __('site.footer.owners') }}</h6>
-                <ul class="list-unstyled small mb-0">
-                    <li class="mb-1"><a href="{{ lroute('owner.landing') }}">{{ __('site.nav.list_your_yacht') }}</a></li>
-                    <li class="mb-1"><a href="/yat-sahibi">{{ __('site.footer.owner_login') }}</a></li>
-                    <li class="mb-1"><a href="{{ lroute('reservation.lookup') }}">{{ __('site.nav.lookup') }}</a></li>
+            <div>
+                <h2 class="mb-3 font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-white">
+                    {{ __('site.footer.owners') }}
+                </h2>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="{{ lroute('owner.landing') }}" class="transition hover:text-white">{{ __('site.nav.list_your_yacht') }}</a></li>
+                    <li><a href="/yat-sahibi" class="transition hover:text-white">{{ __('site.footer.owner_login') }}</a></li>
+                    <li><a href="{{ lroute('reservation.lookup') }}" class="transition hover:text-white">{{ __('site.nav.lookup') }}</a></li>
                 </ul>
             </div>
         </div>
 
-        <div class="foot-bottom d-flex flex-wrap justify-content-between gap-2">
+        <div class="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs">
             <span>&copy; {{ date('Y') }} {{ setting('site_name', config('app.name')) }}</span>
-            <span>{{ __('site.footer.no_payment') }}</span>
+            <span class="text-sea-400">{{ __('site.footer.no_payment') }}</span>
         </div>
     </div>
 </footer>
 
 @include('partials.cookie-consent')
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
 @stack('scripts')
 </body>
 </html>

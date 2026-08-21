@@ -7,60 +7,46 @@
 @section('title', $reservation->code.' — '.setting('site_name', config('app.name')))
 
 @section('content')
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-6">
-            <h1 class="h4 mb-1">{{ $reservation->yacht->getTranslation('name', $locale) }}</h1>
-            <p class="text-muted-2">{{ $reservation->code }}</p>
+<div class="mx-auto max-w-2xl px-4 py-14 sm:px-6">
+    <h1 class="text-2xl font-bold">{{ $reservation->yacht->getTranslation('name', $locale) }}</h1>
+    <p class="mb-6 font-mono text-sm text-sea-500">{{ $reservation->code }}</p>
 
-            <div class="panel">
-                <div class="spec-grid mb-3">
-                    <div>
-                        <div class="k">{{ __('site.booking.start') }}</div>
-                        <div class="v">{{ $reservation->starts_at->format('d.m.Y H:i') }}</div>
-                    </div>
-                    <div>
-                        <div class="k">{{ __('site.booking.end') }}</div>
-                        <div class="v">{{ $reservation->ends_at->format('d.m.Y H:i') }}</div>
-                    </div>
-                    <div>
-                        <div class="k">{{ __('site.booking.guests') }}</div>
-                        <div class="v">{{ $reservation->guests }}</div>
-                    </div>
-                    <div>
-                        <div class="k">{{ __('site.booking.estimate') }}</div>
-                        <div class="v">{{ money($reservation->estimated_total, $reservation->currency) }}</div>
-                    </div>
-                    <div>
-                        <div class="k">{{ __('site.booking.name') }}</div>
-                        <div class="v">{{ $reservation->customer_name }}</div>
-                    </div>
-                    <div>
-                        <div class="k">{{ __('site.booking.phone') }}</div>
-                        <div class="v">{{ $reservation->customer_phone }}</div>
-                    </div>
+    <div class="panel">
+        <dl class="mb-5 grid grid-cols-2 gap-4 sm:grid-cols-3">
+            @foreach ([
+                __('site.booking.start') => $reservation->starts_at->format('d.m.Y H:i'),
+                __('site.booking.end') => $reservation->ends_at->format('d.m.Y H:i'),
+                __('site.booking.guests') => $reservation->guests,
+                __('site.booking.estimate') => money($reservation->estimated_total, $reservation->currency),
+                __('site.booking.name') => $reservation->customer_name,
+                __('site.booking.phone') => $reservation->customer_phone,
+            ] as $label => $value)
+                <div class="rounded-lg bg-sea-50 px-3 py-2.5">
+                    <dt class="text-[10px] uppercase tracking-wider text-sea-500">{{ $label }}</dt>
+                    <dd class="mt-0.5 font-semibold">{{ $value }}</dd>
                 </div>
+            @endforeach
+        </dl>
 
-                @if ($reservation->message)
-                    <p class="small text-muted-2">{{ $reservation->message }}</p>
-                @endif
+        @if ($reservation->message)
+            <p class="mb-5 rounded-lg bg-sea-50 px-4 py-3 text-sm text-sea-700">{{ $reservation->message }}</p>
+        @endif
 
-                <form method="POST" action="{{ lroute('reservation.decide', ['code' => $reservation->code, 'token' => $reservation->access_token]) }}"
-                      class="vstack gap-2">
-                    @csrf
-                    <textarea name="reason" rows="2" class="form-control form-control-sm"
-                              placeholder="{{ __('site.booking.message') }}"></textarea>
-                    <div class="d-flex gap-2">
-                        <button type="submit" name="decision" value="approve" class="btn btn-brass flex-fill">
-                            <i class="bi bi-check2 me-1"></i>Onayla
-                        </button>
-                        <button type="submit" name="decision" value="reject" class="btn btn-outline-danger flex-fill">
-                            <i class="bi bi-x me-1"></i>Reddet
-                        </button>
-                    </div>
-                </form>
+        <form method="POST"
+              action="{{ lroute('reservation.decide', ['code' => $reservation->code, 'token' => $reservation->access_token]) }}"
+              class="space-y-3">
+            @csrf
+            <textarea name="reason" rows="2" class="field" placeholder="{{ __('site.booking.message') }}"></textarea>
+            <div class="flex gap-3">
+                <button type="submit" name="decision" value="approve" class="btn btn-brass flex-1">
+                    <i class="bi bi-check2"></i>{{ __('site.decision.approve') }}
+                </button>
+                <button type="submit" name="decision" value="reject"
+                        class="btn flex-1 border border-red-200 bg-white text-red-700 hover:bg-red-50">
+                    <i class="bi bi-x"></i>{{ __('site.decision.reject') }}
+                </button>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 @endsection

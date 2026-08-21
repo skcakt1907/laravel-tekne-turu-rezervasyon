@@ -46,7 +46,12 @@ return [
         'accept' => 'Accept',
         'reject' => 'Essential only',
     ],
+    'decision' => [
+        'approve' => 'Approve',
+        'reject' => 'Decline',
+    ],
     'nav' => [
+        'skip' => 'Skip to content',
         'yachts' => 'Yachts',
         'destinations' => 'Destinations',
         'lookup' => 'Find My Booking',
@@ -66,6 +71,15 @@ return [
         'no_payment' => 'No payment on site — request-based booking',
     ],
     'home' => [
+        'port_count' => '{0} no yachts|{1} 1 yacht|[2,*] :count yachts',
+        'eyebrow' => 'No payment · Direct from the owner',
+        'featured_title' => 'Yachts ready to sail',
+        'how_title' => 'Four steps from request to voyage',
+        'ports_title' => 'Where would you like to set off?',
+        'faq_title' => 'Frequently asked',
+        'stat_yachts' => 'yachts',
+        'stat_ports' => 'ports',
+        'stat_upfront' => 'upfront',
         'hero_title' => 'Your blue voyage is one request away',
         'hero_sub' => 'Compare yachts along the Turkish coast, pick your dates, and send a booking request without paying anything.',
         'featured' => 'Featured Yachts',
@@ -117,6 +131,7 @@ return [
         'newest' => 'Newest',
     ],
     'card' => [
+        'featured' => 'Featured',
         'from' => 'from :price',
         'per_hour' => 'per hour',
         'per_day' => 'per day',
@@ -125,6 +140,7 @@ return [
         'cabins' => ':count cabins',
     ],
     'detail' => [
+        'no_photo' => 'No photos yet',
         'specs' => 'Specifications',
         'about' => 'About This Yacht',
         'rules' => 'Rules',

@@ -2,50 +2,49 @@
 
 @section('title', __('site.owner_landing.title').' — '.setting('site_name', config('app.name')))
 @section('meta_description', __('site.owner_landing.sub'))
+@section('header_style', 'transparent')
 
 @section('content')
-<section class="hero">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8">
-                <h1 class="mb-3">{{ __('site.owner_landing.title') }}</h1>
-                <p class="lead mb-4">{{ __('site.owner_landing.sub') }}</p>
-                <a href="/yat-sahibi/register" class="btn btn-brass px-4">{{ __('site.owner_landing.cta') }}</a>
-            </div>
-        </div>
+<section class="bg-hero relative overflow-hidden pt-32 pb-24 text-white lg:pt-40">
+    <div class="mx-auto max-w-4xl px-4 text-center sm:px-6">
+        <p class="eyebrow mb-4 text-brass-300">{{ __('site.nav.list_your_yacht') }}</p>
+        <h1 class="text-4xl font-bold leading-tight sm:text-5xl">{{ __('site.owner_landing.title') }}</h1>
+        <p class="mx-auto mt-5 max-w-2xl text-lg text-sea-200">{{ __('site.owner_landing.sub') }}</p>
+        <a href="/yat-sahibi/register" class="btn btn-brass mt-8">
+            {{ __('site.owner_landing.cta') }}<i class="bi bi-arrow-right"></i>
+        </a>
     </div>
 </section>
 
-<section class="container py-5">
-    <div class="row g-3">
-        @foreach (__('site.owner_benefits') as $benefit)
-            <div class="col-12 col-md-6 col-lg-3">
-                <div class="step-card">
-                    <h3 class="h6 fw-bold mb-2">{{ $benefit[0] }}</h3>
-                    <p class="small text-muted-2 mb-0">{{ $benefit[1] }}</p>
+<section class="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        @foreach (__('site.owner_benefits') as $i => $benefit)
+            <div class="panel">
+                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-brass-100 text-brass-700">
+                    <i class="bi {{ ['bi-calendar-check','bi-whatsapp','bi-tags','bi-graph-up'][$i] ?? 'bi-check2' }}"></i>
                 </div>
+                <h2 class="mb-1.5 font-sans text-base font-semibold">{{ $benefit[0] }}</h2>
+                <p class="text-sm leading-relaxed text-sea-600">{{ $benefit[1] }}</p>
             </div>
         @endforeach
     </div>
 </section>
 
 @if ($faqs->isNotEmpty())
-    <section class="container pb-5">
-        <h2 class="section-title mb-3">{{ __('site.home.faq') }}</h2>
-        <div class="accordion" id="owner-faq">
-            @foreach ($faqs as $faq)
-                <div class="accordion-item">
-                    <h3 class="accordion-header">
-                        <button class="accordion-button {{ $loop->first ? '' : 'collapsed' }}" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#ofaq-{{ $faq->id }}">
+    <section class="border-t border-sea-200 bg-white py-20">
+        <div class="mx-auto max-w-3xl px-4 sm:px-6">
+            <h2 class="mb-8 text-center text-3xl font-bold">{{ __('site.home.faq') }}</h2>
+            <div class="divide-y divide-sea-200 border-y border-sea-200">
+                @foreach ($faqs as $faq)
+                    <details class="group py-4" @if ($loop->first) open @endif>
+                        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold">
                             {{ $faq->getTranslation('question', app()->getLocale()) }}
-                        </button>
-                    </h3>
-                    <div id="ofaq-{{ $faq->id }}" class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}" data-bs-parent="#owner-faq">
-                        <div class="accordion-body text-muted-2">{{ $faq->getTranslation('answer', app()->getLocale()) }}</div>
-                    </div>
-                </div>
-            @endforeach
+                            <i class="bi bi-plus-lg shrink-0 text-brass-600 transition group-open:rotate-45"></i>
+                        </summary>
+                        <p class="mt-3 text-sm leading-relaxed text-sea-600">{{ $faq->getTranslation('answer', app()->getLocale()) }}</p>
+                    </details>
+                @endforeach
+            </div>
         </div>
     </section>
 @endif

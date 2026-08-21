@@ -1,32 +1,25 @@
 @extends('layouts.site')
 
 @section('robots', 'noindex, nofollow')
-
 @section('title', __('site.lookup.title').' — '.setting('site_name', config('app.name')))
 
 @section('content')
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-5">
-            <h1 class="h3 mb-1">{{ __('site.lookup.title') }}</h1>
-            <p class="text-muted-2">{{ __('site.lookup.sub') }}</p>
+<div class="mx-auto max-w-md px-4 py-16 sm:px-6">
+    <h1 class="mb-2 text-3xl font-bold">{{ __('site.lookup.title') }}</h1>
+    <p class="mb-6 text-sm text-sea-600">{{ __('site.lookup.sub') }}</p>
 
-            <div class="panel">
-                <form method="POST" action="{{ lroute('reservation.lookup.submit') }}" class="vstack gap-3">
-                    @csrf
-                    <div>
-                        <label class="form-label small">{{ __('site.lookup.code') }}</label>
-                        <input type="text" name="code" class="form-control" placeholder="YK-26-XXXXX"
-                               value="{{ old('code') }}" required>
-                    </div>
-                    <div>
-                        <label class="form-label small">{{ __('site.lookup.email') }}</label>
-                        <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
-                    </div>
-                    <button type="submit" class="btn btn-brass">{{ __('site.lookup.submit') }}</button>
-                </form>
-            </div>
+    <form method="POST" action="{{ lroute('reservation.lookup.submit') }}" class="panel space-y-4">
+        @csrf
+        <div>
+            <label class="label" for="q-code">{{ __('site.lookup.code') }}</label>
+            <input type="text" name="code" id="q-code" class="field font-mono" placeholder="YK-26-XXXXX"
+                   value="{{ old('code') }}" required autofocus>
         </div>
-    </div>
+        <div>
+            <label class="label" for="q-email">{{ __('site.lookup.email') }}</label>
+            <input type="email" name="email" id="q-email" class="field" value="{{ old('email') }}" required>
+        </div>
+        <button type="submit" class="btn btn-brass w-full">{{ __('site.lookup.submit') }}</button>
+    </form>
 </div>
 @endsection

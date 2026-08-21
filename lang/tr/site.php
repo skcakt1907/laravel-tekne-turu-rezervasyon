@@ -46,7 +46,12 @@ return [
         'accept' => 'Kabul et',
         'reject' => 'Sadece zorunlu',
     ],
+    'decision' => [
+        'approve' => 'Onayla',
+        'reject' => 'Reddet',
+    ],
     'nav' => [
+        'skip' => 'İçeriğe geç',
         'yachts' => 'Yatlar',
         'destinations' => 'Limanlar',
         'lookup' => 'Rezervasyon Sorgula',
@@ -66,6 +71,15 @@ return [
         'no_payment' => 'Sitede ödeme alınmaz — talep bazlı rezervasyon',
     ],
     'home' => [
+        'port_count' => '{0} yat yok|{1} yat|[2,*] :count yat',
+        'eyebrow' => 'Ödeme yok · Doğrudan yat sahibinden',
+        'featured_title' => 'Denize hazır tekneler',
+        'how_title' => 'Talepten yolculuğa dört adım',
+        'ports_title' => 'Nereden yola çıkmak istersiniz?',
+        'faq_title' => 'Merak edilenler',
+        'stat_yachts' => 'yat',
+        'stat_ports' => 'liman',
+        'stat_upfront' => 'ön ödeme',
         'hero_title' => 'Mavi yolculuğunuz bir talep uzağınızda',
         'hero_sub' => 'Türkiye kıyılarındaki yatları karşılaştırın, tarih seçin, ödeme yapmadan rezervasyon talebi gönderin.',
         'featured' => 'Öne Çıkan Yatlar',
@@ -117,6 +131,7 @@ return [
         'newest' => 'En yeni',
     ],
     'card' => [
+        'featured' => 'Öne çıkan',
         'from' => ':price fiyatından başlayan',
         'per_hour' => 'saatlik',
         'per_day' => 'günlük',
@@ -125,6 +140,7 @@ return [
         'cabins' => ':count kabin',
     ],
     'detail' => [
+        'no_photo' => 'Fotoğraf henüz eklenmedi',
         'specs' => 'Teknik Bilgiler',
         'about' => 'Yat Hakkında',
         'rules' => 'Kurallar',
