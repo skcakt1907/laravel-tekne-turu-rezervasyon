@@ -9,6 +9,7 @@ use App\Events\ReservationCancelled;
 use App\Events\ReservationRejected;
 use App\Events\ReservationRequested;
 use App\Models\BlockedPeriod;
+use App\Models\Consent;
 use App\Models\Reservation;
 use App\Models\User;
 use App\Models\Yacht;
@@ -77,9 +78,33 @@ class ReservationService
 
         $this->log($reservation, 'created', null, ReservationStatus::Pending, $data['channel'] ?? 'web', $data['ip'] ?? null);
 
+        // Riza kayitlari bildirimden ONCE yazilir: WhatsApp gonderimi acik riza
+        // kaydini arar, sonra yazilirsa musteriye hicbir zaman mesaj gitmez.
+        $this->recordConsents($reservation, $data);
+
         ReservationRequested::dispatch($reservation);
 
         return $reservation;
+    }
+
+    /**
+     * KVKK ve WhatsApp acik riza kayitlari (tarih + IP ile).
+     *
+     * @param  array<int, string>  $data['consents']
+     */
+    private function recordConsents(Reservation $reservation, array $data): void
+    {
+        foreach ($data['consents'] ?? [] as $type) {
+            Consent::create([
+                'subject_type' => Reservation::class,
+                'subject_id' => $reservation->id,
+                'email' => $reservation->customer_email,
+                'phone' => $reservation->customer_phone,
+                'type' => $type,
+                'ip' => $data['ip'] ?? null,
+                'user_agent' => isset($data['user_agent']) ? substr((string) $data['user_agent'], 0, 255) : null,
+            ]);
+        }
     }
 
     /** Adım 3 — onay. Tarih burada kapanır. */

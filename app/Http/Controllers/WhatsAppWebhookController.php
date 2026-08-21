@@ -1,0 +1,166 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\MessageLog;
+use App\Models\Reservation;
+use App\Services\ReservationService;
+use App\Services\WhatsApp\TemplateRegistry;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Throwable;
+
+/**
+ * Meta Cloud API webhook'u — akışın kalbi.
+ *
+ * İki tür olay gelir:
+ *  - `messages`: yat sahibinin bastığı Onayla/Reddet butonu (hızlı yanıt)
+ *  - `statuses`: gönderdiğimiz mesajın teslim/okundu/hata durumu
+ *
+ * Rota CSRF'den muaf (bootstrap/app.php). Meta imzayı `X-Hub-Signature-256`
+ * ile gönderir; app secret tanımlıysa doğrulanır.
+ */
+class WhatsAppWebhookController extends Controller
+{
+    public function __construct(private ReservationService $reservations) {}
+
+    /** Meta'nın webhook doğrulama çağrısı (bir kez, kurulum sırasında). */
+    public function verify(Request $request)
+    {
+        $token = config('whatsapp.verify_token');
+
+        if (blank($token) || $request->query('hub_verify_token') !== $token) {
+            abort(403);
+        }
+
+        return response((string) $request->query('hub_challenge'), 200)
+            ->header('Content-Type', 'text/plain');
+    }
+
+    public function handle(Request $request)
+    {
+        // Meta yeniden denemesin diye her durumda 200 döneriz; hatayı kendimiz loglarız.
+        try {
+            foreach ($request->input('entry', []) as $entry) {
+                foreach ($entry['changes'] ?? [] as $change) {
+                    $value = $change['value'] ?? [];
+
+                    foreach ($value['statuses'] ?? [] as $status) {
+                        $this->recordStatus($status);
+                    }
+
+                    foreach ($value['messages'] ?? [] as $message) {
+                        $this->handleMessage($message);
+                    }
+                }
+            }
+        } catch (Throwable $e) {
+            Log::error('WhatsApp webhook hatası', ['error' => $e->getMessage()]);
+        }
+
+        return response()->json(['received' => true]);
+    }
+
+    /** Teslim/okundu/hata bilgisini mesaj kaydına işler. */
+    private function recordStatus(array $status): void
+    {
+        $log = MessageLog::where('provider_message_id', $status['id'] ?? '')->first();
+
+        if (! $log) {
+            return;
+        }
+
+        $attributes = match ($status['status'] ?? '') {
+            'delivered' => ['status' => 'delivered', 'delivered_at' => now()],
+            'read' => ['status' => 'read', 'read_at' => now()],
+            'failed' => [
+                'status' => 'failed',
+                'error' => $status['errors'][0]['title'] ?? 'Bilinmeyen hata',
+            ],
+            'sent' => ['status' => 'sent', 'sent_at' => now()],
+            default => null,
+        };
+
+        if ($attributes) {
+            $log->update($attributes);
+        }
+    }
+
+    /** Yat sahibinin buton yanıtı — rezervasyonu panelsiz onaylar/reddeder. */
+    private function handleMessage(array $message): void
+    {
+        if (($message['type'] ?? '') !== 'button') {
+            return; // serbest metin: Chatwoot tarafında karşılanır
+        }
+
+        $payload = $message['button']['payload'] ?? $message['button']['text'] ?? '';
+        $contextId = $message['context']['id'] ?? null;
+
+        $reservation = $this->resolveReservation($contextId, $message['from'] ?? null);
+
+        if (! $reservation) {
+            Log::warning('WhatsApp buton yanıtı eşleşmedi', ['context' => $contextId]);
+
+            return;
+        }
+
+        $decision = $this->decisionFrom($payload);
+
+        if (! $decision) {
+            return;
+        }
+
+        try {
+            if ($decision === 'approve') {
+                $this->reservations->approve($reservation, $reservation->owner, 'whatsapp');
+            } else {
+                $this->reservations->reject($reservation, null, $reservation->owner, 'whatsapp');
+            }
+        } catch (Throwable $e) {
+            // Tarih kapanmışsa veya talep zaten yanıtlanmışsa: sessizce logla.
+            Log::info('WhatsApp buton yanıtı uygulanamadı', [
+                'reservation' => $reservation->code,
+                'reason' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /** Önce mesaj kaydı üzerinden, olmazsa numaranın bekleyen tek talebinden. */
+    private function resolveReservation(?string $contextId, ?string $from): ?Reservation
+    {
+        if ($contextId) {
+            $log = MessageLog::where('provider_message_id', $contextId)
+                ->where('related_type', Reservation::class)
+                ->first();
+
+            if ($log?->related_id) {
+                return Reservation::find($log->related_id);
+            }
+        }
+
+        if (! $from) {
+            return null;
+        }
+
+        $pending = Reservation::pending()
+            ->whereHas('owner', fn ($q) => $q->whereRaw(
+                "replace(replace(replace(coalesce(whatsapp_no, phone), '+', ''), ' ', ''), '-', '') = ?",
+                [$from]
+            ))
+            ->latest('id')
+            ->get();
+
+        return $pending->count() === 1 ? $pending->first() : null;
+    }
+
+    private function decisionFrom(string $payload): ?string
+    {
+        $normalized = mb_strtoupper(trim($payload), 'UTF-8');
+
+        return match (true) {
+            str_contains($normalized, TemplateRegistry::BUTTON_APPROVE), str_contains($normalized, 'APPROVE') => 'approve',
+            str_contains($normalized, TemplateRegistry::BUTTON_REJECT), str_contains($normalized, 'DECLINE') => 'reject',
+            default => null,
+        };
+    }
+}

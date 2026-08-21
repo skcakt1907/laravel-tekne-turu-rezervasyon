@@ -66,21 +66,9 @@ class ReservationController extends Controller
             'guests' => $data['guests'],
             'message' => $data['message'] ?? null,
             'ip' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'consents' => [Consent::TYPE_KVKK, Consent::TYPE_WHATSAPP],
         ], $data['extras'] ?? []);
-
-        foreach ([Consent::TYPE_KVKK, Consent::TYPE_WHATSAPP] as $type) {
-            Consent::create([
-                'subject_type' => Reservation::class,
-                'subject_id' => $reservation->id,
-                'email' => $reservation->customer_email,
-                'phone' => $reservation->customer_phone,
-                'type' => $type,
-                'ip' => $request->ip(),
-                'user_agent' => substr((string) $request->userAgent(), 0, 255),
-            ]);
-        }
-
-        // TODO Faz 3/4: bildirim gönderimi (e-posta + WhatsApp)
 
         return redirect()
             ->to(lroute('reservation.show', ['code' => $reservation->code]).'?token='.$reservation->access_token)

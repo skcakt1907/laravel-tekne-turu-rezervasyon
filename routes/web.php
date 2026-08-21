@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\WhatsAppWebhookController;
 use App\Http\Controllers\YachtController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,3 +52,10 @@ foreach (array_slice(array_keys(config('yacht.locales')), 1) as $locale) {
         ->middleware('setlocale')
         ->group($site);
 }
+
+/*
+| Meta Cloud API webhook'u — dil onekinden ve CSRF'den bagimsiz.
+| Meta'ya verilecek adres: https://alan-adi/webhook/whatsapp
+*/
+Route::get('webhook/whatsapp', [WhatsAppWebhookController::class, 'verify']);
+Route::post('webhook/whatsapp', [WhatsAppWebhookController::class, 'handle']);
