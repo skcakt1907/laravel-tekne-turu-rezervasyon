@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\WhatsAppWebhookController;
 use App\Http\Controllers\YachtController;
 use Illuminate\Support\Facades\Route;
@@ -72,6 +73,9 @@ foreach (array_slice(array_keys(config('yacht.locales')), 1) as $locale) {
         ->middleware('setlocale')
         ->group($site);
 }
+
+// Site haritasi - dil onekinden bagimsiz, tum dilleri icerir
+Route::get('sitemap.xml', SitemapController::class)->name('sitemap');
 
 /*
 | Meta Cloud API webhook'u — dil onekinden ve CSRF'den bagimsiz.

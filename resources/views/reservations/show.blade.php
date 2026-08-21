@@ -1,5 +1,7 @@
 @extends('layouts.site')
 
+@section('robots', 'noindex, nofollow')
+
 @php
     $locale = app()->getLocale();
     $status = $reservation->status;

@@ -1,5 +1,7 @@
 @extends('layouts.site')
 
+@section('robots', 'noindex, nofollow')
+
 @php $locale = app()->getLocale(); @endphp
 
 @section('title', $reservation->code.' — '.setting('site_name', config('app.name')))

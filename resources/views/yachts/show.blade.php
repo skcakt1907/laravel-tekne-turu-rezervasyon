@@ -30,6 +30,10 @@
 @section('og_type', 'product')
 @section('og_image', $cover)
 
+@push('head')
+    @include('partials.schema-yacht', ['yacht' => $yacht])
+@endpush
+
 @section('content')
 
 <div class="container py-4">

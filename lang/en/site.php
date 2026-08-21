@@ -40,6 +40,12 @@ return [
         'optional_note' => 'Membership is optional; you can also look up a booking with its code.',
         'save' => 'Save',
     ],
+    'cookie' => [
+        'text' => 'We use cookies to improve the site. Non-essential cookies run only with your consent.',
+        'policy' => 'Cookie policy',
+        'accept' => 'Accept',
+        'reject' => 'Essential only',
+    ],
     'nav' => [
         'yachts' => 'Yachts',
         'destinations' => 'Destinations',

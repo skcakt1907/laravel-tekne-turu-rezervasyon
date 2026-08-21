@@ -1,5 +1,7 @@
 @extends('layouts.site')
 
+@section('robots', 'noindex, nofollow')
+
 @section('title', __('site.account.register').' — '.setting('site_name', config('app.name')))
 
 @section('content')

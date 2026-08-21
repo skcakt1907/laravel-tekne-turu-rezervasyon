@@ -40,6 +40,12 @@ return [
         'optional_note' => 'Üyelik zorunlu değildir; rezervasyon kodunuzla da sorgulayabilirsiniz.',
         'save' => 'Kaydet',
     ],
+    'cookie' => [
+        'text' => 'Sitemizi geliştirmek için çerez kullanıyoruz. Zorunlu çerezler dışındakiler yalnızca onayınızla çalışır.',
+        'policy' => 'Çerez politikası',
+        'accept' => 'Kabul et',
+        'reject' => 'Sadece zorunlu',
+    ],
     'nav' => [
         'yachts' => 'Yatlar',
         'destinations' => 'Limanlar',

@@ -8,7 +8,6 @@ use App\Models\CommissionSetting;
 use App\Models\Faq;
 use App\Models\Feature;
 use App\Models\Location;
-use App\Models\Page;
 use App\Models\Setting;
 use App\Models\User;
 use App\Models\Yacht;
@@ -60,6 +59,8 @@ class DatabaseSeeder extends Seeder
             'default_currency' => 'EUR',
             'estimate_notice_tr' => 'Tahmini tutardır, kesin fiyat onay sırasında netleşir.',
             'estimate_notice_en' => 'This is an estimate; the final price is confirmed upon approval.',
+            'site_description' => 'Türkiye kıyılarında yat kiralama. Ödeme yapmadan rezervasyon talebi gönderin.',
+            'google_analytics_id' => '',
         ];
 
         foreach ($defaults as $key => $value) {
@@ -168,26 +169,7 @@ class DatabaseSeeder extends Seeder
 
     private function content(): void
     {
-        $pages = [
-            'hakkimizda' => ['Hakkımızda', 'About us'],
-            'kullanim-kosullari' => ['Kullanım Koşulları', 'Terms of Use'],
-            'kvkk' => ['KVKK Aydınlatma Metni', 'Privacy Notice'],
-            'gizlilik' => ['Gizlilik Politikası', 'Privacy Policy'],
-            'cerez-politikasi' => ['Çerez Politikası', 'Cookie Policy'],
-            'iptal-politikasi' => ['İptal Politikası', 'Cancellation Policy'],
-        ];
-
-        $sort = 0;
-        foreach ($pages as $slug => [$tr, $en]) {
-            Page::updateOrCreate(
-                ['slug' => $slug],
-                [
-                    'title' => ['tr' => $tr, 'en' => $en],
-                    'body' => ['tr' => '<p>İçerik hazırlanıyor.</p>', 'en' => '<p>Content coming soon.</p>'],
-                    'sort' => $sort++,
-                ]
-            );
-        }
+        $this->call(LegalPagesSeeder::class);
 
         $faqs = [
             [

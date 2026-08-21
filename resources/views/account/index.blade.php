@@ -1,5 +1,7 @@
 @extends('layouts.site')
 
+@section('robots', 'noindex, nofollow')
+
 @php $locale = app()->getLocale(); @endphp
 
 @section('title', __('site.account.title').' — '.setting('site_name', config('app.name')))

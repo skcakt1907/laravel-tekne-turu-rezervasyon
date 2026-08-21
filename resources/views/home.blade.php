@@ -1,6 +1,11 @@
 @extends('layouts.site')
 
-@section('title', setting('site_name', config('app.name')).' — '.__('site.list.title'))
+@php
+    $siteName = setting('site_name', config('app.name'));
+    $tagline = __('site.list.title');
+@endphp
+
+@section('title', str_contains(mb_strtolower($siteName), mb_strtolower($tagline)) ? $siteName : $siteName.' — '.$tagline)
 @section('meta_description', __('site.home.hero_sub'))
 
 @section('content')

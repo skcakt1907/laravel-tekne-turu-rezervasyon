@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Faq;
 use App\Models\Location;
 use App\Models\Yacht;
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
+    /** Ana sayfa sorgulari 10 dakika onbellekte; yat kaydedilince temizlenir (YachtObserver). */
     public function __invoke()
     {
-        return view('home', [
+        $data = Cache::remember('home.'.app()->getLocale(), now()->addMinutes(10), fn () => [
             'featured' => Yacht::bookable()
                 ->with(['photos', 'location'])
                 ->orderByDesc('is_featured')
@@ -37,5 +39,7 @@ class HomeController extends Controller
                 ->orderBy('sort')
                 ->get(),
         ]);
+
+        return view('home', $data);
     }
 }

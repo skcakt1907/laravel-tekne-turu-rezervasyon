@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>@yield('title', setting('site_name', config('app.name')))</title>
+    <meta name="robots" content="@yield('robots', 'index, follow')">
     <meta name="description" content="@yield('meta_description', setting('site_description', ''))">
     <link rel="canonical" href="{{ url()->current() }}">
 
@@ -28,6 +29,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link href="{{ asset('css/site.css') }}?v={{ @filemtime(public_path('css/site.css')) }}" rel="stylesheet">
 
+    @include('partials.schema-organization')
     @stack('head')
 </head>
 <body>
@@ -181,7 +183,9 @@
     </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+@include('partials.cookie-consent')
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
 @stack('scripts')
 </body>
 </html>
