@@ -22,17 +22,25 @@
 @theme {
     --font-family-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
 
-    --color-gray-50: #f2f7f8;
-    --color-gray-100: #e2ecef;
-    --color-gray-200: #c6d9de;
-    --color-gray-300: #9cbcc5;
-    --color-gray-400: #6b98a5;
-    --color-gray-500: #4d7c8a;
-    --color-gray-600: #3f6674;
-    --color-gray-700: #375561;
-    --color-gray-800: #223a44;
-    --color-gray-900: #16303a;
-    --color-gray-950: #0b1f27;
+    /*
+    | Notr olcek: neredeyse gri, yalnizca hafif SOGUK bir ima var.
+    |
+    | Onceki hali doygun deniz mavisiydi ve panel camurlu goruniyordu.
+    | Referans temalar (Amber Slate #1a1a1a, Elegant Luxury #1c1917) doygunlugu
+    | notrlerde DEGIL, yalnizca vurgu renginde kullaniyor. Doygun olan tek renk
+    | pirinc olmali; yuzeyler geri cekilmeli.
+    */
+    --color-gray-50: #f6f7f8;
+    --color-gray-100: #eceef0;
+    --color-gray-200: #d8dce0;
+    --color-gray-300: #b3babf;
+    --color-gray-400: #8b949b;
+    --color-gray-500: #6b757d;
+    --color-gray-600: #525b62;
+    --color-gray-700: #3d454b;
+    --color-gray-800: #262d32;
+    --color-gray-900: #171d21;
+    --color-gray-950: #0f1417;
 }
 
 @layer components {
@@ -50,7 +58,7 @@
 
     /* Üst çubuk zeminden ayrışsın */
     .dark .fi-topbar > nav {
-        background-color: #0e252e;
+        background-color: #131a1e;
         border-bottom: 1px solid rgb(255 255 255 / 0.06);
     }
 }
@@ -102,7 +110,7 @@
     }
 
     .dark .fi-sidebar-item-active .fi-sidebar-item-button {
-        background-color: rgb(232 209 164 / 0.1);
+        background-color: rgb(205 151 73 / 0.14);
     }
 
     /* Rozetler yuvarlak ve sönük — sayı öne çıksın, kutu değil */
