@@ -5,14 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Faq;
 use App\Models\Location;
 use App\Models\Yacht;
-use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
-    /** Ana sayfa sorgulari 10 dakika onbellekte; yat kaydedilince temizlenir (YachtObserver). */
+    /**
+     * DIKKAT: Buradaki sorgular onbellege ALINMAZ.
+     *
+     * Laravel 13 varsayilan olarak onbellekten hicbir PHP sinifini geri acmaz
+     * (config/cache.php -> serializable_classes = false, gadget-chain sertlestirmesi).
+     * Eloquent koleksiyonunu Cache::remember ile saklarsan geri okumada
+     * __PHP_Incomplete_Class doner ve sayfa 500 verir. Hiz gerekirse ID listesi
+     * veya hazir dizi onbellege al, model degil.
+     */
     public function __invoke()
     {
-        $data = Cache::remember('home.'.app()->getLocale(), now()->addMinutes(10), fn () => [
+        return view('home', [
             'featured' => Yacht::bookable()
                 ->with(['photos', 'location'])
                 ->orderByDesc('is_featured')
@@ -39,7 +46,5 @@ class HomeController extends Controller
                 ->orderBy('sort')
                 ->get(),
         ]);
-
-        return view('home', $data);
     }
 }

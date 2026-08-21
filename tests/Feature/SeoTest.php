@@ -103,17 +103,31 @@ class SeoTest extends TestCase
         $this->assertStringContainsString('cookie-consent', $html);
     }
 
-    public function test_home_page_is_cached_and_invalidated_when_a_yacht_changes(): void
+    /**
+     * Testler `array` onbellek surucusuyle kosar ve orada serilestirme HIC olmaz.
+     * Gercek kurulumda (database/file) Laravel 13 onbellekten hicbir PHP sinifini
+     * geri acmaz (serializable_classes = false) -> Eloquent koleksiyonu onbellege
+     * alinirsa sayfa 500 verir. Bu test onu yakalamak icin gercek suruculerle kosar.
+     */
+    public function test_public_pages_work_with_a_serializing_cache_store(): void
     {
-        Cache::flush();
+        foreach (['file', 'database'] as $store) {
+            config(['cache.default' => $store]);
+            Cache::store($store)->clear();
 
+            $this->get('/')->assertOk()->assertSee('Mavi Rüzgar');
+            $this->get('/')->assertOk()->assertSee('Mavi Rüzgar'); // ikinci istek: varsa onbellekten
+            $this->get('/yatlar')->assertOk();
+            $this->get('/yat/'.$this->yacht->slug)->assertOk();
+        }
+    }
+
+    public function test_home_page_reflects_listing_changes_immediately(): void
+    {
         $this->get('/')->assertOk()->assertSee('Mavi Rüzgar');
-        $this->assertTrue(Cache::has('home.tr'));
 
         $this->yacht->forceFill(['status' => \App\Enums\YachtStatus::Draft])->save();
 
-        // Ilan degisince onbellek dusmeli
-        $this->assertFalse(Cache::has('home.tr'));
         $this->get('/')->assertOk()->assertDontSee('Mavi Rüzgar');
     }
 

@@ -4,9 +4,7 @@ namespace App\Providers;
 
 use App\Models\Location;
 use App\Models\Page;
-use App\Models\Yacht;
 use App\Models\YachtRate;
-use App\Observers\YachtObserver;
 use App\Observers\YachtRateObserver;
 use App\Listeners\SendReservationNotifications;
 use Illuminate\Pagination\Paginator;
@@ -23,7 +21,6 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        Yacht::observe(YachtObserver::class);
         YachtRate::observe(YachtRateObserver::class);
 
         Event::subscribe(SendReservationNotifications::class);
