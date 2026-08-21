@@ -15,3 +15,11 @@ Schedule::command('reservations:process')
     ->hourly()
     ->withoutOverlapping()
     ->runInBackground();
+
+/*
+| Aylik hakedis dokumu: her ayin 1'inde, kapanmis onceki ay icin uretilir.
+| Tahsil edilmis donemler yeniden hesaplanmaz.
+*/
+Schedule::command('collections:build')
+    ->monthlyOn(1, '03:00')
+    ->withoutOverlapping();
