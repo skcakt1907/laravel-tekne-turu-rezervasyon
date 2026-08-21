@@ -33,9 +33,9 @@ class ReservationsTable
                     ->label('Yat')
                     ->getStateUsing(fn (Reservation $record) => $record->yacht->getTranslation('name', 'tr'))
                     ->description(fn (Reservation $record) => $record->owner?->name)
-                    ->searchable(query: fn (Builder $q, string $search) => $q->whereHas(
+                    ->searchable(query: fn (Builder $query, string $search) => $query->whereHas(
                         'yacht',
-                        fn (Builder $q) => $q->where('name', 'like', "%{$search}%")
+                        fn (Builder $query) => $query->where('name', 'like', "%{$search}%")
                     )),
                 TextColumn::make('customer_name')
                     ->label('Müşteri')
@@ -95,18 +95,18 @@ class ReservationsTable
                     ->preload(),
                 Filter::make('needs_attention')
                     ->label('Müdahale gerekiyor')
-                    ->query(fn (Builder $q) => $q
+                    ->query(fn (Builder $query) => $query
                         ->where('status', ReservationStatus::Pending)
                         ->whereNotNull('escalated_at'))
                     ->toggle(),
                 Filter::make('cancel_requested')
                     ->label('İptal talebi olanlar')
-                    ->query(fn (Builder $q) => $q->whereNotNull('cancel_requested_at')
+                    ->query(fn (Builder $query) => $query->whereNotNull('cancel_requested_at')
                         ->whereIn('status', [ReservationStatus::Pending, ReservationStatus::Approved]))
                     ->toggle(),
                 Filter::make('upcoming')
                     ->label('Yaklaşan gidişler')
-                    ->query(fn (Builder $q) => $q
+                    ->query(fn (Builder $query) => $query
                         ->where('status', ReservationStatus::Approved)
                         ->whereBetween('starts_at', [now(), now()->addDays(14)]))
                     ->toggle(),

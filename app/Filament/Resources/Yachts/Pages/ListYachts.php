@@ -25,14 +25,14 @@ class ListYachts extends ListRecords
         return [
             'all' => Tab::make('Tümü'),
             'pending' => Tab::make('Onay bekliyor')
-                ->modifyQueryUsing(fn (Builder $q) => $q->where('status', YachtStatus::Pending))
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', YachtStatus::Pending))
                 ->badge(fn () => static::getResource()::getModel()::where('status', YachtStatus::Pending)->count()),
             'published' => Tab::make('Yayında')
-                ->modifyQueryUsing(fn (Builder $q) => $q->where('status', YachtStatus::Published)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', YachtStatus::Published)),
             'draft' => Tab::make('Taslak')
-                ->modifyQueryUsing(fn (Builder $q) => $q->where('status', YachtStatus::Draft)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', YachtStatus::Draft)),
             'closed' => Tab::make('Rezervasyona kapalı')
-                ->modifyQueryUsing(fn (Builder $q) => $q->where('is_open', false)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('is_open', false)),
         ];
     }
 }

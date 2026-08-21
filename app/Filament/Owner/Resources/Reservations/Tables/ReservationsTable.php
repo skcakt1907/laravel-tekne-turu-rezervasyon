@@ -63,12 +63,12 @@ class ReservationsTable
                     ->multiple(),
                 Filter::make('cancel_requested')
                     ->label('İptal talebi olanlar')
-                    ->query(fn (Builder $q) => $q->whereNotNull('cancel_requested_at')
+                    ->query(fn (Builder $query) => $query->whereNotNull('cancel_requested_at')
                         ->whereIn('status', [ReservationStatus::Pending, ReservationStatus::Approved]))
                     ->toggle(),
                 Filter::make('pending')
                     ->label('Yanıt bekleyenler')
-                    ->query(fn (Builder $q) => $q->where('status', ReservationStatus::Pending))
+                    ->query(fn (Builder $query) => $query->where('status', ReservationStatus::Pending))
                     ->toggle(),
             ])
             ->recordActions([

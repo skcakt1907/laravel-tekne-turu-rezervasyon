@@ -30,7 +30,7 @@ trait ScopedToOwner
         if (str_contains($column, '.')) {
             [$relation, $field] = explode('.', $column, 2);
 
-            return $query->whereHas($relation, fn (Builder $q) => $q->where($field, $ownerId));
+            return $query->whereHas($relation, fn (Builder $query) => $query->where($field, $ownerId));
         }
 
         return $query->where($column, $ownerId);
