@@ -6,7 +6,9 @@ use App\Models\Location;
 use App\Models\Page;
 use App\Models\YachtRate;
 use App\Observers\YachtRateObserver;
+use App\Listeners\SendReservationNotifications;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -20,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         YachtRate::observe(YachtRateObserver::class);
+
+        Event::subscribe(SendReservationNotifications::class);
 
         Paginator::useBootstrapFive();
 

@@ -4,6 +4,10 @@ namespace App\Services;
 
 use App\Enums\RentalUnit;
 use App\Enums\ReservationStatus;
+use App\Events\ReservationApproved;
+use App\Events\ReservationCancelled;
+use App\Events\ReservationRejected;
+use App\Events\ReservationRequested;
 use App\Models\BlockedPeriod;
 use App\Models\Reservation;
 use App\Models\User;
@@ -73,13 +77,15 @@ class ReservationService
 
         $this->log($reservation, 'created', null, ReservationStatus::Pending, $data['channel'] ?? 'web', $data['ip'] ?? null);
 
+        ReservationRequested::dispatch($reservation);
+
         return $reservation;
     }
 
     /** Adım 3 — onay. Tarih burada kapanır. */
     public function approve(Reservation $reservation, ?User $actor = null, string $channel = 'panel', ?string $ip = null): Reservation
     {
-        return DB::transaction(function () use ($reservation, $actor, $channel, $ip) {
+        $approved = DB::transaction(function () use ($reservation, $actor, $channel, $ip) {
             /** @var Reservation $fresh */
             $fresh = Reservation::whereKey($reservation->getKey())->lockForUpdate()->firstOrFail();
 
@@ -113,11 +119,15 @@ class ReservationService
 
             return $fresh;
         });
+
+        ReservationApproved::dispatch($approved);
+
+        return $approved;
     }
 
     public function reject(Reservation $reservation, ?string $reason = null, ?User $actor = null, string $channel = 'panel', ?string $ip = null): Reservation
     {
-        return DB::transaction(function () use ($reservation, $reason, $actor, $channel, $ip) {
+        $rejected = DB::transaction(function () use ($reservation, $reason, $actor, $channel, $ip) {
             $fresh = Reservation::whereKey($reservation->getKey())->lockForUpdate()->firstOrFail();
 
             if ($fresh->status !== ReservationStatus::Pending) {
@@ -136,12 +146,16 @@ class ReservationService
 
             return $fresh;
         });
+
+        ReservationRejected::dispatch($rejected);
+
+        return $rejected;
     }
 
     /** İptal — kilit kalkar, tarih tekrar satışa açılır. */
     public function cancel(Reservation $reservation, ?string $reason = null, ?User $actor = null, string $channel = 'panel', ?string $ip = null): Reservation
     {
-        return DB::transaction(function () use ($reservation, $reason, $actor, $channel, $ip) {
+        $cancelled = DB::transaction(function () use ($reservation, $reason, $actor, $channel, $ip) {
             $fresh = Reservation::whereKey($reservation->getKey())->lockForUpdate()->firstOrFail();
 
             if (in_array($fresh->status, [ReservationStatus::Cancelled, ReservationStatus::Completed], true)) {
@@ -162,6 +176,10 @@ class ReservationService
 
             return $fresh;
         });
+
+        ReservationCancelled::dispatch($cancelled);
+
+        return $cancelled;
     }
 
     /** Adım 4 — gidiş tarihi geçince otomatik tamamlanır (zamanlayıcı çağırır). */

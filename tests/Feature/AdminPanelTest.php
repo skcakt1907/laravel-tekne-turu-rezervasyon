@@ -49,6 +49,9 @@ class AdminPanelTest extends TestCase
             '/yonetim/features',
             '/yonetim/users',
             '/yonetim/users/create',
+            '/yonetim/reservations',
+            '/yonetim/message-logs',
+            '/yonetim/contact-messages',
         ];
 
         foreach ($pages as $page) {
