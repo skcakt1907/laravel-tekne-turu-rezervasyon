@@ -17,6 +17,14 @@ return [
         'trip_reminder_customer' => '3 days until departure — :code',
     ],
 
+    'password' => [
+        'subject' => ':site — password reset',
+        'intro' => 'We received a request to reset your password.',
+        'action' => 'Reset password',
+        'expire' => 'This link expires in :count minutes.',
+        'ignore' => 'If you did not request this, you can ignore this email; nothing will change on your account.',
+    ],
+
     'common' => [
         'hello' => 'Hello :name,',
         'code' => 'Booking code',

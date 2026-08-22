@@ -50,6 +50,20 @@ return [
         'approve' => 'Onayla',
         'reject' => 'Reddet',
     ],
+    'password' => [
+        'forgot' => 'Şifremi unuttum',
+        'title' => 'Şifre Sıfırlama',
+        'sub' => 'E-posta adresinizi girin, sıfırlama bağlantısını gönderelim.',
+        'send' => 'Bağlantı gönder',
+        'sent' => 'Adres sistemde kayıtlıysa sıfırlama bağlantısı gönderildi.',
+        'new_title' => 'Yeni Şifre',
+        'new_password' => 'Yeni şifre',
+        'confirm' => 'Yeni şifre (tekrar)',
+        'submit' => 'Şifreyi güncelle',
+        'reset_done' => 'Şifreniz güncellendi, giriş yapabilirsiniz.',
+        'back' => 'Girişe dön',
+    ],
+
     'nav' => [
         'skip' => 'İçeriğe geç',
         'yachts' => 'Yatlar',

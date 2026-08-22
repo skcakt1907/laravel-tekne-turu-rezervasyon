@@ -72,7 +72,14 @@ class OwnerPanelTest extends TestCase
         // fresh(): create() ile olusan ornek veritabani varsayilanlarini (is_active) tasimaz
         $this->actingAs($pending->fresh())->get('/yat-sahibi')->assertForbidden();
 
+        // Admin onayladi ama e-posta HENUZ dogrulanmadi -> dogrulama ekranina yonlenir
         $pending->forceFill(['is_approved' => true])->save();
+        $this->actingAs($pending->fresh())
+            ->get('/yat-sahibi')
+            ->assertRedirect('/yat-sahibi/email-verification/prompt');
+
+        // Onay + dogrulama tamam -> panel acilir
+        $pending->forceFill(['email_verified_at' => now()])->save();
         $this->actingAs($pending->fresh())->get('/yat-sahibi')->assertSuccessful();
     }
 

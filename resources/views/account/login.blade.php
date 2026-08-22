@@ -22,6 +22,11 @@
                    class="h-4 w-4 rounded border-sea-300 text-brass-600 focus:ring-brass-300">
             {{ __('site.account.remember') }}
         </label>
+        <div class="flex items-center justify-between">
+            <a href="{{ lroute('password.request') }}" class="text-xs text-brass-700 hover:underline">
+                {{ __('site.password.forgot') }}
+            </a>
+        </div>
         <button type="submit" class="btn btn-brass w-full">{{ __('site.account.login') }}</button>
     </form>
 

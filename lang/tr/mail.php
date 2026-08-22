@@ -17,6 +17,14 @@ return [
         'trip_reminder_customer' => 'Gidişinize 3 gün kaldı — :code',
     ],
 
+    'password' => [
+        'subject' => ':site — şifre sıfırlama',
+        'intro' => 'Şifrenizi sıfırlamak için bir talep aldık.',
+        'action' => 'Şifremi sıfırla',
+        'expire' => 'Bu bağlantı :count dakika sonra geçersiz olur.',
+        'ignore' => 'Bu talebi siz göndermediyseniz e-postayı yok sayabilirsiniz; hesabınızda hiçbir şey değişmez.',
+    ],
+
     'common' => [
         'hello' => 'Merhaba :name,',
         'code' => 'Rezervasyon kodu',

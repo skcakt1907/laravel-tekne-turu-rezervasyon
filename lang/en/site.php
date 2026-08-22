@@ -50,6 +50,20 @@ return [
         'approve' => 'Approve',
         'reject' => 'Decline',
     ],
+    'password' => [
+        'forgot' => 'Forgot your password?',
+        'title' => 'Reset Password',
+        'sub' => 'Enter your email address and we will send you a reset link.',
+        'send' => 'Send link',
+        'sent' => 'If the address is registered, a reset link has been sent.',
+        'new_title' => 'New Password',
+        'new_password' => 'New password',
+        'confirm' => 'Confirm new password',
+        'submit' => 'Update password',
+        'reset_done' => 'Your password has been updated, you can sign in now.',
+        'back' => 'Back to sign in',
+    ],
+
     'nav' => [
         'skip' => 'Skip to content',
         'yachts' => 'Yachts',

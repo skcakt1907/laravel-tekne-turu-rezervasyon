@@ -32,6 +32,7 @@ class OwnerPanelProvider extends PanelProvider
             ->login()
             ->registration(\App\Filament\Owner\Pages\Auth\Register::class)
             ->passwordReset()
+            ->emailVerification()
             ->profile(\App\Filament\Owner\Pages\Auth\EditProfile::class)
             ->brandName('Yat Sahibi Paneli')
             ->globalSearch(position: GlobalSearchPosition::Sidebar)
