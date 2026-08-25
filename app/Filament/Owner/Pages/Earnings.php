@@ -102,6 +102,43 @@ class Earnings extends Page
         ];
     }
 
+    /** Önceki yılın toplam cirosu — büyüme yüzdesi için. */
+    public function previousYearRevenue(): float
+    {
+        return (float) Reservation::query()
+            ->where('owner_id', auth()->id())
+            ->where('status', ReservationStatus::Completed)
+            ->whereYear('starts_at', $this->year - 1)
+            ->sum('estimated_total');
+    }
+
+    /** Bu yılın geçen yıla göre ciro büyümesi (yüzde, null = kıyaslanacak veri yok). */
+    public function growth(): ?float
+    {
+        $previous = $this->previousYearRevenue();
+        $current = $this->totals()['revenue'];
+
+        if ($previous <= 0) {
+            return $current > 0 ? 100.0 : null;
+        }
+
+        return round((($current - $previous) / $previous) * 100, 1);
+    }
+
+    /**
+     * 12 aylık ciro dizisi — bos aylar da 0 olarak yer alir (grafik icin).
+     *
+     * @return array<int, float>
+     */
+    public function monthlyChart(): array
+    {
+        $months = collect($this->months())->keyBy('month');
+
+        return collect(range(1, 12))
+            ->map(fn (int $m) => (float) ($months->get($m)['revenue'] ?? 0))
+            ->all();
+    }
+
     /** Bu ay bekleyen (henuz tamamlanmamis) onayli rezervasyonlar. */
     public function upcoming(): array
     {

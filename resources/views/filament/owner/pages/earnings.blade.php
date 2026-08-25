@@ -4,6 +4,11 @@
         $totals = $this->totals();
         $upcoming = $this->upcoming();
         $months = $this->months();
+        $chart = $this->monthlyChart();
+        $chartMax = max([1, ...$chart]);
+        $growth = $this->growth();
+        $net = $totals['revenue'] - $totals['commission'];
+        $avg = $totals['count'] > 0 ? $totals['revenue'] / $totals['count'] : 0;
     @endphp
 
     <div class="flex flex-wrap items-center justify-between gap-3">
@@ -19,22 +24,71 @@
         </div>
     </div>
 
+    {{-- Hero: net hakedis + gecen yila gore buyume --}}
+    <div class="relative overflow-hidden rounded-2xl p-8 text-white shadow-xl"
+         style="background: linear-gradient(135deg, #0f1417 0%, #262d32 55%, #543a16 100%);">
+        <div class="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full"
+             style="background: radial-gradient(circle, rgba(192,127,49,0.35), transparent 70%);"></div>
+        <div class="relative">
+            <p class="text-xs uppercase tracking-[0.15em] text-white/60">{{ $this->year }} net hakedişim</p>
+            <p class="mt-2 text-5xl font-black leading-none">{{ money($net, $totals['currency']) }}</p>
+            <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-white/80">
+                <span>Ciro {{ money($totals['revenue'], $totals['currency']) }}</span>
+                <span>&middot;</span>
+                <span>Komisyon {{ money($totals['commission'], $totals['currency']) }}</span>
+                @if ($growth !== null)
+                    <span class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold {{ $growth >= 0 ? 'bg-emerald-500/25 text-emerald-300' : 'bg-red-500/25 text-red-300' }}">
+                        <i class="bi {{ $growth >= 0 ? 'bi-arrow-up-right' : 'bi-arrow-down-right' }}"></i>
+                        {{ $growth >= 0 ? '+' : '' }}{{ $growth }}% geçen yıla göre
+                    </span>
+                @endif
+            </div>
+        </div>
+    </div>
+
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         @foreach ([
-            ['Tamamlanan rezervasyon', $totals['count'], null],
-            ['Toplam ciro', money($totals['revenue'], $totals['currency']), null],
-            ['Toplam komisyon', money($totals['commission'], $totals['currency']), 'Platforma ödenecek'],
-            ['Yaklaşan rezervasyon', $upcoming['count'], money($upcoming['revenue'], $upcoming['currency']).' beklenen'],
-        ] as [$label, $value, $hint])
+            ['heroicon-o-check-circle', '#059669, #10b981', 'Tamamlanan rezervasyon', $totals['count'], null],
+            ['heroicon-o-banknotes', '#0369a1, #0ea5e9', 'Toplam ciro', money($totals['revenue'], $totals['currency']), null],
+            ['heroicon-o-receipt-percent', '#d97706, #f59e0b', 'Toplam komisyon', money($totals['commission'], $totals['currency']), 'Platforma ödenecek'],
+            ['heroicon-o-calculator', '#525b62, #8b949b', 'Ortalama rezervasyon', money($avg, $totals['currency']), null],
+            ['heroicon-o-clock', '#7a5314, #c07f31', 'Yaklaşan rezervasyon', $upcoming['count'], money($upcoming['revenue'], $upcoming['currency']).' beklenen'],
+        ] as [$icon, $gradient, $label, $value, $hint])
             <x-filament::section>
-                <div class="text-xs uppercase tracking-wide text-gray-400">{{ $label }}</div>
-                <div class="mt-1 text-2xl font-semibold">{{ $value }}</div>
+                <div class="flex items-center gap-3">
+                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white"
+                          style="background: linear-gradient(135deg, {{ $gradient }});">
+                        <x-filament::icon :icon="$icon" class="h-5 w-5" />
+                    </span>
+                    <div class="min-w-0">
+                        <div class="text-xs uppercase tracking-wide text-gray-400">{{ $label }}</div>
+                        <div class="mt-0.5 truncate text-xl font-semibold">{{ $value }}</div>
+                    </div>
+                </div>
                 @if ($hint)
-                    <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $hint }}</div>
+                    <div class="mt-2 text-xs text-gray-500 dark:text-gray-400">{{ $hint }}</div>
                 @endif
             </x-filament::section>
         @endforeach
     </div>
+
+    <x-filament::section>
+        <x-slot name="heading">Aylık ciro</x-slot>
+
+        <div class="flex h-40 items-end gap-2">
+            @foreach ($chart as $i => $value)
+                @php $monthLabel = now()->setDate($this->year, $i + 1, 1)->translatedFormat('M'); @endphp
+                <div class="flex flex-1 flex-col items-center gap-1.5">
+                    <div class="flex h-32 w-full items-end">
+                        <div class="w-full rounded-t-md transition-all"
+                             style="height: {{ $value > 0 ? max(6, round($value / $chartMax * 100)) : 0 }}%; background: linear-gradient(180deg, #c07f31, #7a5314);"
+                             title="{{ $monthLabel }}: {{ money($value, $totals['currency']) }}"></div>
+                    </div>
+                    <span class="text-[10px] uppercase text-gray-400">{{ $monthLabel }}</span>
+                </div>
+            @endforeach
+        </div>
+    </x-filament::section>
 
     <x-filament::section>
         <x-slot name="heading">Aylık döküm</x-slot>
