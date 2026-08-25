@@ -39,6 +39,7 @@ return [
         'estimate_notice' => 'Tahmini tutardır, kesin fiyat onay sırasında netleşir.',
         'no_payment' => 'Sitemiz üzerinden ödeme alınmaz. Ödeme, onaydan sonra doğrudan yat sahibiyle yapılır.',
         'view_reservation' => 'Rezervasyonu görüntüle',
+        'qr_hint' => 'Bu QR kodu göstererek rezervasyonunuzu hızlıca doğrulatabilirsiniz.',
         'respond' => 'Talebi yanıtla',
         'regards' => 'İyi yolculuklar,',
         'footer_auto' => 'Bu e-posta :site tarafından otomatik gönderilmiştir.',

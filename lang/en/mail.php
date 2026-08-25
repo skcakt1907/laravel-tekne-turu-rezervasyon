@@ -39,6 +39,7 @@ return [
         'estimate_notice' => 'This is an estimate; the final price is confirmed upon approval.',
         'no_payment' => 'No payment is taken through our site. Payment is arranged directly with the owner after approval.',
         'view_reservation' => 'View booking',
+        'qr_hint' => 'Show this QR code to verify your booking quickly.',
         'respond' => 'Respond to request',
         'regards' => 'Fair winds,',
         'footer_auto' => 'This email was sent automatically by :site.',

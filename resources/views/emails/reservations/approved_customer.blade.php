@@ -8,5 +8,6 @@
         'notice' => true,
         'buttonUrl' => lroute('reservation.show', ['code' => $reservation->code]).'?token='.$reservation->access_token,
         'buttonLabel' => __('mail.common.view_reservation'),
+        'qrCode' => $reservation->qrCodeDataUri(),
     ])
 @endsection

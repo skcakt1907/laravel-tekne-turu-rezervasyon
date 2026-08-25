@@ -21,6 +21,17 @@
     @include('emails.partials.button', ['url' => $buttonUrl, 'label' => $buttonLabel])
 @endisset
 
+@isset($qrCode)
+    <table role="presentation" cellpadding="0" cellspacing="0" style="margin:4px 0 20px;">
+        <tr>
+            <td style="text-align:center;">
+                <img src="{{ $qrCode }}" alt="{{ $reservation->code }}" width="140" height="140">
+                <p style="margin:6px 0 0;font-size:12px;color:#7A929C;">{{ __('mail.common.qr_hint') }}</p>
+            </td>
+        </tr>
+    </table>
+@endisset
+
 @if ($notice)
     <p style="margin:0 0 6px;font-size:13px;color:#7A929C;">{{ __('mail.common.estimate_notice') }}</p>
     <p style="margin:0;font-size:13px;color:#7A929C;">{{ __('mail.common.no_payment') }}</p>
