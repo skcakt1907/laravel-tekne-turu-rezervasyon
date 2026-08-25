@@ -51,6 +51,11 @@
                 {{ $reservation->reject_reason }}
             </p>
         @endif
+
+        <div class="mt-6 flex flex-col items-center gap-2 border-t border-sea-100 pt-6 text-center">
+            <img src="{{ $reservation->qrCodeDataUri() }}" alt="{{ $reservation->code }}" width="140" height="140">
+            <p class="text-[11px] uppercase tracking-wider text-sea-500">{{ __('site.detail.qr_hint') }}</p>
+        </div>
     </div>
 
     @if ($reservation->hasCancelRequest())

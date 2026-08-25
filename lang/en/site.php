@@ -185,6 +185,7 @@ return [
         'engine' => 'Engine',
         'crew' => 'Crew',
         'port' => 'Departure port',
+        'qr_hint' => 'Show this QR code to verify your booking quickly.',
     ],
     'calc' => [
         'fixed' => 'fixed',

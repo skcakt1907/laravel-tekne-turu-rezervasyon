@@ -185,6 +185,7 @@ return [
         'engine' => 'Motor',
         'crew' => 'Mürettebat',
         'port' => 'Kalkış limanı',
+        'qr_hint' => 'Bu QR kodu göstererek rezervasyonunuzu hızlıca doğrulatabilirsiniz.',
     ],
     'calc' => [
         'fixed' => 'sabit',

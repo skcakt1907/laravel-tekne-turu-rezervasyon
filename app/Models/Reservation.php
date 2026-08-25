@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Enums\RentalUnit;
 use App\Enums\ReservationStatus;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -137,5 +139,13 @@ class Reservation extends Model
     public function accessUrl(): string
     {
         return route('reservation.show', ['code' => $this->code, 'token' => $this->access_token]);
+    }
+
+    /** Rezervasyon sayfasına giden QR kod — SVG data URI, harici istek yok. */
+    public function qrCodeDataUri(): string
+    {
+        $qrCode = new QrCode(data: $this->accessUrl(), size: 220, margin: 8);
+
+        return (new SvgWriter)->write($qrCode)->getDataUri();
     }
 }
