@@ -138,7 +138,6 @@ class WhatsAppTest extends TestCase
         $reservation->refresh();
 
         $this->assertSame(ReservationStatus::Approved, $reservation->status);
-        $this->assertSame(1, $reservation->blockedPeriod()->count());
 
         $log = $reservation->logs()->where('action', 'approved')->firstOrFail();
         $this->assertSame('whatsapp', $log->channel);
@@ -158,7 +157,6 @@ class WhatsAppTest extends TestCase
         ))->assertOk();
 
         $this->assertSame(ReservationStatus::Rejected, $reservation->refresh()->status);
-        $this->assertSame(0, $reservation->blockedPeriod()->count());
     }
 
     public function test_second_button_press_does_not_break_anything(): void
@@ -175,7 +173,6 @@ class WhatsAppTest extends TestCase
         $reservation->refresh();
 
         $this->assertSame(ReservationStatus::Approved, $reservation->status);
-        $this->assertSame(1, $reservation->blockedPeriod()->count());
         $this->assertSame(1, $reservation->logs()->where('action', 'approved')->count());
     }
 
@@ -277,14 +274,11 @@ class WhatsAppTest extends TestCase
 
     private function makeReservation(): Reservation
     {
-        $start = now()->addDays(30)->setTime(10, 0);
-
         $this->post('/rezervasyon-talebi', [
             'yacht_id' => $this->yacht->id,
-            'unit' => 'day',
-            'starts_at' => $start->format('Y-m-d H:i'),
-            'ends_at' => $start->copy()->addDays(3)->format('Y-m-d H:i'),
-            'guests' => 6,
+            'date' => now()->addDays(30)->toDateString(),
+            'adults' => 6,
+            'children' => 0,
             'customer_name' => 'Test Musteri',
             'customer_email' => 'test@example.com',
             'customer_phone' => '+905551112233',

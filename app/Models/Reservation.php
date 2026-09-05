@@ -21,7 +21,7 @@ class Reservation extends Model
     protected $fillable = [
         'yacht_id', 'user_id', 'customer_name', 'customer_email', 'customer_phone',
         'customer_whatsapp', 'customer_locale', 'unit', 'starts_at', 'ends_at',
-        'guests', 'message',
+        'adults', 'children', 'message',
     ];
 
     protected $casts = [
@@ -104,6 +104,12 @@ class Reservation extends Model
         } while (self::where('code', $code)->exists());
 
         return $code;
+    }
+
+    /** Toplam kişi sayısı (yetişkin + çocuk) — mesaj/şablon/ek ücret hesaplarında kullanılır. */
+    public function getGuestsAttribute(): int
+    {
+        return $this->adults + $this->children;
     }
 
     public function durationHours(): float

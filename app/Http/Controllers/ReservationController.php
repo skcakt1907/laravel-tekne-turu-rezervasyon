@@ -29,10 +29,9 @@ class ReservationController extends Controller
     {
         $data = $request->validate([
             'yacht_id' => ['required', 'exists:yachts,id'],
-            'unit' => ['required', 'in:hour,day,week'],
-            'starts_at' => ['required', 'date', 'after:now'],
-            'ends_at' => ['required', 'date', 'after:starts_at'],
-            'guests' => ['required', 'integer', 'min:1', 'max:100'],
+            'date' => ['required', 'date', 'after:today'],
+            'adults' => ['required', 'integer', 'min:1', 'max:100'],
+            'children' => ['nullable', 'integer', 'min:0', 'max:100'],
             'customer_name' => ['required', 'string', 'max:120'],
             'customer_email' => ['required', 'email', 'max:190'],
             'customer_phone' => ['required', 'string', 'max:32'],
@@ -45,13 +44,14 @@ class ReservationController extends Controller
         ]);
 
         $yacht = Yacht::bookable()->findOrFail($data['yacht_id']);
-        $start = Carbon::parse($data['starts_at']);
-        $end = Carbon::parse($data['ends_at']);
+        $date = Carbon::parse($data['date'])->startOfDay();
+        $adults = (int) $data['adults'];
+        $children = (int) ($data['children'] ?? 0);
 
-        // Talep kilitlemez ama dolu tarihe talep de almayalım.
-        if (! $this->availability->isAvailable($yacht, $start, $end)) {
+        // Talep kilitlemez ama kapasitesi dolmuş tarihe talep de almayalım.
+        if (! $this->availability->isAvailable($yacht, $date, $adults + $children)) {
             throw ValidationException::withMessages([
-                'starts_at' => 'Seçtiğiniz tarih aralığı müsait değil.',
+                'date' => 'Seçtiğiniz tarihte yeterli kapasite kalmadı.',
             ]);
         }
 
@@ -62,10 +62,9 @@ class ReservationController extends Controller
             'customer_phone' => $data['customer_phone'],
             'customer_whatsapp' => $data['customer_whatsapp'] ?? null,
             'customer_locale' => app()->getLocale(),
-            'unit' => $data['unit'],
-            'starts_at' => $start,
-            'ends_at' => $end,
-            'guests' => $data['guests'],
+            'date' => $date,
+            'adults' => $adults,
+            'children' => $children,
             'message' => $data['message'] ?? null,
             'ip' => $request->ip(),
             'user_agent' => $request->userAgent(),

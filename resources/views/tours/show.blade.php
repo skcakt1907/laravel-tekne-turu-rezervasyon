@@ -1,28 +1,9 @@
 @extends('layouts.site')
 
 @php
-    use Illuminate\Support\Carbon;
-
     $locale = app()->getLocale();
     $name = $yacht->getTranslation('name', $locale);
     $cover = $yacht->coverUrl();
-
-    // Kapalı günleri tek kümede topla (takvim boyaması için)
-    $busyDays = [];
-    foreach ($blocked as $range) {
-        $cursor = Carbon::parse($range['start']);
-        $stop = Carbon::parse($range['end']);
-        while ($cursor->lessThan($stop)) {
-            $busyDays[$cursor->toDateString()] = true;
-            $cursor->addDay();
-        }
-    }
-
-    $unitLabels = [
-        'hour' => __('site.card.per_hour'),
-        'day' => __('site.card.per_day'),
-        'week' => __('site.card.per_week'),
-    ];
 
     $specs = array_filter([
         'length' => $yacht->length_m ? rtrim(rtrim(number_format((float) $yacht->length_m, 1, ',', '.'), '0'), ',').' m' : null,
@@ -74,7 +55,7 @@
             <div class="text-right">
                 <div class="font-serif text-3xl font-bold">{{ money($yacht->price_from, $yacht->currency) }}</div>
                 <div class="text-xs uppercase tracking-wide text-sea-500">
-                    / {{ $unitLabels[$yacht->price_from_unit] ?? '' }}
+                    / {{ __('site.card.per_person') }}
                 </div>
             </div>
         @endif
@@ -152,31 +133,27 @@
                         <table class="w-full text-sm">
                             <thead>
                                 <tr class="border-b border-sea-200 text-left text-[11px] uppercase tracking-wider text-sea-500">
-                                    <th class="pb-2 pr-4 font-semibold">{{ __('site.detail.unit') }}</th>
                                     <th class="pb-2 pr-4 font-semibold">{{ __('site.detail.period') }}</th>
-                                    <th class="pb-2 pr-4 text-right font-semibold">{{ __('site.detail.price') }}</th>
-                                    <th class="pb-2 text-right font-semibold">{{ __('site.detail.min') }}</th>
+                                    <th class="pb-2 pr-4 text-right font-semibold">{{ __('site.booking.adults') }}</th>
+                                    <th class="pb-2 text-right font-semibold">{{ __('site.booking.children') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-sea-100">
-                                @foreach ($rates as $unit => $group)
-                                    @foreach ($group as $rate)
-                                        <tr>
-                                            <td class="py-2.5 pr-4 font-medium">{{ __('site.units.'.$rate->unit->value) }}</td>
-                                            <td class="py-2.5 pr-4 text-sea-600">
-                                                @if ($rate->isBase())
-                                                    {{ __('site.detail.base_price') }}
-                                                @else
-                                                    {{ $rate->season_start->format('d.m.Y') }} – {{ $rate->season_end->format('d.m.Y') }}
-                                                    @if ($rate->label)
-                                                        <span class="badge badge-soft ml-1">{{ $rate->label }}</span>
-                                                    @endif
+                                @foreach ($rates as $rate)
+                                    <tr>
+                                        <td class="py-2.5 pr-4 text-sea-600">
+                                            @if ($rate->isBase())
+                                                {{ __('site.detail.base_price') }}
+                                            @else
+                                                {{ $rate->season_start->format('d.m.Y') }} – {{ $rate->season_end->format('d.m.Y') }}
+                                                @if ($rate->label)
+                                                    <span class="badge badge-soft ml-1">{{ $rate->label }}</span>
                                                 @endif
-                                            </td>
-                                            <td class="py-2.5 pr-4 text-right font-semibold">{{ money($rate->price, $yacht->currency) }}</td>
-                                            <td class="py-2.5 text-right text-sea-600">{{ $rate->min_duration }}</td>
-                                        </tr>
-                                    @endforeach
+                                            @endif
+                                        </td>
+                                        <td class="py-2.5 pr-4 text-right font-semibold">{{ money($rate->price, $yacht->currency) }}</td>
+                                        <td class="py-2.5 text-right font-semibold">{{ money($rate->price_child ?? $rate->price, $yacht->currency) }}</td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -235,11 +212,12 @@
                                     @php
                                         $date = $first->copy()->addDays($d - 1);
                                         $isPast = $date->isBefore(now()->startOfDay());
-                                        $isBusy = isset($busyDays[$date->toDateString()]);
+                                        $remaining = $seats[$date->toDateString()] ?? null;
+                                        $isFull = ! $isPast && $remaining !== null && $remaining <= 0;
                                     @endphp
-                                    <div title="{{ $date->format('d.m.Y') }}{{ $isBusy ? ' — '.__('site.detail.busy') : '' }}"
+                                    <div title="{{ $date->format('d.m.Y') }}{{ $remaining !== null ? ' — '.trans_choice('site.detail.seats_left', $remaining, ['count' => $remaining]) : '' }}"
                                          class="grid aspect-square place-items-center rounded text-xs
-                                            {{ $isPast ? 'text-sea-300' : ($isBusy ? 'bg-brass-100 text-brass-700 line-through' : 'bg-sea-50 text-sea-700') }}">
+                                            {{ $isPast ? 'text-sea-300' : ($isFull ? 'bg-brass-100 text-brass-700 line-through' : 'bg-sea-50 text-sea-700') }}">
                                         {{ $d }}
                                     </div>
                                 @endfor
@@ -290,34 +268,25 @@
                             <input type="hidden" name="yacht_id" value="{{ $yacht->id }}">
 
                             <div>
-                                <label class="label" for="b-unit">{{ __('site.booking.unit') }}</label>
-                                <select name="unit" id="b-unit" class="field" required>
-                                    @foreach ($yacht->activeUnits() as $unit)
-                                        <option value="{{ $unit }}" @selected(old('unit', $prefill['unit']) === $unit)>
-                                            {{ __('site.units.'.$unit) }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <label class="label" for="b-date">{{ __('site.booking.date') }}</label>
+                                <input type="date" name="date" id="b-date" class="field"
+                                       min="{{ now()->addDay()->toDateString() }}"
+                                       value="{{ old('date', $prefill['date']) }}" required>
                             </div>
 
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
-                                    <label class="label" for="b-start">{{ __('site.booking.start') }}</label>
-                                    <input type="datetime-local" name="starts_at" id="b-start" class="field"
-                                           value="{{ old('starts_at', $prefill['start'] ? $prefill['start'].'T10:00' : '') }}" required>
+                                    <label class="label" for="b-adults">{{ __('site.booking.adults') }}</label>
+                                    <input type="number" name="adults" id="b-adults" class="field" min="1"
+                                           max="{{ $yacht->capacity ?: 100 }}"
+                                           value="{{ old('adults', $prefill['adults']) }}" required>
                                 </div>
                                 <div>
-                                    <label class="label" for="b-end">{{ __('site.booking.end') }}</label>
-                                    <input type="datetime-local" name="ends_at" id="b-end" class="field"
-                                           value="{{ old('ends_at', $prefill['end'] ? $prefill['end'].'T10:00' : '') }}" required>
+                                    <label class="label" for="b-children">{{ __('site.booking.children') }}</label>
+                                    <input type="number" name="children" id="b-children" class="field" min="0"
+                                           max="{{ $yacht->capacity ?: 100 }}"
+                                           value="{{ old('children', $prefill['children']) }}">
                                 </div>
-                            </div>
-
-                            <div>
-                                <label class="label" for="b-guests">{{ __('site.booking.guests') }}</label>
-                                <input type="number" name="guests" id="b-guests" class="field" min="1"
-                                       max="{{ $yacht->capacity ?: 100 }}"
-                                       value="{{ old('guests', $prefill['guests']) }}" required>
                             </div>
 
                             @if ($yacht->extras->where('is_required', false)->isNotEmpty())

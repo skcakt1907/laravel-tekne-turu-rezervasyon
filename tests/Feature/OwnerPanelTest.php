@@ -132,7 +132,6 @@ class OwnerPanelTest extends TestCase
                 'type' => 'motoryat',
                 'capacity' => 10,
                 'currency' => 'EUR',
-                'unit_daily' => true,
             ])
             ->call('create')
             ->assertHasNoFormErrors();
@@ -168,7 +167,10 @@ class OwnerPanelTest extends TestCase
         $reservation->refresh();
 
         $this->assertSame(ReservationStatus::Approved, $reservation->status);
-        $this->assertSame(1, BlockedPeriod::where('reservation_id', $reservation->id)->count());
+
+        $remaining = app(\App\Services\AvailabilityService::class)
+            ->remainingSeats($this->yacht, $reservation->starts_at);
+        $this->assertSame(16 - $reservation->guests, $remaining);
     }
 
     public function test_calendar_marks_reserved_and_manually_blocked_days(): void
@@ -255,16 +257,13 @@ class OwnerPanelTest extends TestCase
 
     private function makeReservationFor(Yacht $yacht, int $dayOffset = 25): Reservation
     {
-        $start = now()->addDays($dayOffset)->setTime(10, 0);
-
         return app(\App\Services\ReservationService::class)->request($yacht, [
             'customer_name' => 'Test Musteri',
             'customer_email' => 'musteri@example.com',
             'customer_phone' => '+905551112233',
-            'unit' => 'day',
-            'starts_at' => $start,
-            'ends_at' => $start->copy()->addDays(3),
-            'guests' => 4,
+            'date' => now()->addDays($dayOffset),
+            'adults' => 4,
+            'children' => 0,
         ]);
     }
 }

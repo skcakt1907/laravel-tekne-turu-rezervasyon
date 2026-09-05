@@ -2,13 +2,11 @@
 
 namespace App\Services;
 
-use App\Enums\RentalUnit;
 use App\Enums\ReservationStatus;
 use App\Events\ReservationApproved;
 use App\Events\ReservationCancelled;
 use App\Events\ReservationRejected;
 use App\Events\ReservationRequested;
-use App\Models\BlockedPeriod;
 use App\Models\Consent;
 use App\Models\Reservation;
 use App\Models\User;
@@ -33,18 +31,21 @@ class ReservationService
         private CommissionService $commission,
     ) {}
 
-    /** Adım 1 — talep. Takvimde hiçbir şey kapanmaz. */
+    /** Adım 1 — talep. Kapasiteden hiçbir şey düşmez, sadece ONAY düşer. */
     public function request(Yacht $yacht, array $data, array $extraIds = []): Reservation
     {
-        $unit = $data['unit'] instanceof RentalUnit ? $data['unit'] : RentalUnit::from($data['unit']);
-        $start = Carbon::parse($data['starts_at']);
-        $end = Carbon::parse($data['ends_at']);
+        $date = Carbon::parse($data['date'])->startOfDay();
+        $start = $date->copy()->setTimeFromTimeString((string) ($yacht->day_start ?? '09:00'));
+        $end = $date->copy()->setTimeFromTimeString((string) ($yacht->day_end ?? '18:00'));
 
         if ($end->lessThanOrEqualTo($start)) {
-            throw new RuntimeException('Bitiş tarihi başlangıçtan sonra olmalı.');
+            $end = $date->copy()->endOfDay();
         }
 
-        $quote = $this->pricing->quote($yacht, $unit, $start, $end, (int) ($data['guests'] ?? 1), $extraIds);
+        $adults = (int) ($data['adults'] ?? 1);
+        $children = (int) ($data['children'] ?? 0);
+
+        $quote = $this->pricing->quote($yacht, $date, $adults, $children, $extraIds);
 
         $reservation = new Reservation;
         $reservation->fill([
@@ -55,10 +56,11 @@ class ReservationService
             'customer_phone' => $data['customer_phone'],
             'customer_whatsapp' => $data['customer_whatsapp'] ?? $data['customer_phone'],
             'customer_locale' => $data['customer_locale'] ?? app()->getLocale(),
-            'unit' => $unit->value,
+            'unit' => 'day',
             'starts_at' => $start,
             'ends_at' => $end,
-            'guests' => (int) ($data['guests'] ?? 1),
+            'adults' => $adults,
+            'children' => $children,
             'message' => $data['message'] ?? null,
         ]);
 
@@ -120,8 +122,8 @@ class ReservationService
 
             $yacht = $fresh->yacht()->lockForUpdate()->firstOrFail();
 
-            if (! $this->availability->isAvailable($yacht, $fresh->starts_at, $fresh->ends_at, $fresh->id)) {
-                throw new RuntimeException('Bu tarih aralığı artık müsait değil.');
+            if (! $this->availability->isAvailable($yacht, $fresh->starts_at, $fresh->guests, $fresh->id)) {
+                throw new RuntimeException('Bu tarihte yeterli kapasite kalmadı.');
             }
 
             $from = $fresh->status;
@@ -132,13 +134,6 @@ class ReservationService
                 'approved_at' => now(),
                 'responded_at' => $fresh->responded_at ?? now(),
             ])->save();
-
-            $fresh->blockedPeriod()->create([
-                'yacht_id' => $yacht->id,
-                'starts_at' => $fresh->starts_at,
-                'ends_at' => $fresh->ends_at,
-                'reason' => 'reservation',
-            ]);
 
             $this->log($fresh, 'approved', $from, ReservationStatus::Approved, $channel, $ip, $actor);
 
@@ -194,8 +189,6 @@ class ReservationService
                 'cancelled_at' => now(),
                 'admin_note' => $reason ?: $fresh->admin_note,
             ])->save();
-
-            BlockedPeriod::where('reservation_id', $fresh->id)->delete();
 
             $this->log($fresh, 'cancelled', $from, ReservationStatus::Cancelled, $channel, $ip, $actor, $reason);
 

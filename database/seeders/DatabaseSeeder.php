@@ -165,7 +165,7 @@ class DatabaseSeeder extends Seeder
                 'type' => 'gulet',
                 'length_m' => 28.5, 'cabins' => 6, 'beds' => 12, 'wc' => 6,
                 'capacity' => 16, 'sleep_capacity' => 12, 'build_year' => 2016,
-                'units' => ['day' => 2400, 'week' => 14000],
+                'price' => 2400, 'price_child' => 1200,
             ],
             [
                 'slug' => 'demo-motoryat-deniz-yildizi',
@@ -173,13 +173,14 @@ class DatabaseSeeder extends Seeder
                 'type' => 'motoryat',
                 'length_m' => 18.0, 'cabins' => 3, 'beds' => 6, 'wc' => 3,
                 'capacity' => 12, 'sleep_capacity' => 6, 'build_year' => 2020,
-                'units' => ['hour' => 350, 'day' => 1800],
+                'price' => 350, 'price_child' => 175,
             ],
         ];
 
         foreach ($yachts as $data) {
-            $units = $data['units'];
-            unset($data['units']);
+            $price = $data['price'];
+            $priceChild = $data['price_child'];
+            unset($data['price'], $data['price_child']);
 
             $yacht = Yacht::updateOrCreate(
                 ['slug' => $data['slug']],
@@ -188,22 +189,19 @@ class DatabaseSeeder extends Seeder
                     'description' => ['tr' => 'Demo ilan — gerçek içerik müşteriden gelecek.', 'en' => 'Demo listing.'],
                     'with_crew' => true,
                     'currency' => 'EUR',
-                    'turnaround_minutes' => 180,
-                    'unit_hourly' => isset($units['hour']),
-                    'unit_daily' => isset($units['day']),
-                    'unit_weekly' => isset($units['week']),
+                    'unit_daily' => true,
+                    'day_start' => '09:00',
+                    'day_end' => '18:00',
                     'is_open' => true,
                 ])
             );
 
             $yacht->forceFill(['status' => YachtStatus::Published, 'published_at' => now()])->save();
 
-            foreach ($units as $unit => $price) {
-                $yacht->rates()->updateOrCreate(
-                    ['unit' => $unit, 'season_start' => null, 'season_end' => null],
-                    ['price' => $price, 'min_duration' => $unit === 'hour' ? 3 : 1, 'label' => 'Temel fiyat']
-                );
-            }
+            $yacht->rates()->updateOrCreate(
+                ['unit' => 'day', 'season_start' => null, 'season_end' => null],
+                ['price' => $price, 'price_child' => $priceChild, 'min_duration' => 1, 'label' => 'Temel fiyat']
+            );
 
             $yacht->features()->sync(Feature::inRandomOrder()->limit(8)->pluck('id'));
         }
@@ -266,7 +264,6 @@ class DatabaseSeeder extends Seeder
                     'currency' => 'EUR',
                     'unit_daily' => true,
                     'is_open' => true,
-                    'capacity' => 35, // gunubirlik tur teknesi, ~30-40 kisi
                 ])
             );
 

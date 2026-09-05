@@ -158,16 +158,14 @@ class AdminTablesTest extends TestCase
     public function test_admin_can_approve_a_reservation_from_the_table(): void
     {
         $yacht = Yacht::where('slug', 'demo-gulet-mavi-ruzgar')->firstOrFail();
-        $start = now()->addDays(20)->setTime(10, 0);
 
         $reservation = app(\App\Services\ReservationService::class)->request($yacht, [
             'customer_name' => 'Test',
             'customer_email' => 'test@example.com',
             'customer_phone' => '+905551112233',
-            'unit' => 'day',
-            'starts_at' => $start,
-            'ends_at' => $start->copy()->addDays(2),
-            'guests' => 4,
+            'date' => now()->addDays(20),
+            'adults' => 4,
+            'children' => 0,
         ]);
 
         Livewire::test(ListReservations::class)
@@ -175,22 +173,19 @@ class AdminTablesTest extends TestCase
             ->assertOk();
 
         $this->assertSame(ReservationStatus::Approved, $reservation->refresh()->status);
-        $this->assertSame(1, $reservation->blockedPeriod()->count());
     }
 
     public function test_global_search_finds_yachts_reservations_and_users(): void
     {
         $yacht = Yacht::where('slug', 'demo-gulet-mavi-ruzgar')->firstOrFail();
-        $start = now()->addDays(15)->setTime(10, 0);
 
         $reservation = app(\App\Services\ReservationService::class)->request($yacht, [
             'customer_name' => 'Arama Testi',
             'customer_email' => 'arama@example.com',
             'customer_phone' => '+905551112233',
-            'unit' => 'day',
-            'starts_at' => $start,
-            'ends_at' => $start->copy()->addDays(2),
-            'guests' => 4,
+            'date' => now()->addDays(15),
+            'adults' => 4,
+            'children' => 0,
         ]);
 
         // Yat adi (ceviri JSON'unda arar)

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\RentalUnit;
 use App\Models\Feature;
 use App\Models\Yacht;
 use App\Services\AvailabilityService;
@@ -39,7 +38,7 @@ class YachtController extends Controller
             ->firstOrFail();
 
         $from = now()->startOfDay();
-        $to = $from->copy()->addMonths(6);
+        $to = $from->copy()->addMonths(3);
 
         $similar = Yacht::bookable()
             ->with('photos')
@@ -50,32 +49,15 @@ class YachtController extends Controller
 
         return view('tours.show', [
             'yacht' => $yacht,
-            'blocked' => $this->availability->blockedRanges($yacht, $from, $to)
-                ->map(fn ($b) => [
-                    'start' => $b->starts_at->toDateString(),
-                    'end' => $b->ends_at->toDateString(),
-                ])->values(),
-            'rates' => $yacht->rates->groupBy(fn ($rate) => $rate->unit->value),
+            'seats' => $this->availability->seatsForRange($yacht, $from, $to),
+            'rates' => $yacht->rates,
             'similar' => $similar,
             'prefill' => [
-                'unit' => $this->defaultUnit($yacht, $request),
-                'start' => $request->string('start')->toString(),
-                'end' => $request->string('end')->toString(),
-                'guests' => $request->integer('guests') ?: 2,
+                'date' => $request->string('date')->toString(),
+                'adults' => $request->integer('adults') ?: 2,
+                'children' => $request->integer('children') ?: 0,
             ],
         ]);
-    }
-
-    private function defaultUnit(Yacht $yacht, Request $request): string
-    {
-        $requested = $request->string('unit')->toString();
-        $units = $yacht->activeUnits();
-
-        if ($requested && in_array($requested, $units, true)) {
-            return $requested;
-        }
-
-        return $units[0] ?? RentalUnit::Day->value;
     }
 
     private function features()

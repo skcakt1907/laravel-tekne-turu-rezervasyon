@@ -65,14 +65,14 @@ class CommissionTest extends TestCase
         $reservation = app(ReservationService::class)->approve($this->makeReservation());
 
         $this->assertSame('10.00', $reservation->commission_rate);
-        $this->assertSame('720.00', $reservation->commission_amount); // 7200 x %10
+        $this->assertSame('1440.00', $reservation->commission_amount); // 6 yetiskin x 2400 = 14400 x %10
 
         // Oran sonradan degisirse gecmis kayit etkilenmemeli
         CommissionSetting::where('scope', CommissionSetting::SCOPE_GLOBAL)->update(['rate' => 25]);
 
         $reservation->refresh();
         $this->assertSame('10.00', $reservation->commission_rate);
-        $this->assertSame('720.00', $reservation->commission_amount);
+        $this->assertSame('1440.00', $reservation->commission_amount);
     }
 
     public function test_collection_totals_only_completed_reservations(): void
@@ -217,16 +217,13 @@ class CommissionTest extends TestCase
 
     private function makeReservation(int $dayOffset = 30): Reservation
     {
-        $start = now()->addDays($dayOffset)->setTime(10, 0);
-
         return app(ReservationService::class)->request($this->yacht, [
             'customer_name' => 'Test Musteri',
             'customer_email' => 'test@example.com',
             'customer_phone' => '+905551112233',
-            'unit' => 'day',
-            'starts_at' => $start,
-            'ends_at' => $start->copy()->addDays(3),
-            'guests' => 6,
+            'date' => now()->addDays($dayOffset),
+            'adults' => 6,
+            'children' => 0,
         ]);
     }
 }

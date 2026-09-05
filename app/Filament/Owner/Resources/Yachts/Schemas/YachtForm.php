@@ -81,14 +81,10 @@ class YachtForm
                     TextInput::make('sleep_capacity')->label('Konaklamalı kapasite')->numeric()->minValue(0),
                 ]),
 
-            Section::make('Kiralama Ayarları')
-                ->description('Fiyatları kaydettikten sonra "Fiyatlar" sekmesinden girersiniz.')
+            Section::make('Tur Saatleri')
+                ->description('Günde tek sefer — tarihi müşteri seçer, saat sabittir. Fiyatları kaydettikten sonra "Fiyatlar" sekmesinden girersiniz.')
                 ->columns(3)
                 ->schema([
-                    Toggle::make('unit_hourly')->label('Saatlik')->live(),
-                    Toggle::make('unit_daily')->label('Günlük')->default(true)->live(),
-                    Toggle::make('unit_weekly')->label('Haftalık')->live(),
-
                     Select::make('currency')
                         ->label('Para birimi')
                         ->options(fn () => collect(config('yacht.currencies'))
@@ -96,29 +92,8 @@ class YachtForm
                         ->default('EUR')
                         ->required()
                         ->helperText('Sonradan değiştirmeyin; geçmiş talepler bu birimle kaydedildi.'),
-                    TextInput::make('turnaround_minutes')
-                        ->label('İki kiralama arası boşluk (dk)')
-                        ->numeric()
-                        ->default(180)
-                        ->minValue(0)
-                        ->helperText('Temizlik, yakıt, teslim payı. Bu süre içinde yeni rezervasyon alınmaz.'),
-
-                    TimePicker::make('day_start')->label('Gün içi başlangıç')->seconds(false)
-                        ->visible(fn (Get $get) => (bool) $get('unit_hourly')),
-                    TimePicker::make('day_end')->label('Gün içi bitiş')->seconds(false)
-                        ->visible(fn (Get $get) => (bool) $get('unit_hourly')),
-                    TimePicker::make('checkin_time')->label('Giriş saati')->seconds(false)
-                        ->visible(fn (Get $get) => (bool) $get('unit_daily') || (bool) $get('unit_weekly')),
-                    TimePicker::make('checkout_time')->label('Çıkış saati')->seconds(false)
-                        ->visible(fn (Get $get) => (bool) $get('unit_daily') || (bool) $get('unit_weekly')),
-                    Select::make('weekly_start_dow')
-                        ->label('Haftalık kiralama giriş günü')
-                        ->options([
-                            0 => 'Pazar', 1 => 'Pazartesi', 2 => 'Salı', 3 => 'Çarşamba',
-                            4 => 'Perşembe', 5 => 'Cuma', 6 => 'Cumartesi',
-                        ])
-                        ->helperText('Boş bırakılırsa her gün başlayabilir.')
-                        ->visible(fn (Get $get) => (bool) $get('unit_weekly')),
+                    TimePicker::make('day_start')->label('Kalkış saati')->seconds(false),
+                    TimePicker::make('day_end')->label('Dönüş saati')->seconds(false),
                 ]),
 
             Section::make('Özellikler')

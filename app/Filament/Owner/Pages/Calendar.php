@@ -3,10 +3,10 @@
 namespace App\Filament\Owner\Pages;
 
 use App\Models\Yacht;
+use App\Services\AvailabilityService;
 use BackedEnum;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
-use Illuminate\Support\Carbon;
 
 /**
  * Yat sahibinin takvimi: onayli rezervasyonlar + elle bloklar tek gorunumde.
@@ -68,7 +68,6 @@ class Calendar extends Page
         $to = $from->copy()->addMonths(3)->endOfMonth();
 
         $blocks = $yacht->blockedPeriods()
-            ->with('reservation')
             ->overlapping($from, $to)
             ->get();
 
@@ -80,13 +79,13 @@ class Calendar extends Page
             while ($cursor->lt($block->ends_at)) {
                 $map[$cursor->toDateString()] = [
                     'reason' => $block->reason,
-                    'label' => $block->reason === 'reservation'
-                        ? ($block->reservation?->code ?? 'Rezervasyon')
-                        : ($block->note ?: ($block->reason === 'maintenance' ? 'Bakim' : 'Ozel kullanim')),
+                    'label' => $block->note ?: ($block->reason === 'maintenance' ? 'Bakim' : 'Ozel kullanim'),
                 ];
                 $cursor->addDay();
             }
         }
+
+        $seats = app(AvailabilityService::class)->seatsForRange($yacht, $from, $to);
 
         $months = [];
 
@@ -107,6 +106,7 @@ class Calendar extends Page
                     'day' => $d,
                     'past' => $date->isBefore(now()->startOfDay()),
                     'block' => $map[$key] ?? null,
+                    'seats' => $seats[$key] ?? null,
                     'date' => $date->format('d.m.Y'),
                 ];
             }

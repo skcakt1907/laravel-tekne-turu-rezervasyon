@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class YachtRate extends Model
 {
     protected $fillable = [
-        'yacht_id', 'unit', 'label', 'season_start', 'season_end', 'price', 'min_duration',
+        'yacht_id', 'unit', 'label', 'season_start', 'season_end', 'price', 'price_child', 'min_duration',
     ];
 
     protected $casts = [
@@ -17,6 +17,7 @@ class YachtRate extends Model
         'season_start' => 'date',
         'season_end' => 'date',
         'price' => 'decimal:2',
+        'price_child' => 'decimal:2',
     ];
 
     public function yacht(): BelongsTo

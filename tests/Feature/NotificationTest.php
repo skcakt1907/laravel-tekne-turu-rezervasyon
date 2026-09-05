@@ -179,14 +179,11 @@ class NotificationTest extends TestCase
 
     private function payload(string $email, int $dayOffset = 30): array
     {
-        $start = now()->addDays($dayOffset)->setTime(10, 0);
-
         return [
             'yacht_id' => $this->yacht->id,
-            'unit' => 'day',
-            'starts_at' => $start->format('Y-m-d H:i'),
-            'ends_at' => $start->copy()->addDays(3)->format('Y-m-d H:i'),
-            'guests' => 6,
+            'date' => now()->addDays($dayOffset)->toDateString(),
+            'adults' => 6,
+            'children' => 0,
             'customer_name' => 'Test Musteri',
             'customer_email' => $email,
             'customer_phone' => '+905551112233',

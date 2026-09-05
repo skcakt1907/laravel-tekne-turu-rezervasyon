@@ -46,17 +46,20 @@
                                 <div></div>
                             @else
                                 @php
+                                    $isFull = ! $day['past'] && $day['seats'] !== null && $day['seats'] <= 0;
                                     $classes = match (true) {
-                                        $day['block'] && $day['block']['reason'] === 'reservation'
-                                            => 'bg-success-100 text-success-700 dark:bg-success-500/20 dark:text-success-400 font-medium',
                                         (bool) $day['block']
                                             => 'bg-warning-100 text-warning-700 dark:bg-warning-500/20 dark:text-warning-400',
+                                        $isFull => 'bg-success-100 text-success-700 dark:bg-success-500/20 dark:text-success-400 font-medium',
                                         $day['past'] => 'text-gray-300 dark:text-gray-600',
                                         default => 'bg-gray-50 dark:bg-white/5',
                                     };
+                                    $title = $day['date'];
+                                    $title .= $day['block'] ? ' — '.$day['block']['label'] : '';
+                                    $title .= (! $day['block'] && $day['seats'] !== null) ? ' — '.$day['seats'].' kişilik yer var' : '';
                                 @endphp
                                 <div class="aspect-square rounded-md grid place-items-center text-xs {{ $classes }}"
-                                     title="{{ $day['date'] }}{{ $day['block'] ? ' — '.$day['block']['label'] : '' }}">
+                                     title="{{ $title }}">
                                     {{ $day['day'] }}
                                 </div>
                             @endif

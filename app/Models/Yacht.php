@@ -90,14 +90,4 @@ class Yacht extends Model
 
         return $cover?->url();
     }
-
-    /** Yat için aktif kiralama birimleri. */
-    public function activeUnits(): array
-    {
-        return array_keys(array_filter([
-            'hour' => $this->unit_hourly,
-            'day' => $this->unit_daily,
-            'week' => $this->unit_weekly,
-        ]));
-    }
 }

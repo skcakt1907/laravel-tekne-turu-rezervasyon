@@ -136,7 +136,6 @@ class CustomerAccountTest extends TestCase
         // Talep kaydedilir ama rezervasyon HÂLÂ onayli - karari yat sahibi verir
         $this->assertNotNull($reservation->cancel_requested_at);
         $this->assertSame(ReservationStatus::Approved, $reservation->status);
-        $this->assertSame(1, $reservation->blockedPeriod()->count());
 
         // Yat sahibine ve admin'e bildirim gider
         Mail::assertSent(ReservationMail::class, fn ($mail) => $mail->template === 'cancel_requested_owner');
@@ -185,7 +184,6 @@ class CustomerAccountTest extends TestCase
         $reservation->refresh();
 
         $this->assertSame(ReservationStatus::Cancelled, $reservation->status);
-        $this->assertSame(0, $reservation->blockedPeriod()->count());
     }
 
     private function makeCustomer(string $email): User
@@ -201,14 +199,13 @@ class CustomerAccountTest extends TestCase
 
     private function makeReservation(string $email = 'test@example.com', int $dayOffset = 30): Reservation
     {
-        $start = now()->addDays($dayOffset)->setTime(10, 0);
+        $date = now()->addDays($dayOffset)->toDateString();
 
         $this->post('/rezervasyon-talebi', [
             'yacht_id' => $this->yacht->id,
-            'unit' => 'day',
-            'starts_at' => $start->format('Y-m-d H:i'),
-            'ends_at' => $start->copy()->addDays(3)->format('Y-m-d H:i'),
-            'guests' => 4,
+            'date' => $date,
+            'adults' => 4,
+            'children' => 0,
             'customer_name' => 'Test Musteri',
             'customer_email' => $email,
             'customer_phone' => '+905551112233',

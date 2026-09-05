@@ -53,11 +53,11 @@ class SiteTest extends TestCase
         $response->assertOk();
 
         $positions = [
-            'hourly' => strpos($response->getContent(), 'Deniz Yıldızı'),
-            'daily' => strpos($response->getContent(), 'Mavi Rüzgar'),
+            'cheap' => strpos($response->getContent(), 'Deniz Yıldızı'),
+            'expensive' => strpos($response->getContent(), 'Mavi Rüzgar'),
         ];
 
-        $this->assertLessThan($positions['daily'], $positions['hourly']);
+        $this->assertLessThan($positions['expensive'], $positions['cheap']);
     }
 
     public function test_filters_narrow_results(): void
@@ -91,15 +91,13 @@ class SiteTest extends TestCase
 
     public function test_booking_request_creates_pending_reservation_and_consents(): void
     {
-        $start = now()->addDays(30)->setTime(10, 0);
-        $end = $start->copy()->addDays(4);
+        $date = now()->addDays(30)->toDateString();
 
         $response = $this->post('/rezervasyon-talebi', [
             'yacht_id' => $this->yacht->id,
-            'unit' => 'day',
-            'starts_at' => $start->format('Y-m-d H:i'),
-            'ends_at' => $end->format('Y-m-d H:i'),
-            'guests' => 8,
+            'date' => $date,
+            'adults' => 4,
+            'children' => 0,
             'customer_name' => 'Test Musteri',
             'customer_email' => 'test@example.com',
             'customer_phone' => '+905551112233',
@@ -111,11 +109,11 @@ class SiteTest extends TestCase
 
         $response->assertRedirect();
         $this->assertSame(ReservationStatus::Pending, $reservation->status);
-        $this->assertSame('9600.00', $reservation->estimated_total); // 4 gun x 2400
+        $this->assertSame('9600.00', $reservation->estimated_total); // 4 yetiskin x 2400
         $this->assertStringStartsWith('YK-', $reservation->code);
 
-        // Talep takvimi KILITLEMEZ
-        $this->assertSame(0, BlockedPeriod::where('yacht_id', $this->yacht->id)->count());
+        // Talep kapasiteden dusmez (Mavi Ruzgar kapasitesi 16)
+        $this->assertSame(16, app(\App\Services\AvailabilityService::class)->remainingSeats($this->yacht, \Illuminate\Support\Carbon::parse($date)));
 
         // Acik riza kayitlari (KVKK + WhatsApp)
         $this->assertSame(2, Consent::where('subject_id', $reservation->id)->count());
@@ -123,14 +121,13 @@ class SiteTest extends TestCase
 
     public function test_booking_request_requires_consent(): void
     {
-        $start = now()->addDays(30)->setTime(10, 0);
+        $date = now()->addDays(30)->toDateString();
 
         $this->post('/rezervasyon-talebi', [
             'yacht_id' => $this->yacht->id,
-            'unit' => 'day',
-            'starts_at' => $start->format('Y-m-d H:i'),
-            'ends_at' => $start->copy()->addDays(2)->format('Y-m-d H:i'),
-            'guests' => 4,
+            'date' => $date,
+            'adults' => 4,
+            'children' => 0,
             'customer_name' => 'Test',
             'customer_email' => 'test@example.com',
             'customer_phone' => '+905551112233',
@@ -178,7 +175,10 @@ class SiteTest extends TestCase
         $reservation->refresh();
 
         $this->assertSame(ReservationStatus::Approved, $reservation->status);
-        $this->assertSame(1, BlockedPeriod::where('reservation_id', $reservation->id)->count());
+
+        // Kapasiteden onaylanan kisi sayisi kadar dusmus olmali
+        $remaining = app(\App\Services\AvailabilityService::class)->remainingSeats($this->yacht, $reservation->starts_at);
+        $this->assertSame(16 - $reservation->guests, $remaining);
 
         // Ayni baglanti ikinci kez onay ekrani acmamali
         $this->get("/onay/{$reservation->code}/{$reservation->access_token}")->assertStatus(410);
@@ -197,14 +197,13 @@ class SiteTest extends TestCase
 
     private function makeReservation(): Reservation
     {
-        $start = now()->addDays(40)->setTime(10, 0);
+        $date = now()->addDays(40)->toDateString();
 
         $this->post('/rezervasyon-talebi', [
             'yacht_id' => $this->yacht->id,
-            'unit' => 'day',
-            'starts_at' => $start->format('Y-m-d H:i'),
-            'ends_at' => $start->copy()->addDays(3)->format('Y-m-d H:i'),
-            'guests' => 6,
+            'date' => $date,
+            'adults' => 6,
+            'children' => 0,
             'customer_name' => 'Test Musteri',
             'customer_email' => 'test@example.com',
             'customer_phone' => '+905551112233',

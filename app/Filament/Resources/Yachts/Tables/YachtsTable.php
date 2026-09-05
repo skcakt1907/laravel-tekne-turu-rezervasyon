@@ -43,15 +43,10 @@ class YachtsTable
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
-                TextColumn::make('units')
-                    ->label('Birimler')
-                    ->getStateUsing(function (Yacht $record) {
-                        $map = ['hour' => 'Saatlik', 'day' => 'Günlük', 'week' => 'Haftalık'];
-
-                        return collect($record->activeUnits())->map(fn ($u) => $map[$u])->implode(', ') ?: '—';
-                    })
-                    ->badge()
-                    ->color('gray'),
+                TextColumn::make('capacity')
+                    ->label('Kapasite')
+                    ->placeholder('—')
+                    ->toggleable(),
                 TextColumn::make('status')
                     ->label('Durum')
                     ->badge()

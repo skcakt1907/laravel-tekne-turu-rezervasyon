@@ -77,8 +77,8 @@ class AdminPanelTest extends TestCase
                 'slug' => 'test-yati',
                 'owner_id' => $owner->id,
                 'type' => 'motoryat',
+                'capacity' => 10,
                 'currency' => 'EUR',
-                'unit_daily' => true,
                 'status' => YachtStatus::Pending->value,
             ])
             ->call('create')
@@ -134,12 +134,10 @@ class AdminPanelTest extends TestCase
             'pageClass' => EditYacht::class,
         ])
             ->callAction(TestAction::make('create')->table(), data: [
-                'unit' => 'day',
                 'label' => 'Yuksek sezon',
                 'season_start' => '2026-06-15',
                 'season_end' => '2026-09-15',
                 'price' => 3600,
-                'min_duration' => 3,
             ])
             ->assertHasNoActionErrors();
 
@@ -149,7 +147,7 @@ class AdminPanelTest extends TestCase
 
         // Sezon fiyati temel fiyati ezmeli (dar aralik kazanir)
         $resolved = app(\App\Services\PricingService::class)
-            ->resolveRate($yacht->fresh(), \App\Enums\RentalUnit::Day, \Illuminate\Support\Carbon::parse('2026-07-01'));
+            ->resolveRate($yacht->fresh(), \Illuminate\Support\Carbon::parse('2026-07-01'));
         $this->assertSame($rate->id, $resolved->id);
     }
 }

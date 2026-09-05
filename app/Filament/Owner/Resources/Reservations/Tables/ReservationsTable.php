@@ -81,9 +81,9 @@ class ReservationsTable
                     ->modalHeading('Rezervasyonu onayla')
                     ->modalDescription(function (Reservation $record) {
                         $others = app(AvailabilityService::class)
-                            ->pendingRequestCount($record->yacht, $record->starts_at, $record->ends_at, $record->id);
+                            ->pendingRequestCount($record->yacht, $record->starts_at, $record->id);
 
-                        $note = 'Onayladığınızda bu tarih takviminizde kapanır.';
+                        $note = 'Onayladığınızda bu tarihteki kapasiteden düşer.';
 
                         return $others > 0
                             ? $note." Aynı tarihte bekleyen {$others} talep daha var, onlar açıkta kalacak."

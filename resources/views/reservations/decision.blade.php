@@ -14,9 +14,9 @@
     <div class="panel">
         <dl class="mb-5 grid grid-cols-2 gap-4 sm:grid-cols-3">
             @foreach ([
-                __('site.booking.start') => $reservation->starts_at->format('d.m.Y H:i'),
-                __('site.booking.end') => $reservation->ends_at->format('d.m.Y H:i'),
-                __('site.booking.guests') => $reservation->guests,
+                __('site.booking.date') => $reservation->starts_at->format('d.m.Y'),
+                __('site.booking.adults') => $reservation->adults,
+                __('site.booking.children') => $reservation->children,
                 __('site.booking.estimate') => money($reservation->estimated_total, $reservation->currency),
                 __('site.booking.name') => $reservation->customer_name,
                 __('site.booking.phone') => $reservation->customer_phone,

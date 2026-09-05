@@ -118,8 +118,8 @@ class YachtsTable
             $missing[] = 'En az bir fiyat girmelisiniz.';
         }
 
-        if (! $yacht->activeUnits()) {
-            $missing[] = 'En az bir kiralama birimi (saatlik/günlük/haftalık) açık olmalı.';
+        if (! $yacht->capacity) {
+            $missing[] = 'Günlük tur kapasitesi girilmeli.';
         }
 
         return $missing;

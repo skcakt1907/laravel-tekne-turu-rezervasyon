@@ -121,16 +121,13 @@ class OwnerTablesTest extends TestCase
 
     private function makeReservation(int $dayOffset): Reservation
     {
-        $start = now()->addDays($dayOffset)->setTime(10, 0);
-
         return app(ReservationService::class)->request($this->yacht, [
             'customer_name' => 'Test',
             'customer_email' => 'test@example.com',
             'customer_phone' => '+905551112233',
-            'unit' => 'day',
-            'starts_at' => $start,
-            'ends_at' => $start->copy()->addDays(2),
-            'guests' => 4,
+            'date' => now()->addDays($dayOffset),
+            'adults' => 4,
+            'children' => 0,
         ]);
     }
 }

@@ -2,61 +2,94 @@
 
 namespace App\Services;
 
+use App\Enums\ReservationStatus;
 use App\Models\BlockedPeriod;
 use App\Models\Yacht;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Collection;
 
 /**
- * Tek zaman modeli: saatlik/günlük/haftalık hepsi starts_at–ends_at.
- * Çakışma sorgusu: starts_at < :bitis AND ends_at > :baslangic
- * Hazırlık payı (turnaround) aralığın iki ucuna eklenerek kontrol edilir.
+ * Kişi başı grup turu: günde tek sefer, kapasite dolana kadar bağımsız
+ * müşteriler aynı tarihe rezervasyon yaptırabilir. "Talep kilitlemez, ONAY
+ * kilitler" kuralı burada "onaylı rezervasyonlar kapasiteden düşer" olarak
+ * uygulanır. Manuel blok (owner'ın bakım/özel kullanım için kapattığı gün)
+ * günü tamamen kapatır.
  */
 class AvailabilityService
 {
-    /** Yat verilen aralıkta müsait mi? (yalnızca ONAYLI kayıtlar ve manuel bloklar kilitler) */
-    public function isAvailable(Yacht $yacht, CarbonInterface $start, CarbonInterface $end, ?int $ignoreReservationId = null): bool
+    /** Bu tarihte istenen kişi sayısı için yer var mı? */
+    public function isAvailable(Yacht $yacht, CarbonInterface $date, int $requestedGuests, ?int $ignoreReservationId = null): bool
     {
         if (! $yacht->is_open) {
             return false;
         }
 
-        return ! $this->conflicts($yacht, $start, $end, $ignoreReservationId)->isNotEmpty();
+        if ($this->isManuallyBlocked($yacht, $date)) {
+            return false;
+        }
+
+        return $this->remainingSeats($yacht, $date, $ignoreReservationId) >= $requestedGuests;
     }
 
-    /** Çakışan blok kayıtları. */
-    public function conflicts(Yacht $yacht, CarbonInterface $start, CarbonInterface $end, ?int $ignoreReservationId = null): Collection
+    /** Bu tarihte kalan koltuk sayısı. */
+    public function remainingSeats(Yacht $yacht, CarbonInterface $date, ?int $ignoreReservationId = null): int
     {
-        $pad = $yacht->turnaround_minutes ?: 0;
-        $paddedStart = $start->copy()->subMinutes($pad);
-        $paddedEnd = $end->copy()->addMinutes($pad);
+        $capacity = (int) ($yacht->capacity ?? 0);
 
-        return BlockedPeriod::query()
-            ->where('yacht_id', $yacht->id)
-            ->when($ignoreReservationId, fn ($q) => $q->where(function ($q) use ($ignoreReservationId) {
-                $q->whereNull('reservation_id')->orWhere('reservation_id', '!=', $ignoreReservationId);
-            }))
-            ->overlapping($paddedStart, $paddedEnd)
-            ->get();
+        $booked = $yacht->reservations()
+            ->where('status', ReservationStatus::Approved)
+            ->whereDate('starts_at', $date->toDateString())
+            ->when($ignoreReservationId, fn ($q) => $q->where('id', '!=', $ignoreReservationId))
+            ->get()
+            ->sum(fn ($r) => $r->adults + $r->children);
+
+        return max(0, $capacity - $booked);
     }
 
-    /** Aynı aralığa gelmiş bekleyen talep sayısı — panelde "bu tarihte 2 talep var" uyarısı. */
-    public function pendingRequestCount(Yacht $yacht, CarbonInterface $start, CarbonInterface $end, ?int $ignoreReservationId = null): int
+    /** Manuel olarak (bakım, özel kullanım) tamamen kapatılmış mı? */
+    public function isManuallyBlocked(Yacht $yacht, CarbonInterface $date): bool
+    {
+        return $yacht->blockedPeriods()
+            ->where('starts_at', '<', $date->copy()->endOfDay())
+            ->where('ends_at', '>', $date->copy()->startOfDay())
+            ->exists();
+    }
+
+    /** Aynı tarihe gelmiş bekleyen talep sayısı — panelde "bu tarihte 2 talep var" uyarısı. */
+    public function pendingRequestCount(Yacht $yacht, CarbonInterface $date, ?int $ignoreReservationId = null): int
     {
         return $yacht->reservations()
             ->pending()
+            ->whereDate('starts_at', $date->toDateString())
             ->when($ignoreReservationId, fn ($q) => $q->where('id', '!=', $ignoreReservationId))
-            ->overlapping($start, $end)
             ->count();
     }
 
-    /** Takvim için kapalı aralıklar (yat detay sayfası müsaitlik takvimi). */
+    /** Takvim için kapalı aralıklar (manuel bloklar — yat detay sayfası/owner takvimi). */
     public function blockedRanges(Yacht $yacht, CarbonInterface $from, CarbonInterface $to): Collection
     {
         return $yacht->blockedPeriods()
             ->overlapping($from, $to)
             ->orderBy('starts_at')
             ->get(['id', 'starts_at', 'ends_at', 'reason']);
+    }
+
+    /** Yat detay sayfası takvimi: her gün için kalan koltuk sayısı. */
+    public function seatsForRange(Yacht $yacht, CarbonInterface $from, CarbonInterface $to): array
+    {
+        $seats = [];
+        $cursor = $from->copy()->startOfDay();
+        $stop = $to->copy()->startOfDay();
+
+        while ($cursor->lessThanOrEqualTo($stop)) {
+            $seats[$cursor->toDateString()] = $this->isManuallyBlocked($yacht, $cursor)
+                ? 0
+                : $this->remainingSeats($yacht, $cursor);
+
+            $cursor->addDay();
+        }
+
+        return $seats;
     }
 
     /** Manuel blok (bakım, özel kullanım, site dışı rezervasyon). */

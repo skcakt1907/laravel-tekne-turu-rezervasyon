@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Enums\RentalUnit;
 use App\Models\Yacht;
 use App\Models\YachtRate;
 use Carbon\CarbonInterface;
 
 /**
  * Tahmini tutar hesabı. Sitede ödeme alınmadığı için sonuç daima "tahmini"dir.
+ * Kişi başı grup turu: yetişkin + çocuk (boşsa yetişkinle aynı) fiyatı.
  * Sezon kuralı: dar aralık geniş aralığı ezer; hiçbiri denk gelmezse temel fiyat.
  */
 class PricingService
@@ -18,19 +18,18 @@ class PricingService
      */
     public function quote(
         Yacht $yacht,
-        RentalUnit $unit,
-        CarbonInterface $start,
-        CarbonInterface $end,
-        int $guests = 1,
+        CarbonInterface $date,
+        int $adults = 1,
+        int $children = 0,
         array $extraIds = [],
     ): array {
-        $quantity = $this->quantity($unit, $start, $end);
-        $rate = $this->resolveRate($yacht, $unit, $start);
+        $rate = $this->resolveRate($yacht, $date);
 
-        $unitPrice = $rate ? (float) $rate->price : 0.0;
-        $base = round($unitPrice * $quantity, 2);
+        $adultPrice = $rate ? (float) $rate->price : 0.0;
+        $childPrice = $rate ? (float) ($rate->price_child ?? $rate->price) : 0.0;
+        $base = round($adultPrice * $adults + $childPrice * $children, 2);
 
-        $days = max($start->diffInMinutes($end) / 1440, 0);
+        $guests = $adults + $children;
         $extras = 0.0;
         $extraLines = [];
 
@@ -41,7 +40,7 @@ class PricingService
                 continue;
             }
 
-            $amount = $extra->calculate($guests, $days);
+            $amount = $extra->calculate($guests, 1);
             $extras += $amount;
             $extraLines[] = [
                 'id' => $extra->id,
@@ -57,9 +56,10 @@ class PricingService
             'total' => round($base + $extras, 2),
             'currency' => $yacht->currency,
             'breakdown' => [
-                'unit' => $unit->value,
-                'unit_price' => $unitPrice,
-                'quantity' => $quantity,
+                'adult_price' => $adultPrice,
+                'child_price' => $childPrice,
+                'adults' => $adults,
+                'children' => $children,
                 'rate_id' => $rate?->id,
                 'rate_label' => $rate?->label,
                 'extras' => $extraLines,
@@ -67,13 +67,12 @@ class PricingService
         ];
     }
 
-    /** Seçilen tarihte geçerli fiyat kaydı. */
-    public function resolveRate(Yacht $yacht, RentalUnit $unit, CarbonInterface $date): ?YachtRate
+    /** Seçilen tarihte geçerli fiyat kaydı (tek birim: günlük). */
+    public function resolveRate(Yacht $yacht, CarbonInterface $date): ?YachtRate
     {
         $rates = $yacht->relationLoaded('rates') ? $yacht->rates : $yacht->rates()->get();
 
-        $matching = $rates
-            ->where('unit', $unit)
+        return $rates
             ->filter(function (YachtRate $rate) use ($date) {
                 if ($rate->isBase()) {
                     return true;
@@ -81,24 +80,14 @@ class PricingService
 
                 return $date->betweenIncluded($rate->season_start, $rate->season_end);
             })
-            ->sortBy(fn (YachtRate $rate) => $rate->spanDays()); // dar aralık önce
-
-        return $matching->first();
+            ->sortBy(fn (YachtRate $rate) => $rate->spanDays()) // dar aralık önce
+            ->first();
     }
 
-    /** Liste kartındaki "…'den başlayan fiyatlarla" değeri. */
+    /** Liste kartındaki "…'den başlayan fiyatlarla" değeri (yetişkin fiyatı). */
     public function priceFrom(Yacht $yacht): ?array
     {
-        $units = $yacht->activeUnits();
-
-        if (! $units) {
-            return null;
-        }
-
-        $cheapest = $yacht->rates()
-            ->whereIn('unit', $units)
-            ->orderBy('price')
-            ->first();
+        $cheapest = $yacht->rates()->orderBy('price')->first();
 
         if (! $cheapest) {
             return null;
@@ -109,25 +98,5 @@ class PricingService
             'unit' => $cheapest->unit->value,
             'currency' => $yacht->currency,
         ];
-    }
-
-    /** Kiralama süresinin birim cinsinden miktarı (yukarı yuvarlanır). */
-    public function quantity(RentalUnit $unit, CarbonInterface $start, CarbonInterface $end): float
-    {
-        $minutes = max($start->diffInMinutes($end), 0);
-
-        return max(1, ceil($minutes / $unit->minutes()));
-    }
-
-    /** Yat sahibinin girdiği en az süre kuralı sağlanıyor mu? */
-    public function meetsMinimum(Yacht $yacht, RentalUnit $unit, CarbonInterface $start, CarbonInterface $end): bool
-    {
-        $rate = $this->resolveRate($yacht, $unit, $start);
-
-        if (! $rate) {
-            return false;
-        }
-
-        return $this->quantity($unit, $start, $end) >= $rate->min_duration;
     }
 }
