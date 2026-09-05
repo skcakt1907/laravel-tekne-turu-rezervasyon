@@ -46,10 +46,9 @@
                     </a>
                 </div>
 
-                <dl class="mt-10 grid max-w-lg grid-cols-3 gap-6 border-t border-white/15 pt-6">
+                <dl class="mt-10 grid max-w-sm grid-cols-2 gap-6 border-t border-white/15 pt-6">
                     @foreach ([
                         ['value' => $stats['yachts'], 'label' => __('site.home.stat_yachts')],
-                        ['value' => $stats['ports'], 'label' => __('site.home.stat_ports')],
                         ['value' => '0 ₺', 'label' => __('site.home.stat_upfront')],
                     ] as $stat)
                         <div>
@@ -144,39 +143,6 @@
         </ol>
     </div>
 </section>
-
-{{-- ---------------- LİMANLAR ---------------- --}}
-@if ($ports->isNotEmpty())
-    <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6">
-        <div class="mb-8">
-            <p class="eyebrow mb-2">{{ __('site.home.ports') }}</p>
-            <h2 class="text-3xl font-bold sm:text-4xl">{{ __('site.home.ports_title') }}</h2>
-        </div>
-
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            @foreach ($ports as $port)
-                <a href="{{ lroute('locations.show', $port->slug) }}"
-                   class="group relative flex min-h-44 flex-col justify-end overflow-hidden rounded-xl bg-sea-900 p-5 text-white transition hover:-translate-y-1 hover:shadow-xl hover:shadow-sea-900/20">
-                    @if ($port->cover)
-                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($port->cover) }}"
-                             alt="" loading="lazy"
-                             class="absolute inset-0 h-full w-full object-cover opacity-55 transition duration-500 group-hover:scale-105 group-hover:opacity-70">
-                    @else
-                        <div class="absolute inset-0 bg-gradient-to-br from-sea-700 via-sea-800 to-sea-950"></div>
-                    @endif
-                    <div class="absolute inset-0 bg-gradient-to-t from-sea-950/85 to-transparent"></div>
-
-                    <div class="relative">
-                        <h3 class="font-serif text-xl font-semibold">{{ $port->getTranslation('name', app()->getLocale()) }}</h3>
-                        <p class="mt-0.5 text-xs text-sea-300">
-                            {{ trans_choice('site.home.port_count', $port->yachts_count, ['count' => $port->yachts_count]) }}
-                        </p>
-                    </div>
-                </a>
-            @endforeach
-        </div>
-    </section>
-@endif
 
 {{-- ---------------- YAT TİPLERİ ---------------- --}}
 @if ($types->isNotEmpty())

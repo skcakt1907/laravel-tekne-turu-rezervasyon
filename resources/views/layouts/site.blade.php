@@ -57,25 +57,6 @@
                 {{ __('site.nav.yachts') }}
             </a>
 
-            @if ($navPorts->isNotEmpty())
-                <div class="relative" x-data="{ open: false }" @mouseleave="open = false">
-                    <button type="button" @click="open = !open" @mouseenter="open = true"
-                            class="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition hover:text-brass-500">
-                        {{ __('site.nav.destinations') }}
-                        <i class="bi bi-chevron-down text-[10px]"></i>
-                    </button>
-                    <div x-show="open" x-transition x-cloak
-                         class="absolute left-0 top-full w-52 overflow-hidden rounded-xl border border-sea-200 bg-white py-1 text-sea-900 shadow-lg">
-                        @foreach ($navPorts as $port)
-                            <a href="{{ lroute('locations.show', $port->slug) }}"
-                               class="block px-4 py-2 text-sm hover:bg-sea-50 hover:text-brass-700">
-                                {{ $port->getTranslation('name', app()->getLocale()) }}
-                            </a>
-                        @endforeach
-                    </div>
-                </div>
-            @endif
-
             <a href="{{ lroute('reservation.lookup') }}"
                class="rounded-lg px-3 py-2 text-sm font-medium transition hover:text-brass-500">
                 {{ __('site.nav.lookup') }}
@@ -121,11 +102,6 @@
     <div x-show="open" x-transition x-cloak class="border-t border-sea-200 bg-white text-sea-900 lg:hidden">
         <div class="space-y-1 px-4 py-3">
             <a href="{{ lroute('tours.index') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.yachts') }}</a>
-            @foreach ($navPorts as $port)
-                <a href="{{ lroute('locations.show', $port->slug) }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">
-                    {{ $port->getTranslation('name', app()->getLocale()) }}
-                </a>
-            @endforeach
             <a href="{{ lroute('reservation.lookup') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.lookup') }}</a>
             <a href="{{ lroute('contact') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.contact') }}</a>
             @auth
@@ -170,7 +146,7 @@
 
 <footer class="mt-24 bg-sea-950 text-sea-300">
     <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-        <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+        <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
             <div>
                 <div class="mb-3 flex items-center gap-2 font-serif text-lg font-bold text-white">
                     <i class="bi bi-life-preserver text-brass-500"></i>
@@ -185,21 +161,6 @@
                         <p><i class="bi bi-envelope mr-2 text-brass-500"></i>{{ setting('site_email') }}</p>
                     @endif
                 </div>
-            </div>
-
-            <div>
-                <h2 class="mb-3 font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-white">
-                    {{ __('site.footer.ports') }}
-                </h2>
-                <ul class="space-y-2 text-sm">
-                    @foreach ($navPorts as $port)
-                        <li>
-                            <a href="{{ lroute('locations.show', $port->slug) }}" class="transition hover:text-white">
-                                {{ $port->getTranslation('name', app()->getLocale()) }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
             </div>
 
             <div>

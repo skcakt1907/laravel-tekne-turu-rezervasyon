@@ -34,7 +34,6 @@ class SeoTest extends TestCase
 
         $this->assertStringContainsString('<loc>'.url('/').'</loc>', $xml);
         $this->assertStringContainsString(url('/tur/'.$this->yacht->slug), $xml);
-        $this->assertStringContainsString(url('/liman/bodrum'), $xml);
         $this->assertStringContainsString(url('/sayfa/kvkk'), $xml);
 
         // Her adres icin EN karsiligi

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Location;
 use App\Models\Page;
 use App\Models\Yacht;
 use Illuminate\Support\Carbon;
@@ -33,18 +32,6 @@ class SitemapController extends Controller
         // Yayındaki yatlar
         foreach (Yacht::published()->get(['slug', 'updated_at']) as $yacht) {
             $urls[] = $this->entry('tours.show', ['slug' => $yacht->slug], $locales, '0.8', 'weekly', $yacht->updated_at);
-        }
-
-        // Liman / bölge sayfaları (SEO'nun asıl çalıştığı yer)
-        foreach (Location::where('is_active', true)->get(['slug', 'updated_at', 'level']) as $location) {
-            $urls[] = $this->entry(
-                'locations.show',
-                ['slug' => $location->slug],
-                $locales,
-                $location->level === Location::LEVEL_PORT ? '0.7' : '0.5',
-                'weekly',
-                $location->updated_at
-            );
         }
 
         // Kurumsal sayfalar

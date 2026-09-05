@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 /**
- * Tur listesi filtreleri. Tur listesi ve liman sayfası aynı motoru kullanır.
+ * Tur listesi filtreleri.
  *
  * Tarih filtresi müsaitliği "kilitli aralık yok" olarak yorumlar: yalnızca
  * onaylı rezervasyonlar ve manuel bloklar turu listeden düşürür (talep düşürmez).
@@ -21,11 +21,7 @@ class YachtSearch
     {
         $query ??= Yacht::query();
 
-        $query->bookable()->with(['photos', 'location', 'owner']);
-
-        if ($portId = $request->integer('port')) {
-            $query->where('location_id', $portId);
-        }
+        $query->bookable()->with(['photos', 'owner']);
 
         if ($guests = $request->integer('guests')) {
             $query->where(function (Builder $q) use ($guests) {

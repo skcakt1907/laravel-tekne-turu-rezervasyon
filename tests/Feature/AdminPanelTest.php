@@ -7,7 +7,6 @@ use App\Enums\YachtStatus;
 use App\Filament\Resources\Yachts\Pages\CreateYacht;
 use App\Filament\Resources\Yachts\Pages\EditYacht;
 use App\Filament\Resources\Yachts\RelationManagers\RatesRelationManager;
-use App\Models\Location;
 use App\Models\User;
 use App\Models\Yacht;
 use Database\Seeders\DatabaseSeeder;
@@ -44,8 +43,6 @@ class AdminPanelTest extends TestCase
             '/yonetim/yachts',
             '/yonetim/yachts/create',
             "/yonetim/yachts/{$yacht->id}/edit",
-            '/yonetim/locations',
-            '/yonetim/locations/create',
             '/yonetim/features',
             '/yonetim/users',
             '/yonetim/users/create',
@@ -73,14 +70,12 @@ class AdminPanelTest extends TestCase
         $this->actingAs($this->admin);
 
         $owner = User::where('role', UserRole::Owner)->firstOrFail();
-        $port = Location::where('level', Location::LEVEL_PORT)->firstOrFail();
 
         Livewire::test(CreateYacht::class)
             ->fillForm([
                 'name' => ['tr' => 'Test Yatı', 'en' => 'Test Yacht'],
                 'slug' => 'test-yati',
                 'owner_id' => $owner->id,
-                'location_id' => $port->id,
                 'type' => 'motoryat',
                 'currency' => 'EUR',
                 'unit_daily' => true,

@@ -18,7 +18,7 @@ class Yacht extends Model
     public array $translatable = ['name', 'description', 'rules'];
 
     protected $fillable = [
-        'owner_id', 'location_id', 'name', 'slug', 'description', 'rules',
+        'owner_id', 'name', 'slug', 'description', 'rules',
         'type', 'brand', 'model', 'build_year', 'length_m', 'cabins', 'beds', 'wc',
         'capacity', 'sleep_capacity', 'engine', 'with_crew',
         'unit_hourly', 'unit_daily', 'unit_weekly', 'currency',
@@ -42,11 +42,6 @@ class Yacht extends Model
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
-    }
-
-    public function location(): BelongsTo
-    {
-        return $this->belongsTo(Location::class);
     }
 
     public function photos(): HasMany

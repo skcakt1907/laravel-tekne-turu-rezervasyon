@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Yachts\Tables;
 
 use App\Enums\YachtStatus;
-use App\Models\Location;
 use App\Models\Yacht;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
@@ -43,10 +42,6 @@ class YachtsTable
                     ->label('Sahibi')
                     ->searchable()
                     ->sortable()
-                    ->toggleable(),
-                TextColumn::make('location_id')
-                    ->label('Liman')
-                    ->getStateUsing(fn (Yacht $record) => $record->location?->getTranslation('name', 'tr') ?? '—')
                     ->toggleable(),
                 TextColumn::make('units')
                     ->label('Birimler')
@@ -88,11 +83,6 @@ class YachtsTable
                     ->relationship('owner', 'name')
                     ->searchable()
                     ->preload(),
-                SelectFilter::make('location_id')
-                    ->label('Liman')
-                    ->options(fn () => Location::where('level', Location::LEVEL_PORT)
-                        ->get()
-                        ->mapWithKeys(fn (Location $l) => [$l->id => $l->getTranslation('name', 'tr')])),
                 SelectFilter::make('type')
                     ->label('Tekne tipi')
                     ->options(config('yacht.types')),

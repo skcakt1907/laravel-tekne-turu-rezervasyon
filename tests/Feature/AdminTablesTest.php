@@ -8,12 +8,10 @@ use App\Filament\Resources\Collections\Pages\ListCollections;
 use App\Filament\Resources\CommissionSettings\Pages\ListCommissionSettings;
 use App\Filament\Resources\ContactMessages\Pages\ListContactMessages;
 use App\Filament\Resources\Features\Pages\ListFeatures;
-use App\Filament\Resources\Locations\Pages\ListLocations;
 use App\Filament\Resources\MessageLogs\Pages\ListMessageLogs;
 use App\Filament\Resources\Reservations\Pages\ListReservations;
 use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Filament\Resources\Yachts\Pages\ListYachts;
-use App\Models\Location;
 use App\Models\User;
 use App\Models\Yacht;
 use Database\Seeders\DatabaseSeeder;
@@ -58,14 +56,11 @@ class AdminTablesTest extends TestCase
     public function test_yacht_filters_work(): void
     {
         $owner = User::where('email', 'sahip@yatkiralama.com')->firstOrFail();
-        $port = Location::where('slug', 'bodrum')->firstOrFail();
 
         Livewire::test(ListYachts::class)
             ->filterTable('status', YachtStatus::Published->value)
             ->assertOk()
             ->filterTable('owner', $owner->id)
-            ->assertOk()
-            ->filterTable('location_id', $port->id)
             ->assertOk()
             ->filterTable('type', 'gulet')
             ->assertOk()
@@ -96,10 +91,6 @@ class AdminTablesTest extends TestCase
             ->filterTable('role', 'owner')
             ->assertOk()
             ->filterTable('is_approved', true)
-            ->assertOk();
-
-        Livewire::test(ListLocations::class)
-            ->filterTable('level', Location::LEVEL_PORT)
             ->assertOk();
 
         Livewire::test(ListFeatures::class)

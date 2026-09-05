@@ -2,15 +2,13 @@
 
 @php
     $locale = app()->getLocale();
-    $heading = $location
-        ? $location->getTranslation('name', $locale).' — '.__('site.list.title')
-        : __('site.list.title');
-    $formAction = $location ? lroute('locations.show', $location->slug) : lroute('tours.index');
+    $heading = __('site.list.title');
+    $formAction = lroute('tours.index');
     $activeFilters = collect(request()->except(['page', 'sort']))->filter()->count();
 @endphp
 
-@section('title', $location ? ($location->getTranslation('seo_title', $locale) ?: $heading) : $heading)
-@section('meta_description', $location ? strip_tags((string) $location->getTranslation('description', $locale)) : __('site.home.hero_sub'))
+@section('title', $heading)
+@section('meta_description', __('site.home.hero_sub'))
 
 @section('content')
 
@@ -19,13 +17,7 @@
         <nav class="mb-3 text-sm text-sea-300">
             <a href="{{ lroute('home') }}" class="transition hover:text-white">{{ setting('site_name', config('app.name')) }}</a>
             <span class="mx-1.5 text-sea-500">/</span>
-            @if ($location)
-                <a href="{{ lroute('tours.index') }}" class="transition hover:text-white">{{ __('site.nav.yachts') }}</a>
-                <span class="mx-1.5 text-sea-500">/</span>
-                <span class="text-white">{{ $location->getTranslation('name', $locale) }}</span>
-            @else
-                <span class="text-white">{{ __('site.nav.yachts') }}</span>
-            @endif
+            <span class="text-white">{{ __('site.nav.yachts') }}</span>
         </nav>
 
         <h1 class="text-3xl font-bold sm:text-4xl">{{ $heading }}</h1>
@@ -35,12 +27,6 @@
 
 <div class="mx-auto -mt-12 max-w-7xl px-4 sm:px-6">
     @include('partials.search-form', ['action' => $formAction])
-
-    @if ($location && $location->getTranslation('description', $locale))
-        <div class="panel prose-site mt-6">
-            {!! $location->getTranslation('description', $locale) !!}
-        </div>
-    @endif
 
     <div class="mt-8 grid gap-8 lg:grid-cols-[280px_1fr]">
 
@@ -59,7 +45,7 @@
                   x-cloak
                   class="mt-3 space-y-4 lg:mt-0 lg:block">
 
-                @foreach (['port', 'start', 'end', 'guests'] as $keep)
+                @foreach (['start', 'end', 'guests'] as $keep)
                     @if (request()->filled($keep))
                         <input type="hidden" name="{{ $keep }}" value="{{ request($keep) }}">
                     @endif

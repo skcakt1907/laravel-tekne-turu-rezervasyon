@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Enums\ReservationStatus;
 use App\Models\BlockedPeriod;
 use App\Models\Consent;
-use App\Models\Location;
 use App\Models\Reservation;
 use App\Models\Yacht;
 use Database\Seeders\DatabaseSeeder;
@@ -28,12 +27,9 @@ class SiteTest extends TestCase
 
     public function test_public_pages_load(): void
     {
-        $port = Location::where('slug', 'bodrum')->firstOrFail();
-
         $this->get('/')->assertOk()->assertSee('Mavi Rüzgar');
         $this->get('/turlar')->assertOk();
         $this->get('/tur/'.$this->yacht->slug)->assertOk()->assertSee('Rezervasyon Talebi');
-        $this->get('/liman/'.$port->slug)->assertOk()->assertSee('Mavi Rüzgar');
         $this->get('/tur-sahibi-ol')->assertOk();
         $this->get('/iletisim')->assertOk();
         $this->get('/sayfa/kvkk')->assertOk();

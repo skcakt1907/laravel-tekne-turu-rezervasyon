@@ -23,7 +23,6 @@ $site = function () {
 
     Route::get('/turlar', [YachtController::class, 'index'])->name('tours.index');
     Route::get('/tur/{slug}', [YachtController::class, 'show'])->name('tours.show');
-    Route::get('/liman/{slug}', [YachtController::class, 'location'])->name('locations.show');
 
     // Rezervasyon talebi
     Route::post('/rezervasyon-talebi', [ReservationController::class, 'store'])->name('reservation.store');

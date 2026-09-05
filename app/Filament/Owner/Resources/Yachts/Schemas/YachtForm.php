@@ -3,7 +3,6 @@
 namespace App\Filament\Owner\Resources\Yachts\Schemas;
 
 use App\Filament\Support\Translatable;
-use App\Models\Location;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -58,16 +57,6 @@ class YachtForm
             Section::make('Tekne Bilgileri')
                 ->columns(4)
                 ->schema([
-                    Select::make('location_id')
-                        ->label('Kalkış limanı')
-                        ->options(fn () => Location::where('level', Location::LEVEL_PORT)
-                            ->where('is_active', true)
-                            ->get()
-                            ->mapWithKeys(fn (Location $l) => [$l->id => $l->getTranslation('name', 'tr')]))
-                        ->searchable()
-                        ->preload()
-                        ->required()
-                        ->columnSpan(2),
                     Select::make('type')
                         ->label('Tekne tipi')
                         ->options(config('yacht.types'))

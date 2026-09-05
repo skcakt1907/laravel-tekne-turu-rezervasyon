@@ -7,7 +7,6 @@ use App\Enums\YachtStatus;
 use App\Models\CommissionSetting;
 use App\Models\Faq;
 use App\Models\Feature;
-use App\Models\Location;
 use App\Models\Setting;
 use App\Models\User;
 use App\Models\Yacht;
@@ -21,7 +20,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->users();
         $this->settings();
-        $this->locations();
         $this->features();
         $this->content();
         $this->demoYachts();
@@ -72,53 +70,6 @@ class DatabaseSeeder extends Seeder
             ['scope' => CommissionSetting::SCOPE_GLOBAL, 'target_id' => null],
             ['rate' => config('yacht.default_commission_rate', 10), 'note' => 'Varsayılan genel oran']
         );
-    }
-
-    private function locations(): void
-    {
-        $turkey = Location::updateOrCreate(
-            ['slug' => 'turkiye'],
-            ['name' => ['tr' => 'Türkiye', 'en' => 'Türkiye'], 'level' => Location::LEVEL_COUNTRY]
-        );
-
-        $regions = [
-            'ege' => ['tr' => 'Ege', 'en' => 'Aegean'],
-            'akdeniz' => ['tr' => 'Akdeniz', 'en' => 'Mediterranean'],
-            'marmara' => ['tr' => 'Marmara', 'en' => 'Marmara'],
-        ];
-
-        $regionModels = [];
-        foreach ($regions as $slug => $name) {
-            $regionModels[$slug] = Location::updateOrCreate(
-                ['slug' => $slug],
-                ['name' => $name, 'level' => Location::LEVEL_REGION, 'parent_id' => $turkey->id]
-            );
-        }
-
-        $ports = [
-            'bodrum' => ['ege', 'Bodrum', 37.0344, 27.4305],
-            'marmaris' => ['ege', 'Marmaris', 36.8552, 28.2740],
-            'gocek' => ['ege', 'Göcek', 36.7522, 28.9414],
-            'fethiye' => ['ege', 'Fethiye', 36.6213, 29.1164],
-            'cesme' => ['ege', 'Çeşme', 38.3235, 26.3060],
-            'kas' => ['akdeniz', 'Kaş', 36.2019, 29.6392],
-            'antalya' => ['akdeniz', 'Antalya', 36.8841, 30.7056],
-            'istanbul' => ['marmara', 'İstanbul', 41.0082, 28.9784],
-        ];
-
-        foreach ($ports as $slug => [$region, $name, $lat, $lng]) {
-            Location::updateOrCreate(
-                ['slug' => $slug],
-                [
-                    'name' => ['tr' => $name, 'en' => $name],
-                    'level' => Location::LEVEL_PORT,
-                    'parent_id' => $regionModels[$region]->id,
-                    'lat' => $lat,
-                    'lng' => $lng,
-                    'is_featured' => in_array($slug, ['bodrum', 'marmaris', 'gocek', 'fethiye'], true),
-                ]
-            );
-        }
     }
 
     private function features(): void
@@ -205,15 +156,11 @@ class DatabaseSeeder extends Seeder
             return;
         }
 
-        $bodrum = Location::where('slug', 'bodrum')->first();
-        $gocek = Location::where('slug', 'gocek')->first();
-
         $yachts = [
             [
                 'slug' => 'demo-gulet-mavi-ruzgar',
                 'name' => ['tr' => 'Mavi Rüzgar', 'en' => 'Mavi Rüzgar'],
                 'type' => 'gulet',
-                'location_id' => $bodrum?->id,
                 'length_m' => 28.5, 'cabins' => 6, 'beds' => 12, 'wc' => 6,
                 'capacity' => 16, 'sleep_capacity' => 12, 'build_year' => 2016,
                 'units' => ['day' => 2400, 'week' => 14000],
@@ -222,7 +169,6 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'demo-motoryat-deniz-yildizi',
                 'name' => ['tr' => 'Deniz Yıldızı', 'en' => 'Deniz Yıldızı'],
                 'type' => 'motoryat',
-                'location_id' => $gocek?->id,
                 'length_m' => 18.0, 'cabins' => 3, 'beds' => 6, 'wc' => 3,
                 'capacity' => 12, 'sleep_capacity' => 6, 'build_year' => 2020,
                 'units' => ['hour' => 350, 'day' => 1800],

@@ -8,7 +8,6 @@ use App\Enums\YachtStatus;
 use App\Filament\Owner\Resources\Yachts\Pages\CreateYacht;
 use App\Filament\Owner\Resources\Yachts\Pages\EditYacht;
 use App\Models\BlockedPeriod;
-use App\Models\Location;
 use App\Models\Reservation;
 use App\Models\User;
 use App\Models\Yacht;
@@ -126,13 +125,10 @@ class OwnerPanelTest extends TestCase
     {
         $this->actingAs($this->owner);
 
-        $port = Location::where('level', Location::LEVEL_PORT)->firstOrFail();
-
         Livewire::test(CreateYacht::class)
             ->fillForm([
                 'name' => ['tr' => 'Yeni Tekne', 'en' => 'New Boat'],
                 'slug' => 'yeni-tekne',
-                'location_id' => $port->id,
                 'type' => 'motoryat',
                 'capacity' => 10,
                 'currency' => 'EUR',

@@ -41,9 +41,8 @@
         </h3>
 
         <p class="mt-1 text-sm text-sea-500">
-            <i class="bi bi-geo-alt"></i>
-            {{ $yacht->location?->getTranslation('name', $locale) ?? '—' }}
-            <span class="mx-1 text-sea-300">·</span>{{ yacht_type_label($yacht->type) }}
+            <i class="bi bi-compass"></i>
+            {{ yacht_type_label($yacht->type) }}
         </p>
 
         <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-sea-100 pt-3 text-xs text-sea-600">

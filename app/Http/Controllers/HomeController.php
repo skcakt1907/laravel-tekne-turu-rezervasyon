@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Faq;
-use App\Models\Location;
 use App\Models\Yacht;
 
 class HomeController extends Controller
@@ -22,22 +21,12 @@ class HomeController extends Controller
         return view('home', [
             'stats' => [
                 'yachts' => Yacht::bookable()->count(),
-                'ports' => Location::where('level', Location::LEVEL_PORT)
-                    ->whereHas('yachts', fn ($q) => $q->bookable())
-                    ->count(),
             ],
             'featured' => Yacht::bookable()
-                ->with(['photos', 'location'])
+                ->with('photos')
                 ->orderByDesc('is_featured')
                 ->orderByDesc('published_at')
                 ->limit(6)
-                ->get(),
-            'ports' => Location::where('level', Location::LEVEL_PORT)
-                ->where('is_active', true)
-                ->where('is_featured', true)
-                ->withCount(['yachts' => fn ($q) => $q->bookable()])
-                ->orderBy('sort')
-                ->limit(8)
                 ->get(),
             'types' => collect(config('yacht.types'))
                 ->map(fn ($label, $key) => [

@@ -1,5 +1,4 @@
 @php
-    $locale = app()->getLocale();
     $action = $action ?? lroute('tours.index');
     $variant = $variant ?? 'floating'; // floating: hero altında kart · inline: sayfa içi
 @endphp
@@ -9,22 +8,7 @@
         ? 'rounded-2xl border border-white/15 bg-white/95 p-3 shadow-2xl shadow-sea-950/30 backdrop-blur sm:p-4'
         : 'card p-3 sm:p-4' }}">
 
-    <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_0.7fr_auto]">
-        <div>
-            <label for="s-port" class="label">{{ __('site.search.port') }}</label>
-            <div class="relative">
-                <i class="bi bi-geo-alt pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sea-400"></i>
-                <select name="port" id="s-port" class="field pl-9">
-                    <option value="">{{ __('site.search.all_ports') }}</option>
-                    @foreach ($ports as $port)
-                        <option value="{{ $port->id }}" @selected(request('port') == $port->id)>
-                            {{ $port->getTranslation('name', $locale) }}@isset($port->yachts_count) ({{ $port->yachts_count }})@endisset
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-
+    <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_0.7fr_auto]">
         <div>
             <label for="s-start" class="label">{{ __('site.search.start') }}</label>
             <input type="date" name="start" id="s-start" class="field"

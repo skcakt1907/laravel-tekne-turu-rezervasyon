@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Yachts\Schemas;
 use App\Enums\UserRole;
 use App\Enums\YachtStatus;
 use App\Filament\Support\Translatable;
-use App\Models\Location;
 use App\Models\User;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -66,13 +65,6 @@ class YachtForm
                             ->searchable()
                             ->preload()
                             ->required(),
-                        Select::make('location_id')
-                            ->label('Kalkış limanı')
-                            ->options(fn () => Location::where('level', Location::LEVEL_PORT)
-                                ->get()
-                                ->mapWithKeys(fn (Location $l) => [$l->id => $l->getTranslation('name', 'tr')]))
-                            ->searchable()
-                            ->preload(),
                         Select::make('type')
                             ->label('Tekne tipi')
                             ->options(config('yacht.types'))

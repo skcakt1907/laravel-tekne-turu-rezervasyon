@@ -26,21 +26,15 @@
     $breadcrumb = [
         '@context' => 'https://schema.org',
         '@type' => 'BreadcrumbList',
-        'itemListElement' => array_values(array_filter([
+        'itemListElement' => [
             ['@type' => 'ListItem', 'position' => 1, 'name' => __('site.nav.yachts'), 'item' => lroute('tours.index')],
-            $yacht->location ? [
-                '@type' => 'ListItem',
-                'position' => 2,
-                'name' => $yacht->location->getTranslation('name', $locale),
-                'item' => lroute('locations.show', $yacht->location->slug),
-            ] : null,
             [
                 '@type' => 'ListItem',
-                'position' => $yacht->location ? 3 : 2,
+                'position' => 2,
                 'name' => $yacht->getTranslation('name', $locale),
                 'item' => lroute('tours.show', $yacht->slug),
             ],
-        ])),
+        ],
     ];
 @endphp
 <script type="application/ld+json">{!! json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>

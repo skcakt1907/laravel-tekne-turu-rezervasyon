@@ -26,7 +26,6 @@ class YachtsTable
                 TextColumn::make('name')
                     ->label('Tur')
                     ->getStateUsing(fn (Yacht $record) => $record->getTranslation('name', 'tr'))
-                    ->description(fn (Yacht $record) => $record->location?->getTranslation('name', 'tr'))
                     ->searchable(query: fn ($query, string $search) => $query->where('name', 'like', "%{$search}%")),
                 TextColumn::make('status')
                     ->label('Durum')

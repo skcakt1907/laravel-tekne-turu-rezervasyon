@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Enums\RentalUnit;
 use App\Models\Feature;
-use App\Models\Location;
 use App\Models\Yacht;
 use App\Services\AvailabilityService;
 use App\Services\PricingService;
@@ -28,16 +27,14 @@ class YachtController extends Controller
 
         return view('tours.index', [
             'yachts' => $yachts,
-            'ports' => $this->ports(),
             'features' => $this->features(),
-            'location' => null,
         ]);
     }
 
     public function show(Request $request, string $slug)
     {
         $yacht = Yacht::published()
-            ->with(['photos', 'features', 'rates', 'extras', 'location', 'owner'])
+            ->with(['photos', 'features', 'rates', 'extras', 'owner'])
             ->where('slug', $slug)
             ->firstOrFail();
 
@@ -47,7 +44,7 @@ class YachtController extends Controller
         $similar = Yacht::bookable()
             ->with('photos')
             ->whereKeyNot($yacht->id)
-            ->where(fn ($q) => $q->where('location_id', $yacht->location_id)->orWhere('type', $yacht->type))
+            ->where('type', $yacht->type)
             ->limit(3)
             ->get();
 
@@ -69,25 +66,6 @@ class YachtController extends Controller
         ]);
     }
 
-    /** Liman / bölge SEO sayfası — "Bodrum yat kiralama" tipi. */
-    public function location(Request $request, string $slug)
-    {
-        $location = Location::where('slug', $slug)->where('is_active', true)->firstOrFail();
-
-        $query = Yacht::query()->whereIn('location_id', $location->descendantIds());
-
-        $yachts = $this->search->apply($request, $query)
-            ->paginate(12)
-            ->withQueryString();
-
-        return view('tours.index', [
-            'yachts' => $yachts,
-            'ports' => $this->ports(),
-            'features' => $this->features(),
-            'location' => $location,
-        ]);
-    }
-
     private function defaultUnit(Yacht $yacht, Request $request): string
     {
         $requested = $request->string('unit')->toString();
@@ -98,15 +76,6 @@ class YachtController extends Controller
         }
 
         return $units[0] ?? RentalUnit::Day->value;
-    }
-
-    private function ports()
-    {
-        return Location::where('level', Location::LEVEL_PORT)
-            ->where('is_active', true)
-            ->withCount(['yachts' => fn ($q) => $q->bookable()])
-            ->orderBy('sort')
-            ->get();
     }
 
     private function features()

@@ -53,12 +53,6 @@
 
     <nav class="mb-4 text-sm text-sea-500">
         <a href="{{ lroute('tours.index') }}" class="transition hover:text-brass-700">{{ __('site.nav.yachts') }}</a>
-        @if ($yacht->location)
-            <span class="mx-1.5 text-sea-300">/</span>
-            <a href="{{ lroute('locations.show', $yacht->location->slug) }}" class="transition hover:text-brass-700">
-                {{ $yacht->location->getTranslation('name', $locale) }}
-            </a>
-        @endif
         <span class="mx-1.5 text-sea-300">/</span>
         <span class="text-sea-900">{{ $name }}</span>
     </nav>
@@ -67,8 +61,6 @@
         <div>
             <h1 class="text-3xl font-bold sm:text-4xl">{{ $name }}</h1>
             <p class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-sea-600">
-                <span><i class="bi bi-geo-alt text-sea-400"></i> {{ $yacht->location?->getTranslation('name', $locale) ?? '—' }}</span>
-                <span class="text-sea-300">·</span>
                 <span>{{ yacht_type_label($yacht->type) }}</span>
                 <span class="text-sea-300">·</span>
                 <span>{{ $yacht->with_crew ? __('site.list.with_crew') : __('site.list.without_crew') }}</span>
