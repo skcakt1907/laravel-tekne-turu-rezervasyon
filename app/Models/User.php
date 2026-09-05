@@ -71,6 +71,12 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         return $this->hasMany(Reservation::class, 'user_id');
     }
 
+    /** CRM notları — bu kullanıcı müşteri olarak görüntülenirken. */
+    public function customerNotes(): HasMany
+    {
+        return $this->hasMany(CustomerNote::class, 'user_id')->latest();
+    }
+
     public function collections(): HasMany
     {
         return $this->hasMany(Collection::class, 'owner_id');
