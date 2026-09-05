@@ -266,6 +266,7 @@ class DatabaseSeeder extends Seeder
                     'currency' => 'EUR',
                     'unit_daily' => true,
                     'is_open' => true,
+                    'capacity' => 35, // gunubirlik tur teknesi, ~30-40 kisi
                 ])
             );
 
