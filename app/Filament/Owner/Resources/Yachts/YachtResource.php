@@ -30,11 +30,11 @@ class YachtResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    protected static ?string $modelLabel = 'yat';
+    protected static ?string $modelLabel = 'tur';
 
-    protected static ?string $pluralModelLabel = 'yatlarım';
+    protected static ?string $pluralModelLabel = 'turlarım';
 
-    protected static ?string $navigationLabel = 'Yatlarım';
+    protected static ?string $navigationLabel = 'Turlarım';
 
     protected static ?string $recordTitleAttribute = 'slug';
 

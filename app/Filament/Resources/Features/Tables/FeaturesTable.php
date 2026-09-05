@@ -23,7 +23,7 @@ class FeaturesTable
                     ->getStateUsing(fn (Feature $record) => $record->getTranslation('name', 'tr'))
                     ->searchable(query: fn ($query, string $search) => $query->where('name', 'like', "%{$search}%")),
                 TextColumn::make('group')->label('Grup')->badge()->color('gray'),
-                TextColumn::make('yachts_count')->label('Yat')->counts('yachts'),
+                TextColumn::make('yachts_count')->label('Tur')->counts('yachts'),
                 TextColumn::make('sort')->label('Sira')->sortable(),
                 IconColumn::make('is_active')->label('Aktif')->boolean(),
             ])

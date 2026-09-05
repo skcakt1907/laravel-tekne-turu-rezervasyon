@@ -31,10 +31,10 @@ class SiteTest extends TestCase
         $port = Location::where('slug', 'bodrum')->firstOrFail();
 
         $this->get('/')->assertOk()->assertSee('Mavi Rüzgar');
-        $this->get('/yatlar')->assertOk();
-        $this->get('/yat/'.$this->yacht->slug)->assertOk()->assertSee('Rezervasyon Talebi');
+        $this->get('/turlar')->assertOk();
+        $this->get('/tur/'.$this->yacht->slug)->assertOk()->assertSee('Rezervasyon Talebi');
         $this->get('/liman/'.$port->slug)->assertOk()->assertSee('Mavi Rüzgar');
-        $this->get('/yat-sahibi-ol')->assertOk();
+        $this->get('/tur-sahibi-ol')->assertOk();
         $this->get('/iletisim')->assertOk();
         $this->get('/sayfa/kvkk')->assertOk();
         $this->get('/rezervasyon-sorgula')->assertOk();
@@ -43,8 +43,8 @@ class SiteTest extends TestCase
     public function test_english_pages_load_with_translations(): void
     {
         $this->get('/en')->assertOk()->assertSee('Your blue voyage is one request away');
-        $this->get('/en/yatlar')->assertOk()->assertSee('yachts found', false);
-        $this->get('/en/yat/'.$this->yacht->slug)->assertOk()->assertSee('Booking Request');
+        $this->get('/en/turlar')->assertOk()->assertSee('tours found', false);
+        $this->get('/en/tur/'.$this->yacht->slug)->assertOk()->assertSee('Booking Request');
     }
 
     public function test_price_from_is_denormalised_for_sorting(): void
@@ -53,7 +53,7 @@ class SiteTest extends TestCase
         $this->assertSame('day', $this->yacht->price_from_unit);
 
         // En ucuz once
-        $response = $this->get('/yatlar?sort=price_asc');
+        $response = $this->get('/turlar?sort=price_asc');
         $response->assertOk();
 
         $positions = [
@@ -66,10 +66,10 @@ class SiteTest extends TestCase
 
     public function test_filters_narrow_results(): void
     {
-        $this->get('/yatlar?type=gulet')->assertOk()->assertSee('Mavi Rüzgar')->assertDontSee('Deniz Yıldızı');
-        $this->get('/yatlar?cabins=6')->assertOk()->assertSee('Mavi Rüzgar')->assertDontSee('Deniz Yıldızı');
-        $this->get('/yatlar?guests=14')->assertOk()->assertSee('Mavi Rüzgar')->assertDontSee('Deniz Yıldızı');
-        $this->get('/yatlar?price_max=500')->assertOk()->assertSee('Deniz Yıldızı')->assertDontSee('Mavi Rüzgar');
+        $this->get('/turlar?type=gulet')->assertOk()->assertSee('Mavi Rüzgar')->assertDontSee('Deniz Yıldızı');
+        $this->get('/turlar?cabins=6')->assertOk()->assertSee('Mavi Rüzgar')->assertDontSee('Deniz Yıldızı');
+        $this->get('/turlar?guests=14')->assertOk()->assertSee('Mavi Rüzgar')->assertDontSee('Deniz Yıldızı');
+        $this->get('/turlar?price_max=500')->assertOk()->assertSee('Deniz Yıldızı')->assertDontSee('Mavi Rüzgar');
     }
 
     public function test_date_filter_hides_yachts_with_approved_bookings(): void
@@ -86,11 +86,11 @@ class SiteTest extends TestCase
 
         $query = '?start='.$start->toDateString().'&end='.$end->toDateString();
 
-        $this->get('/yatlar'.$query)->assertOk()->assertDontSee('Mavi Rüzgar');
+        $this->get('/turlar'.$query)->assertOk()->assertDontSee('Mavi Rüzgar');
 
         // Bloktan sonraki tarihlerde yine gorunmeli
         $free = '?start='.$end->copy()->addDays(5)->toDateString().'&end='.$end->copy()->addDays(8)->toDateString();
-        $this->get('/yatlar'.$free)->assertOk()->assertSee('Mavi Rüzgar');
+        $this->get('/turlar'.$free)->assertOk()->assertSee('Mavi Rüzgar');
     }
 
     public function test_booking_request_creates_pending_reservation_and_consents(): void

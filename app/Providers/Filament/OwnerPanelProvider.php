@@ -27,7 +27,7 @@ class OwnerPanelProvider extends PanelProvider
     {
         return $panel
             ->id('owner')
-            ->path('yat-sahibi')
+            ->path('tur-sahibi')
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
             ->registration(\App\Filament\Owner\Pages\Auth\Register::class)

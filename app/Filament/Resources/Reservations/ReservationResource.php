@@ -62,7 +62,7 @@ class ReservationResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return array_filter([
-            'Yat' => $record->yacht?->getTranslation('name', 'tr'),
+            'Tur' => $record->yacht?->getTranslation('name', 'tr'),
             'Tarih' => $record->starts_at?->format('d.m.Y'),
             'Durum' => $record->status->label(),
         ]);

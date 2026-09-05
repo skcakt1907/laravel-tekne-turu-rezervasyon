@@ -3,13 +3,13 @@
     @if ($this->yachts()->isEmpty())
         <x-filament::section>
             <p class="text-sm text-gray-500 dark:text-gray-400">
-                Henüz yat eklemediniz. Takvim, ilan ekledikten sonra burada görünür.
+                Henüz tur eklemediniz. Takvim, ilan ekledikten sonra burada görünür.
             </p>
         </x-filament::section>
     @else
         <div class="flex flex-wrap items-end justify-between gap-3">
             <div class="w-full sm:w-72">
-                <label for="yachtId" class="mb-1 block text-sm font-medium">Yat</label>
+                <label for="yachtId" class="mb-1 block text-sm font-medium">Tur</label>
                 <select id="yachtId" wire:model.live="yachtId"
                         class="fi-input block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900">
                     @foreach ($this->yachts() as $id => $name)

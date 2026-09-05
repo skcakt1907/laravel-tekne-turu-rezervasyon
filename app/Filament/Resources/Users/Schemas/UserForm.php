@@ -78,7 +78,7 @@ class UserForm
                 ->schema([
                     Toggle::make('is_approved')
                         ->label('Onaylı')
-                        ->helperText('Yat sahibi panele yalnızca onaylıysa girebilir.'),
+                        ->helperText('Tur sahibi panele yalnızca onaylıysa girebilir.'),
                     Toggle::make('is_active')->label('Aktif')->default(true),
                     Textarea::make('notes')->label('Yönetici notu')->rows(2)->columnSpanFull(),
                 ]),

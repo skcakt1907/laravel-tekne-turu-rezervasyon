@@ -22,7 +22,7 @@ class SitemapController extends Controller
         // Sabit sayfalar
         foreach ([
             ['home', [], '1.0', 'daily'],
-            ['yachts.index', [], '0.9', 'daily'],
+            ['tours.index', [], '0.9', 'daily'],
             ['owner.landing', [], '0.6', 'monthly'],
             ['contact', [], '0.5', 'monthly'],
             ['reservation.lookup', [], '0.4', 'yearly'],
@@ -32,7 +32,7 @@ class SitemapController extends Controller
 
         // Yayındaki yatlar
         foreach (Yacht::published()->get(['slug', 'updated_at']) as $yacht) {
-            $urls[] = $this->entry('yachts.show', ['slug' => $yacht->slug], $locales, '0.8', 'weekly', $yacht->updated_at);
+            $urls[] = $this->entry('tours.show', ['slug' => $yacht->slug], $locales, '0.8', 'weekly', $yacht->updated_at);
         }
 
         // Liman / bölge sayfaları (SEO'nun asıl çalıştığı yer)

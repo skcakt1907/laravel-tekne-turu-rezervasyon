@@ -219,7 +219,7 @@ class AdminTablesTest extends TestCase
 
         // Kullanici
         Livewire::test(\Filament\Livewire\GlobalSearch::class)
-            ->set('search', 'Demo Yat Sahibi')
-            ->assertSee('Demo Yat Sahibi');
+            ->set('search', 'Demo Tur Sahibi')
+            ->assertSee('Demo Tur Sahibi');
     }
 }

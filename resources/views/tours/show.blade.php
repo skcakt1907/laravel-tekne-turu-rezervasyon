@@ -52,7 +52,7 @@
 <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6">
 
     <nav class="mb-4 text-sm text-sea-500">
-        <a href="{{ lroute('yachts.index') }}" class="transition hover:text-brass-700">{{ __('site.nav.yachts') }}</a>
+        <a href="{{ lroute('tours.index') }}" class="transition hover:text-brass-700">{{ __('site.nav.yachts') }}</a>
         @if ($yacht->location)
             <span class="mx-1.5 text-sea-300">/</span>
             <a href="{{ lroute('locations.show', $yacht->location->slug) }}" class="transition hover:text-brass-700">
@@ -382,7 +382,7 @@
         </div>
     </div>
 
-    {{-- Benzer yatlar --}}
+    {{-- Benzer turlar --}}
     @if ($similar->isNotEmpty())
         <section class="mt-16">
             <h2 class="mb-6 text-2xl font-bold">{{ __('site.detail.similar') }}</h2>

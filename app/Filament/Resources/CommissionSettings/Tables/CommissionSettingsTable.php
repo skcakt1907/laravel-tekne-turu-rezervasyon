@@ -28,8 +28,8 @@ class CommissionSettingsTable
                         default => 'gray',
                     })
                     ->formatStateUsing(fn (string $state) => match ($state) {
-                        CommissionSetting::SCOPE_YACHT => 'Yat',
-                        CommissionSetting::SCOPE_OWNER => 'Yat sahibi',
+                        CommissionSetting::SCOPE_YACHT => 'Tur',
+                        CommissionSetting::SCOPE_OWNER => 'Tur sahibi',
                         default => 'Genel',
                     }),
                 TextColumn::make('target_id')
@@ -62,8 +62,8 @@ class CommissionSettingsTable
                     ->label('Kapsam')
                     ->options([
                         CommissionSetting::SCOPE_GLOBAL => 'Genel',
-                        CommissionSetting::SCOPE_OWNER => 'Yat sahibi',
-                        CommissionSetting::SCOPE_YACHT => 'Yat',
+                        CommissionSetting::SCOPE_OWNER => 'Tur sahibi',
+                        CommissionSetting::SCOPE_YACHT => 'Tur',
                     ]),
             ])
             ->recordActions([

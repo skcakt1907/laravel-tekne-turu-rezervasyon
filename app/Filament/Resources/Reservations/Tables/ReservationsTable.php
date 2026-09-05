@@ -30,7 +30,7 @@ class ReservationsTable
                     ->copyable()
                     ->weight('bold'),
                 TextColumn::make('yacht.slug')
-                    ->label('Yat')
+                    ->label('Tur')
                     ->getStateUsing(fn (Reservation $record) => $record->yacht->getTranslation('name', 'tr'))
                     ->description(fn (Reservation $record) => $record->owner?->name)
                     ->searchable(query: fn (Builder $query, string $search) => $query->whereHas(
@@ -89,7 +89,7 @@ class ReservationsTable
                     ->options(ReservationStatus::options())
                     ->multiple(),
                 SelectFilter::make('owner')
-                    ->label('Yat sahibi')
+                    ->label('Tur sahibi')
                     ->relationship('owner', 'name')
                     ->searchable()
                     ->preload(),

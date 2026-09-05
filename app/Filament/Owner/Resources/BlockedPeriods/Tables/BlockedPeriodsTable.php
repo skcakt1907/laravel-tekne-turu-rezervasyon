@@ -16,7 +16,7 @@ class BlockedPeriodsTable
         return $table
             ->columns([
                 TextColumn::make('yacht.slug')
-                    ->label('Yat')
+                    ->label('Tur')
                     ->getStateUsing(fn (BlockedPeriod $record) => $record->yacht->getTranslation('name', 'tr')),
                 TextColumn::make('starts_at')->label('Baslangic')->dateTime('d.m.Y H:i')->sortable(),
                 TextColumn::make('ends_at')->label('Bitis')->dateTime('d.m.Y H:i'),

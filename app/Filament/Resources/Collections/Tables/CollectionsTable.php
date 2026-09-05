@@ -31,7 +31,7 @@ class CollectionsTable
                         ->orderBy('year', $direction)
                         ->orderBy('month', $direction)),
                 TextColumn::make('owner.name')
-                    ->label('Yat sahibi')
+                    ->label('Tur sahibi')
                     ->description(fn (CollectionModel $record) => $record->owner?->company_name)
                     ->searchable()
                     ->sortable(),
@@ -59,7 +59,7 @@ class CollectionsTable
                     ->label('Durum')
                     ->options(['pending' => 'Bekliyor', 'collected' => 'Tahsil edildi']),
                 SelectFilter::make('owner')
-                    ->label('Yat sahibi')
+                    ->label('Tur sahibi')
                     ->relationship('owner', 'name')
                     ->searchable()
                     ->preload(),
@@ -96,7 +96,7 @@ class CollectionsTable
                         Notification::make()
                             ->title($built->isEmpty()
                                 ? 'Bu dönemde tamamlanmış rezervasyon yok.'
-                                : $built->count().' yat sahibi için döküm hazırlandı.')
+                                : $built->count().' tur sahibi için döküm hazırlandı.')
                             ->color($built->isEmpty() ? 'warning' : 'success')
                             ->send();
                     }),

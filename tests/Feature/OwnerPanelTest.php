@@ -45,16 +45,16 @@ class OwnerPanelTest extends TestCase
         $this->actingAs($this->owner);
 
         foreach ([
-            '/yat-sahibi',
-            '/yat-sahibi/yachts',
-            '/yat-sahibi/yachts/create',
-            "/yat-sahibi/yachts/{$this->yacht->id}/edit",
-            '/yat-sahibi/reservations',
-            '/yat-sahibi/blocked-periods',
-            '/yat-sahibi/blocked-periods/create',
-            '/yat-sahibi/calendar',
-            '/yat-sahibi/earnings',
-            '/yat-sahibi/profile',
+            '/tur-sahibi',
+            '/tur-sahibi/yachts',
+            '/tur-sahibi/yachts/create',
+            "/tur-sahibi/yachts/{$this->yacht->id}/edit",
+            '/tur-sahibi/reservations',
+            '/tur-sahibi/blocked-periods',
+            '/tur-sahibi/blocked-periods/create',
+            '/tur-sahibi/calendar',
+            '/tur-sahibi/earnings',
+            '/tur-sahibi/profile',
         ] as $page) {
             $this->get($page)->assertSuccessful();
         }
@@ -70,24 +70,24 @@ class OwnerPanelTest extends TestCase
         $pending->forceFill(['role' => UserRole::Owner, 'is_approved' => false])->save();
 
         // fresh(): create() ile olusan ornek veritabani varsayilanlarini (is_active) tasimaz
-        $this->actingAs($pending->fresh())->get('/yat-sahibi')->assertForbidden();
+        $this->actingAs($pending->fresh())->get('/tur-sahibi')->assertForbidden();
 
         // Admin onayladi ama e-posta HENUZ dogrulanmadi -> dogrulama ekranina yonlenir
         $pending->forceFill(['is_approved' => true])->save();
         $this->actingAs($pending->fresh())
-            ->get('/yat-sahibi')
-            ->assertRedirect('/yat-sahibi/email-verification/prompt');
+            ->get('/tur-sahibi')
+            ->assertRedirect('/tur-sahibi/email-verification/prompt');
 
         // Onay + dogrulama tamam -> panel acilir
         $pending->forceFill(['email_verified_at' => now()])->save();
-        $this->actingAs($pending->fresh())->get('/yat-sahibi')->assertSuccessful();
+        $this->actingAs($pending->fresh())->get('/tur-sahibi')->assertSuccessful();
     }
 
     public function test_customer_and_admin_cannot_enter_the_owner_panel(): void
     {
         $admin = User::where('email', 'admin@yatkiralama.com')->firstOrFail();
 
-        $this->actingAs($admin)->get('/yat-sahibi')->assertForbidden();
+        $this->actingAs($admin)->get('/tur-sahibi')->assertForbidden();
     }
 
     public function test_owner_only_sees_their_own_yachts_and_reservations(): void
@@ -97,13 +97,13 @@ class OwnerPanelTest extends TestCase
 
         $this->actingAs($this->owner);
 
-        $this->get('/yat-sahibi/yachts')
+        $this->get('/tur-sahibi/yachts')
             ->assertSuccessful()
             ->assertSee('Mavi Rüzgar')
             ->assertDontSee('Baskasinin Yati');
 
         // Baskasinin kaydini adres cubugundan acmaya calismak 404 vermeli
-        $this->get("/yat-sahibi/yachts/{$otherYacht->id}/edit")->assertNotFound();
+        $this->get("/tur-sahibi/yachts/{$otherYacht->id}/edit")->assertNotFound();
     }
 
     public function test_owner_cannot_edit_another_owners_reservation(): void

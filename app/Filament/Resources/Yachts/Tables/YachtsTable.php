@@ -34,7 +34,7 @@ class YachtsTable
                     ->defaultImageUrl(asset('images/yacht-placeholder.svg'))
                     ->height(44),
                 TextColumn::make('name')
-                    ->label('Yat')
+                    ->label('Tur')
                     ->getStateUsing(fn (Yacht $record) => $record->getTranslation('name', 'tr'))
                     ->description(fn (Yacht $record) => config('yacht.types')[$record->type] ?? $record->type)
                     ->searchable(query: fn ($query, string $search) => $query->where('name', 'like', "%{$search}%"))
@@ -84,7 +84,7 @@ class YachtsTable
                     ->options(collect(YachtStatus::cases())
                         ->mapWithKeys(fn (YachtStatus $s) => [$s->value => $s->label()])->all()),
                 SelectFilter::make('owner')
-                    ->label('Yat sahibi')
+                    ->label('Tur sahibi')
                     ->relationship('owner', 'name')
                     ->searchable()
                     ->preload(),
@@ -94,7 +94,7 @@ class YachtsTable
                         ->get()
                         ->mapWithKeys(fn (Location $l) => [$l->id => $l->getTranslation('name', 'tr')])),
                 SelectFilter::make('type')
-                    ->label('Yat tipi')
+                    ->label('Tekne tipi')
                     ->options(config('yacht.types')),
                 TernaryFilter::make('is_open')->label('Rezervasyona açık'),
                 TrashedFilter::make(),

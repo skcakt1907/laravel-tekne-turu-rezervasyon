@@ -15,7 +15,7 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 
 /**
- * Üç kademeli oran: genel → yat sahibi → yat. En dar tanım geçerlidir.
+ * Üç kademeli oran: genel → tur sahibi → tur. En dar tanım geçerlidir.
  * Oran yalnızca YENİ onaylarda geçerli olur; onaylanmış rezervasyonlarda
  * oran dondurulmuştur.
  */
@@ -30,17 +30,17 @@ class CommissionSettingForm
                     ->label('Kapsam')
                     ->options([
                         CommissionSetting::SCOPE_GLOBAL => 'Genel (varsayılan)',
-                        CommissionSetting::SCOPE_OWNER => 'Yat sahibi bazlı',
-                        CommissionSetting::SCOPE_YACHT => 'Yat bazlı',
+                        CommissionSetting::SCOPE_OWNER => 'Tur sahibi bazlı',
+                        CommissionSetting::SCOPE_YACHT => 'Tur bazlı',
                     ])
                     ->default(CommissionSetting::SCOPE_GLOBAL)
                     ->required()
                     ->live()
                     ->afterStateUpdated(fn (Set $set) => $set('target_id', null))
-                    ->helperText('En dar tanım kazanır: yat > yat sahibi > genel.'),
+                    ->helperText('En dar tanım kazanır: tur > tur sahibi > genel.'),
 
                 Select::make('target_id')
-                    ->label(fn (Get $get) => $get('scope') === CommissionSetting::SCOPE_YACHT ? 'Yat' : 'Yat sahibi')
+                    ->label(fn (Get $get) => $get('scope') === CommissionSetting::SCOPE_YACHT ? 'Tur' : 'Tur sahibi')
                     ->options(function (Get $get) {
                         return match ($get('scope')) {
                             CommissionSetting::SCOPE_YACHT => Yacht::with('owner')

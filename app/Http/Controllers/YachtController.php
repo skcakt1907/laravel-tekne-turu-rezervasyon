@@ -26,7 +26,7 @@ class YachtController extends Controller
             ->paginate(12)
             ->withQueryString();
 
-        return view('yachts.index', [
+        return view('tours.index', [
             'yachts' => $yachts,
             'ports' => $this->ports(),
             'features' => $this->features(),
@@ -51,7 +51,7 @@ class YachtController extends Controller
             ->limit(3)
             ->get();
 
-        return view('yachts.show', [
+        return view('tours.show', [
             'yacht' => $yacht,
             'blocked' => $this->availability->blockedRanges($yacht, $from, $to)
                 ->map(fn ($b) => [
@@ -80,7 +80,7 @@ class YachtController extends Controller
             ->paginate(12)
             ->withQueryString();
 
-        return view('yachts.index', [
+        return view('tours.index', [
             'yachts' => $yachts,
             'ports' => $this->ports(),
             'features' => $this->features(),

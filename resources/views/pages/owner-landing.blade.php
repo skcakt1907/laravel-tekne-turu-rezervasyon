@@ -10,7 +10,7 @@
         <p class="eyebrow mb-4 text-brass-300">{{ __('site.nav.list_your_yacht') }}</p>
         <h1 class="text-4xl font-bold leading-tight sm:text-5xl">{{ __('site.owner_landing.title') }}</h1>
         <p class="mx-auto mt-5 max-w-2xl text-lg text-sea-200">{{ __('site.owner_landing.sub') }}</p>
-        <a href="/yat-sahibi/register" class="btn btn-brass mt-8">
+        <a href="/tur-sahibi/register" class="btn btn-brass mt-8">
             {{ __('site.owner_landing.cta') }}<i class="bi bi-arrow-right"></i>
         </a>
     </div>

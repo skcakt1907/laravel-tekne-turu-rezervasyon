@@ -29,7 +29,7 @@ class YachtForm
                     ->schema([
                         Translatable::tabs(fn (string $locale, bool $isDefault) => [
                             TextInput::make("name.{$locale}")
-                                ->label('Yat adı')
+                                ->label('Tur adı')
                                 ->required($isDefault)
                                 ->maxLength(160)
                                 ->live(onBlur: true)
@@ -52,14 +52,14 @@ class YachtForm
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->maxLength(190)
-                            ->helperText('Sitede /yat/{slug} adresinde görünür.'),
+                            ->helperText('Sitede /tur/{slug} adresinde görünür.'),
                     ]),
 
                 Section::make('Sahip ve Konum')
                     ->columns(2)
                     ->schema([
                         Select::make('owner_id')
-                            ->label('Yat sahibi')
+                            ->label('Tur sahibi')
                             ->options(fn () => User::where('role', UserRole::Owner)
                                 ->orderBy('name')
                                 ->pluck('name', 'id'))
@@ -74,7 +74,7 @@ class YachtForm
                             ->searchable()
                             ->preload(),
                         Select::make('type')
-                            ->label('Yat tipi')
+                            ->label('Tekne tipi')
                             ->options(config('yacht.types'))
                             ->required(),
                         Toggle::make('with_crew')
@@ -119,7 +119,7 @@ class YachtForm
                                 ->map(fn ($symbol, $code) => "{$code} ({$symbol})")->all())
                             ->default('EUR')
                             ->required()
-                            ->helperText('Yat bazında sabittir.'),
+                            ->helperText('Tur bazında sabittir.'),
                         TextInput::make('turnaround_minutes')
                             ->label('İki kiralama arası boşluk (dk)')
                             ->numeric()
@@ -157,7 +157,7 @@ class YachtForm
                 Section::make('Özellikler')
                     ->schema([
                         Select::make('features')
-                            ->label('Yat özellikleri')
+                            ->label('Tekne özellikleri')
                             ->relationship('features', 'slug')
                             ->getOptionLabelFromRecordUsing(fn ($record) => $record->getTranslation('name', 'tr'))
                             ->multiple()

@@ -6,7 +6,7 @@
         'template' => 'cancel_requested_owner',
         'showCustomer' => true,
         'notice' => false,
-        'buttonUrl' => url('/yat-sahibi/reservations'),
+        'buttonUrl' => url('/tur-sahibi/reservations'),
         'buttonLabel' => __('mail.common.view_reservation'),
         'extraNote' => $reservation->cancel_request_reason,
     ])

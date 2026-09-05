@@ -52,8 +52,8 @@
         </a>
 
         <nav class="ml-auto hidden items-center gap-1 lg:flex">
-            <a href="{{ lroute('yachts.index') }}"
-               class="rounded-lg px-3 py-2 text-sm font-medium transition hover:text-brass-500 {{ request()->routeIs('*yachts.*') ? 'text-brass-500' : '' }}">
+            <a href="{{ lroute('tours.index') }}"
+               class="rounded-lg px-3 py-2 text-sm font-medium transition hover:text-brass-500 {{ request()->routeIs('*tours.*') ? 'text-brass-500' : '' }}">
                 {{ __('site.nav.yachts') }}
             </a>
 
@@ -120,7 +120,7 @@
     {{-- Mobil menü --}}
     <div x-show="open" x-transition x-cloak class="border-t border-sea-200 bg-white text-sea-900 lg:hidden">
         <div class="space-y-1 px-4 py-3">
-            <a href="{{ lroute('yachts.index') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.yachts') }}</a>
+            <a href="{{ lroute('tours.index') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.yachts') }}</a>
             @foreach ($navPorts as $port)
                 <a href="{{ lroute('locations.show', $port->slug) }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">
                     {{ $port->getTranslation('name', app()->getLocale()) }}
@@ -153,7 +153,7 @@
         </div>
     @endif
 
-    @if ($errors->any() && ! request()->routeIs('*yachts.show'))
+    @if ($errors->any() && ! request()->routeIs('*tours.show'))
         <div class="mx-auto max-w-7xl px-4 pt-6 sm:px-6">
             <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
                 <ul class="list-disc space-y-1 pl-5">
@@ -223,7 +223,7 @@
                 </h2>
                 <ul class="space-y-2 text-sm">
                     <li><a href="{{ lroute('owner.landing') }}" class="transition hover:text-white">{{ __('site.nav.list_your_yacht') }}</a></li>
-                    <li><a href="/yat-sahibi" class="transition hover:text-white">{{ __('site.footer.owner_login') }}</a></li>
+                    <li><a href="/tur-sahibi" class="transition hover:text-white">{{ __('site.footer.owner_login') }}</a></li>
                     <li><a href="{{ lroute('reservation.lookup') }}" class="transition hover:text-white">{{ __('site.nav.lookup') }}</a></li>
                 </ul>
             </div>

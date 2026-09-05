@@ -8,10 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 /**
- * Yat listesi filtreleri. Yat listesi ve liman sayfası aynı motoru kullanır.
+ * Tur listesi filtreleri. Tur listesi ve liman sayfası aynı motoru kullanır.
  *
  * Tarih filtresi müsaitliği "kilitli aralık yok" olarak yorumlar: yalnızca
- * onaylı rezervasyonlar ve manuel bloklar yatı listeden düşürür (talep düşürmez).
+ * onaylı rezervasyonlar ve manuel bloklar turu listeden düşürür (talep düşürmez).
  */
 class YachtSearch
 {

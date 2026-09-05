@@ -1,7 +1,7 @@
 @php
     $panel = \Filament\Facades\Filament::getCurrentPanel();
     $siteName = setting('site_name', config('app.name'));
-    $panelLabel = $panel?->getId() === 'owner' ? 'Yat Sahibi Paneli' : 'Yonetim';
+    $panelLabel = $panel?->getId() === 'owner' ? 'Tur Sahibi Paneli' : 'Yonetim';
 @endphp
 
 {{-- Referanstaki "workspace switcher" blogunun karsiligi: kare rozet + ad + alt satir --}}

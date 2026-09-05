@@ -28,7 +28,7 @@ return [
     'common' => [
         'hello' => 'Merhaba :name,',
         'code' => 'Rezervasyon kodu',
-        'yacht' => 'Yat',
+        'yacht' => 'Tur',
         'dates' => 'Tarih',
         'guests' => 'Kişi',
         'estimate' => 'Tahmini tutar',
@@ -37,7 +37,7 @@ return [
         'email' => 'E-posta',
         'note' => 'Not',
         'estimate_notice' => 'Tahmini tutardır, kesin fiyat onay sırasında netleşir.',
-        'no_payment' => 'Sitemiz üzerinden ödeme alınmaz. Ödeme, onaydan sonra doğrudan yat sahibiyle yapılır.',
+        'no_payment' => 'Sitemiz üzerinden ödeme alınmaz. Ödeme, onaydan sonra doğrudan tur sahibiyle yapılır.',
         'view_reservation' => 'Rezervasyonu görüntüle',
         'qr_hint' => 'Bu QR kodu göstererek rezervasyonunuzu hızlıca doğrulatabilirsiniz.',
         'respond' => 'Talebi yanıtla',
@@ -46,20 +46,20 @@ return [
     ],
 
     'request_received_customer' => [
-        'intro' => 'Rezervasyon talebiniz bize ulaştı ve yat sahibine iletildi.',
-        'body' => 'Yat sahibi talebinizi değerlendirip onaylayınca size tekrar yazacağız. Bu aşamada herhangi bir ödeme yapmanız gerekmiyor ve takvimde tarih henüz kapanmadı.',
+        'intro' => 'Rezervasyon talebiniz bize ulaştı ve tur sahibine iletildi.',
+        'body' => 'Tur sahibi talebinizi değerlendirip onaylayınca size tekrar yazacağız. Bu aşamada herhangi bir ödeme yapmanız gerekmiyor ve takvimde tarih henüz kapanmadı.',
     ],
     'request_new_owner' => [
-        'intro' => 'Yatınız için yeni bir rezervasyon talebi var.',
+        'intro' => 'Turunuz için yeni bir rezervasyon talebi var.',
         'body' => 'Aşağıdaki bağlantıdan panele girmeden onaylayabilir veya reddedebilirsiniz. Tarih yalnızca siz onayladığınızda kapanır.',
     ],
     'request_new_admin' => [
         'intro' => 'Sisteme yeni bir rezervasyon talebi düştü.',
-        'body' => 'Yat sahibi 4 saat içinde yanıt vermezse hatırlatma gider, 12 saat sonra talep yönetim ekranında işaretlenir.',
+        'body' => 'Tur sahibi 4 saat içinde yanıt vermezse hatırlatma gider, 12 saat sonra talep yönetim ekranında işaretlenir.',
     ],
     'approved_customer' => [
         'intro' => 'Rezervasyonunuz onaylandı.',
-        'body' => 'Seçtiğiniz tarih sizin adınıza kapatıldı. Ödeme ve teslim detayları için yat sahibi sizinle iletişime geçecek.',
+        'body' => 'Seçtiğiniz tarih sizin adınıza kapatıldı. Ödeme ve teslim detayları için tur sahibi sizinle iletişime geçecek.',
     ],
     'approved_owner' => [
         'intro' => 'Rezervasyon kesinleşti, tarih takviminizde kapatıldı.',
@@ -67,11 +67,11 @@ return [
     ],
     'rejected_customer' => [
         'intro' => 'Talebiniz maalesef karşılanamadı.',
-        'body' => 'Başka tarihler veya farklı bir yat için yeniden talep gönderebilirsiniz.',
+        'body' => 'Başka tarihler veya farklı bir tur için yeniden talep gönderebilirsiniz.',
     ],
     'cancelled_customer' => [
         'intro' => 'Rezervasyonunuz iptal edildi.',
-        'body' => 'Dilerseniz aynı yat için yeni bir talep gönderebilirsiniz.',
+        'body' => 'Dilerseniz aynı tur için yeni bir talep gönderebilirsiniz.',
     ],
     'cancelled_owner' => [
         'intro' => 'Bir rezervasyon iptal edildi.',
@@ -83,18 +83,18 @@ return [
     ],
     'cancel_requested_admin' => [
         'intro' => 'Bir rezervasyon için müşteri iptal talebi geldi.',
-        'body' => 'Yat sahibi karar vermezse yönetim panelinden siz de iptal edebilirsiniz.',
+        'body' => 'Tur sahibi karar vermezse yönetim panelinden siz de iptal edebilirsiniz.',
     ],
     'pending_reminder_owner' => [
         'intro' => 'Yanıtlanmayı bekleyen bir talebiniz var.',
         'body' => 'Müşteriler hızlı dönüş yapılan ilanları tercih ediyor. Talebi onaylamak veya reddetmek için aşağıdaki bağlantıyı kullanabilirsiniz.',
     ],
     'escalated_admin' => [
-        'intro' => 'Yat sahibi bu talebi 12 saattir yanıtlamadı.',
+        'intro' => 'Tur sahibi bu talebi 12 saattir yanıtlamadı.',
         'body' => 'Yönetim panelinden talebi siz onaylayabilir veya reddedebilirsiniz.',
     ],
     'trip_reminder_customer' => [
         'intro' => 'Gidişinize 3 gün kaldı.',
-        'body' => 'İyi bir yolculuk için hazırlıklarınızı tamamlamayı ve yat sahibiyle buluşma detaylarını teyit etmeyi unutmayın.',
+        'body' => 'İyi bir yolculuk için hazırlıklarınızı tamamlamayı ve tur sahibiyle buluşma detaylarını teyit etmeyi unutmayın.',
     ],
 ];

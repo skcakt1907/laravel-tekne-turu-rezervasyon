@@ -19,7 +19,7 @@
             'availability' => $yacht->is_open
                 ? 'https://schema.org/PreOrder'
                 : 'https://schema.org/OutOfStock',
-            'url' => lroute('yachts.show', $yacht->slug),
+            'url' => lroute('tours.show', $yacht->slug),
         ]) : null,
     ]);
 
@@ -27,7 +27,7 @@
         '@context' => 'https://schema.org',
         '@type' => 'BreadcrumbList',
         'itemListElement' => array_values(array_filter([
-            ['@type' => 'ListItem', 'position' => 1, 'name' => __('site.nav.yachts'), 'item' => lroute('yachts.index')],
+            ['@type' => 'ListItem', 'position' => 1, 'name' => __('site.nav.yachts'), 'item' => lroute('tours.index')],
             $yacht->location ? [
                 '@type' => 'ListItem',
                 'position' => 2,
@@ -38,7 +38,7 @@
                 '@type' => 'ListItem',
                 'position' => $yacht->location ? 3 : 2,
                 'name' => $yacht->getTranslation('name', $locale),
-                'item' => lroute('yachts.show', $yacht->slug),
+                'item' => lroute('tours.show', $yacht->slug),
             ],
         ])),
     ];

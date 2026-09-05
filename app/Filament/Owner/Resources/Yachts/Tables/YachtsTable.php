@@ -24,7 +24,7 @@ class YachtsTable
                     ->defaultImageUrl(asset('images/yacht-placeholder.svg'))
                     ->height(44),
                 TextColumn::make('name')
-                    ->label('Yat')
+                    ->label('Tur')
                     ->getStateUsing(fn (Yacht $record) => $record->getTranslation('name', 'tr'))
                     ->description(fn (Yacht $record) => $record->location?->getTranslation('name', 'tr'))
                     ->searchable(query: fn ($query, string $search) => $query->where('name', 'like', "%{$search}%")),
@@ -96,12 +96,12 @@ class YachtsTable
                     ->label('Sitede gör')
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->color('gray')
-                    ->url(fn (Yacht $record) => route('yachts.show', $record->slug))
+                    ->url(fn (Yacht $record) => route('tours.show', $record->slug))
                     ->openUrlInNewTab()
                     ->visible(fn (Yacht $record) => $record->status === YachtStatus::Published),
             ])
             ->toolbarActions([])
-            ->emptyStateHeading('Henüz yat eklemediniz')
+            ->emptyStateHeading('Henüz tur eklemediniz')
             ->emptyStateDescription('İlanınızı ekleyin, fotoğraf ve fiyatları girin, onaya gönderin.');
     }
 

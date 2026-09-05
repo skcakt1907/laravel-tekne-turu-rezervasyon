@@ -3,7 +3,7 @@ Allow: /
 
 # Paneller ve kisisel ekranlar aranmasin
 Disallow: /yonetim
-Disallow: /yat-sahibi
+Disallow: /tur-sahibi
 Disallow: /hesabim
 Disallow: /rezervasyon/
 Disallow: /onay/

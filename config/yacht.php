@@ -13,7 +13,7 @@ return [
     // İlan yayına girmeden önce zorunlu minimum fotoğraf sayısı
     'min_photos' => 4,
 
-    // Yat tipleri
+    // Tekne tipleri
     'types' => [
         'motoryat' => 'Motoryat',
         'gulet' => 'Gulet',

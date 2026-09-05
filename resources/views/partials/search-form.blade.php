@@ -1,6 +1,6 @@
 @php
     $locale = app()->getLocale();
-    $action = $action ?? lroute('yachts.index');
+    $action = $action ?? lroute('tours.index');
     $variant = $variant ?? 'floating'; // floating: hero altında kart · inline: sayfa içi
 @endphp
 

@@ -16,7 +16,7 @@ class BlockedPeriodForm
             ->columns(2)
             ->components([
                 Select::make('yacht_id')
-                    ->label('Yat')
+                    ->label('Tur')
                     ->options(fn () => Yacht::where('owner_id', auth()->id())
                         ->get()
                         ->mapWithKeys(fn (Yacht $y) => [$y->id => $y->getTranslation('name', 'tr')]))

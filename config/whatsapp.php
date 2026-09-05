@@ -31,7 +31,7 @@ return [
     ],
 
     /*
-    | Rezervasyon otomasyonu: yat sahibi yanıt vermezse.
+    | Rezervasyon otomasyonu: tur sahibi yanıt vermezse.
     */
     'reminder_hours' => (int) env('RESERVATION_REMINDER_HOURS', 4),
     'escalate_hours' => (int) env('RESERVATION_ESCALATE_HOURS', 12),

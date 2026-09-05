@@ -29,7 +29,7 @@ class YachtForm
                 ->schema([
                     Translatable::tabs(fn (string $locale, bool $isDefault) => [
                         TextInput::make("name.{$locale}")
-                            ->label('Yat adı')
+                            ->label('Tur adı')
                             ->required($isDefault)
                             ->maxLength(160)
                             ->live(onBlur: true)
@@ -52,10 +52,10 @@ class YachtForm
                         ->required()
                         ->unique(ignoreRecord: true)
                         ->maxLength(190)
-                        ->helperText('İlanınız /yat/{adres-eki} adresinde görünür.'),
+                        ->helperText('İlanınız /tur/{adres-eki} adresinde görünür.'),
                 ]),
 
-            Section::make('Yat Bilgileri')
+            Section::make('Tekne Bilgileri')
                 ->columns(4)
                 ->schema([
                     Select::make('location_id')
@@ -69,7 +69,7 @@ class YachtForm
                         ->required()
                         ->columnSpan(2),
                     Select::make('type')
-                        ->label('Yat tipi')
+                        ->label('Tekne tipi')
                         ->options(config('yacht.types'))
                         ->required(),
                     Toggle::make('with_crew')

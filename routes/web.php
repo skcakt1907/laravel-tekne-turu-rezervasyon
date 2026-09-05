@@ -15,14 +15,14 @@ use Illuminate\Support\Facades\Route;
 | Site onyuzu
 |--------------------------------------------------------------------------
 | Turkce oneksiz, Ingilizce /en/ onekiyle (yol haritasi bolum 10).
-| Panel rotalari Filament tarafindan uretilir: /yonetim ve /yat-sahibi
+| Panel rotalari Filament tarafindan uretilir: /yonetim ve /tur-sahibi
 */
 
 $site = function () {
     Route::get('/', HomeController::class)->name('home');
 
-    Route::get('/yatlar', [YachtController::class, 'index'])->name('yachts.index');
-    Route::get('/yat/{slug}', [YachtController::class, 'show'])->name('yachts.show');
+    Route::get('/turlar', [YachtController::class, 'index'])->name('tours.index');
+    Route::get('/tur/{slug}', [YachtController::class, 'show'])->name('tours.show');
     Route::get('/liman/{slug}', [YachtController::class, 'location'])->name('locations.show');
 
     // Rezervasyon talebi
@@ -63,7 +63,7 @@ $site = function () {
         ->name('reservation.cancel-request');
 
     // Kurumsal
-    Route::get('/yat-sahibi-ol', [PageController::class, 'ownerLanding'])->name('owner.landing');
+    Route::get('/tur-sahibi-ol', [PageController::class, 'ownerLanding'])->name('owner.landing');
     Route::get('/iletisim', [PageController::class, 'contact'])->name('contact');
     Route::post('/iletisim', [PageController::class, 'contactStore'])->name('contact.store');
     Route::get('/sayfa/{slug}', [PageController::class, 'show'])->name('pages.show');

@@ -32,7 +32,7 @@
             <i class="bi bi-calendar-x mb-3 block text-4xl text-sea-300"></i>
             <p class="font-semibold">{{ __('site.account.empty') }}</p>
             <p class="mt-1 text-sm text-sea-500">{{ __('site.account.empty_hint') }}</p>
-            <a href="{{ lroute('yachts.index') }}" class="btn btn-brass btn-sm mt-5">{{ __('site.home.all_yachts') }}</a>
+            <a href="{{ lroute('tours.index') }}" class="btn btn-brass btn-sm mt-5">{{ __('site.home.all_yachts') }}</a>
         </div>
     @else
         <div class="space-y-4">

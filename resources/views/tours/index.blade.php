@@ -5,7 +5,7 @@
     $heading = $location
         ? $location->getTranslation('name', $locale).' — '.__('site.list.title')
         : __('site.list.title');
-    $formAction = $location ? lroute('locations.show', $location->slug) : lroute('yachts.index');
+    $formAction = $location ? lroute('locations.show', $location->slug) : lroute('tours.index');
     $activeFilters = collect(request()->except(['page', 'sort']))->filter()->count();
 @endphp
 
@@ -20,7 +20,7 @@
             <a href="{{ lroute('home') }}" class="transition hover:text-white">{{ setting('site_name', config('app.name')) }}</a>
             <span class="mx-1.5 text-sea-500">/</span>
             @if ($location)
-                <a href="{{ lroute('yachts.index') }}" class="transition hover:text-white">{{ __('site.nav.yachts') }}</a>
+                <a href="{{ lroute('tours.index') }}" class="transition hover:text-white">{{ __('site.nav.yachts') }}</a>
                 <span class="mx-1.5 text-sea-500">/</span>
                 <span class="text-white">{{ $location->getTranslation('name', $locale) }}</span>
             @else

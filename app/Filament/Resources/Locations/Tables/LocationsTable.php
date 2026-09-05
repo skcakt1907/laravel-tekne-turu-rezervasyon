@@ -38,7 +38,7 @@ class LocationsTable
                         default => 'success',
                     }),
                 TextColumn::make('slug')->label('Slug')->toggleable(),
-                TextColumn::make('yachts_count')->label('Yat')->counts('yachts'),
+                TextColumn::make('yachts_count')->label('Tur')->counts('yachts'),
                 IconColumn::make('is_featured')->label('Populer')->boolean(),
                 IconColumn::make('is_active')->label('Aktif')->boolean(),
             ])

@@ -37,16 +37,16 @@ class LegalPagesSeeder extends Seeder
                 'sort' => 0,
                 'title' => ['tr' => 'Hakkımızda', 'en' => 'About Us'],
                 'seo' => [
-                    'tr' => 'Yat sahibinden doğrudan kiralama platformu.',
-                    'en' => 'Charter directly from yacht owners.',
+                    'tr' => 'Tur sahibinden doğrudan rezervasyon platformu.',
+                    'en' => 'Book directly with tour owners.',
                 ],
                 'body' => [
-                    'tr' => '<p>Türkiye kıyılarındaki yatları, sahipleriyle doğrudan buluşturan bir kiralama platformuyuz.
-                        Sitemizde ödeme alınmaz; talebiniz yat sahibine iletilir, onay verdiğinde tarih size ayrılır ve
-                        ödemeyi doğrudan yat sahibiyle yaparsınız.</p>
-                        <p>Amacımız aracı katmanını inceltmek: yat sahibi kendi fiyatını ve takvimini yönetir, misafir
-                        gerçek fiyatı görür, biz de yalnızca gerçekleşen kiralamalardan komisyon alırız.</p>',
-                    'en' => '<p>We connect guests directly with yacht owners along the Turkish coast. No payment is taken
+                    'tr' => '<p>Marmaris\'teki günübirlik tekne turlarını, sahipleriyle doğrudan buluşturan bir rezervasyon platformuyuz.
+                        Sitemizde ödeme alınmaz; talebiniz tur sahibine iletilir, onay verdiğinde tarih size ayrılır ve
+                        ödemeyi doğrudan tur sahibiyle yaparsınız.</p>
+                        <p>Amacımız aracı katmanını inceltmek: tur sahibi kendi fiyatını ve takvimini yönetir, misafir
+                        gerçek fiyatı görür, biz de yalnızca gerçekleşen rezervasyonlardan komisyon alırız.</p>',
+                    'en' => '<p>We connect guests directly with tour owners in Marmaris. No payment is taken
                         on this site; your request goes to the owner, and once approved the dates are held for you while
                         payment is arranged directly with the owner.</p>',
                 ],
@@ -58,19 +58,19 @@ class LegalPagesSeeder extends Seeder
                 'body' => [
                     'tr' => "<p><strong>Bu metin şablondur; yayına almadan önce hukuk danışmanınıza onaylatın.</strong></p>
                         <h3>1. Taraflar ve konu</h3>
-                        <p>Bu site {$company} tarafından işletilmektedir. Site, yat sahipleri ile kiralamak isteyen
+                        <p>Bu site {$company} tarafından işletilmektedir. Site, tur sahipleri ile kiralamak isteyen
                         kullanıcıları buluşturan bir <em>ilan ve talep</em> platformudur.</p>
                         <h3>2. Platformun rolü</h3>
-                        <p>Platform, kiralama sözleşmesinin tarafı değildir. Kiralama ilişkisi doğrudan yat sahibi ile
+                        <p>Platform, kiralama sözleşmesinin tarafı değildir. Kiralama ilişkisi doğrudan tur sahibi ile
                         misafir arasında kurulur. Site üzerinden ödeme alınmaz; ücret, taraflar arasında ödenir.</p>
                         <h3>3. Fiyatlar</h3>
-                        <p>Sitede gösterilen tutarlar <em>tahminidir</em>. Kesin fiyat, yat sahibinin onayı sırasında
+                        <p>Sitede gösterilen tutarlar <em>tahminidir</em>. Kesin fiyat, tur sahibinin onayı sırasında
                         netleşir. Yakıt, temizlik, mürettebat gibi ek kalemler ilanda belirtildiği şekilde uygulanır.</p>
                         <h3>4. Rezervasyon ve onay</h3>
-                        <p>Gönderilen talep tek başına rezervasyon oluşturmaz. Tarih, yalnızca yat sahibi onay verdiğinde
+                        <p>Gönderilen talep tek başına rezervasyon oluşturmaz. Tarih, yalnızca tur sahibi onay verdiğinde
                         ayrılır. Onaylanan rezervasyonun iptali için iptal politikası geçerlidir.</p>
                         <h3>5. Kullanıcı yükümlülükleri</h3>
-                        <p>Kullanıcı, verdiği bilgilerin doğru olduğunu kabul eder. Yat sahibi, ilanındaki bilgilerin ve
+                        <p>Kullanıcı, verdiği bilgilerin doğru olduğunu kabul eder. Tur sahibi, ilanındaki bilgilerin ve
                         yasal izinlerin (denize elverişlilik, sigorta, kaptan belgeleri) doğruluğundan sorumludur.</p>
                         <h3>6. Sorumluluğun sınırı</h3>
                         <p>Platform, kiralamanın gerçekleşmemesinden, hizmet kalitesinden veya taraflar arasındaki
@@ -80,7 +80,7 @@ class LegalPagesSeeder extends Seeder
                         metin bu sayfada yayımlanır.</p>",
                     'en' => "<p><strong>This is a template; have it reviewed by your legal counsel before publishing.</strong></p>
                         <p>This site is operated by {$company} and acts as a listing and request platform connecting
-                        yacht owners with guests. The platform is not a party to the charter agreement, takes no payment,
+                        tour owners with guests. The platform is not a party to the charter agreement, takes no payment,
                         and displays estimated prices that are finalised upon the owner's approval.</p>",
                 ],
             ],
@@ -95,16 +95,16 @@ class LegalPagesSeeder extends Seeder
                         sorumlusudur.</p>
                         <h3>İşlenen veriler</h3>
                         <p>Ad soyad, e-posta, telefon/WhatsApp numarası, rezervasyon talebine ilişkin bilgiler
-                        (yat, tarih, kişi sayısı, notunuz), IP adresi ve onay kayıtları.</p>
+                        (tur, tarih, kişi sayısı, notunuz), IP adresi ve onay kayıtları.</p>
                         <h3>İşleme amaçları</h3>
-                        <p>Rezervasyon talebinizin yat sahibine iletilmesi, sürecin takibi, e-posta ve WhatsApp
+                        <p>Rezervasyon talebinizin tur sahibine iletilmesi, sürecin takibi, e-posta ve WhatsApp
                         bildirimlerinin gönderilmesi, yasal yükümlülüklerin yerine getirilmesi ve uyuşmazlık hâlinde
                         ispat.</p>
                         <h3>Hukuki sebep</h3>
                         <p>Sözleşmenin kurulması ve ifası, meşru menfaat ve — WhatsApp bildirimleri bakımından —
                         <em>açık rızanız</em>. Açık rıza kaydınız tarih ve IP bilgisiyle saklanır.</p>
                         <h3>Aktarım</h3>
-                        <p>Talebiniz, ilgili yat sahibiyle paylaşılır. Bildirim gönderimi için e-posta servis
+                        <p>Talebiniz, ilgili tur sahibiyle paylaşılır. Bildirim gönderimi için e-posta servis
                         sağlayıcısı ve WhatsApp altyapısı (Meta) kullanılır.</p>
                         <h3>Saklama süresi</h3>
                         <p>Veriler, ilişkinin sona ermesinden itibaren yasal zamanaşımı süreleri boyunca saklanır,
@@ -161,10 +161,10 @@ class LegalPagesSeeder extends Seeder
                         <h3>Talep aşaması</h3>
                         <p>Henüz onaylanmamış bir talep, herhangi bir yükümlülük doğurmaz.</p>
                         <h3>Onaylanmış rezervasyon</h3>
-                        <p>İptal talebinizi rezervasyon sayfanızdan iletebilirsiniz. Talebiniz yat sahibine bildirilir;
-                        iptal kararı yat sahibindedir. Onaylanması hâlinde tarih tekrar satışa açılır.</p>
-                        <h3>Yat sahibi kaynaklı iptaller</h3>
-                        <p>Yat sahibi, hava koşulları veya teknik zorunluluk gibi sebeplerle rezervasyonu iptal
+                        <p>İptal talebinizi rezervasyon sayfanızdan iletebilirsiniz. Talebiniz tur sahibine bildirilir;
+                        iptal kararı tur sahibindedir. Onaylanması hâlinde tarih tekrar satışa açılır.</p>
+                        <h3>Tur sahibi kaynaklı iptaller</h3>
+                        <p>Tur sahibi, hava koşulları veya teknik zorunluluk gibi sebeplerle rezervasyonu iptal
                         edebilir; bu durumda size bildirim gönderilir.</p>
                         <h3>Gelmeme (no-show)</h3>
                         <p>Bildirimde bulunmadan gelinmeyen rezervasyonlar kayıtlarımıza işlenir; tekrarlayan

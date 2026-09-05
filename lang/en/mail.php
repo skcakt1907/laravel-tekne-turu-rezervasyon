@@ -28,7 +28,7 @@ return [
     'common' => [
         'hello' => 'Hello :name,',
         'code' => 'Booking code',
-        'yacht' => 'Yacht',
+        'yacht' => 'Tour',
         'dates' => 'Dates',
         'guests' => 'Guests',
         'estimate' => 'Estimated total',
@@ -46,11 +46,11 @@ return [
     ],
 
     'request_received_customer' => [
-        'intro' => 'Your booking request has reached us and has been passed to the yacht owner.',
+        'intro' => 'Your booking request has reached us and has been passed to the tour owner.',
         'body' => 'We will write again as soon as the owner reviews and approves it. No payment is required at this stage, and the dates are not blocked yet.',
     ],
     'request_new_owner' => [
-        'intro' => 'There is a new booking request for your yacht.',
+        'intro' => 'There is a new booking request for your tour.',
         'body' => 'You can approve or decline it from the link below without logging into the panel. The dates are blocked only once you approve.',
     ],
     'request_new_admin' => [
@@ -67,11 +67,11 @@ return [
     ],
     'rejected_customer' => [
         'intro' => 'Unfortunately your request could not be fulfilled.',
-        'body' => 'You are welcome to send a new request for different dates or another yacht.',
+        'body' => 'You are welcome to send a new request for different dates or another tour.',
     ],
     'cancelled_customer' => [
         'intro' => 'Your booking has been cancelled.',
-        'body' => 'You can send a new request for the same yacht if you wish.',
+        'body' => 'You can send a new request for the same tour if you wish.',
     ],
     'cancelled_owner' => [
         'intro' => 'A booking has been cancelled.',
@@ -95,6 +95,6 @@ return [
     ],
     'trip_reminder_customer' => [
         'intro' => 'Only 3 days until your departure.',
-        'body' => 'Remember to finish your preparations and confirm the meeting details with the yacht owner.',
+        'body' => 'Remember to finish your preparations and confirm the meeting details with the tour owner.',
     ],
 ];

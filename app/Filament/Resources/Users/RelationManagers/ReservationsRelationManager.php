@@ -25,7 +25,7 @@ class ReservationsRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('code')->label('Kod')->copyable(),
                 TextColumn::make('yacht.slug')
-                    ->label('Yat')
+                    ->label('Tur')
                     ->getStateUsing(fn (Reservation $record) => $record->yacht->getTranslation('name', 'tr')),
                 TextColumn::make('starts_at')->label('Tarih')->dateTime('d.m.Y H:i')->sortable(),
                 TextColumn::make('status')

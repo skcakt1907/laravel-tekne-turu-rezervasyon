@@ -37,7 +37,7 @@ class UsersTable
                         UserRole::Owner => 'warning',
                         UserRole::Customer => 'gray',
                     }),
-                TextColumn::make('yachts_count')->label('Yat')->counts('yachts'),
+                TextColumn::make('yachts_count')->label('Tur')->counts('yachts'),
                 IconColumn::make('is_approved')->label('Onayli')->boolean(),
                 IconColumn::make('is_active')->label('Aktif')->boolean(),
                 TextColumn::make('created_at')->label('Kayit')->date('d.m.Y')->sortable()->toggleable(),
@@ -60,7 +60,7 @@ class UsersTable
                     ->requiresConfirmation()
                     ->action(function (User $record) {
                         $record->forceFill(['is_approved' => true])->save();
-                        Notification::make()->title('Yat sahibi onaylandi.')->success()->send();
+                        Notification::make()->title('Tur sahibi onaylandi.')->success()->send();
                     }),
                 EditAction::make(),
             ])

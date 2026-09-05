@@ -46,8 +46,8 @@ if (! function_exists('locale_url')) {
 
 if (! function_exists('lroute')) {
     /**
-     * Aktif dilin rotasini uretir. Varsayilan dil oneksiz ("yachts.index"),
-     * digerleri onekli isimle kayitli ("en.yachts.index").
+     * Aktif dilin rotasini uretir. Varsayilan dil oneksiz ("tours.index"),
+     * digerleri onekli isimle kayitli ("en.tours.index").
      */
     function lroute(string $name, mixed $params = []): string
     {

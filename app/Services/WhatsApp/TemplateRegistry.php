@@ -9,7 +9,7 @@ use App\Models\Reservation;
  *
  * Her şablon Utility kategorisinde; metinler kısa ve tamamen bilgilendirici
  * (pazarlama dili numaranın kısıtlanmasına yol açar). Onay butonu yalnızca
- * yat sahibine giden şablonda var; yedek yol olarak güvenli bağlantı gövdede.
+ * tur sahibine giden şablonda var; yedek yol olarak güvenli bağlantı gövdede.
  *
  * `php artisan whatsapp:templates` bu tanımları Meta'ya yüklenecek JSON olarak basar.
  */
@@ -32,8 +32,8 @@ class TemplateRegistry
                 'name' => 'talep_alindi_musteri',
                 'buttons' => [],
                 'body' => [
-                    'tr' => "Merhaba {{1}}, {{2}} için {{3}} tarihli rezervasyon talebiniz alındı. Rezervasyon kodunuz: {{4}}. Yat sahibi onayladığında size bilgi vereceğiz. Durumu buradan takip edebilirsiniz: {{5}}",
-                    'en' => "Hello {{1}}, we received your booking request for {{2}} on {{3}}. Your booking code is {{4}}. We will let you know once the owner approves. You can track it here: {{5}}",
+                    'tr' => "Merhaba {{1}}, {{2}} için {{3}} tarihli rezervasyon talebiniz alındı. Rezervasyon kodunuz: {{4}}. Tur sahibi onayladığında size bilgi vereceğiz. Durumu buradan takip edebilirsiniz: {{5}}",
+                    'en' => "Hello {{1}}, we received your booking request for {{2}} on {{3}}. Your booking code is {{4}}. We will let you know once the tour owner approves. You can track it here: {{5}}",
                 ],
             ],
             'request_new_owner' => [
@@ -72,8 +72,8 @@ class TemplateRegistry
                 'name' => 'talep_karsilanamadi_musteri',
                 'buttons' => [],
                 'body' => [
-                    'tr' => "Merhaba {{1}}, {{2}} için {{3}} tarihli talebiniz maalesef karşılanamadı. Kod {{4}}. Diğer yatlara buradan bakabilirsiniz: {{5}}",
-                    'en' => "Hello {{1}}, unfortunately your request for {{2}} on {{3}} could not be fulfilled. Code {{4}}. You can browse other yachts here: {{5}}",
+                    'tr' => "Merhaba {{1}}, {{2}} için {{3}} tarihli talebiniz maalesef karşılanamadı. Kod {{4}}. Diğer turlara buradan bakabilirsiniz: {{5}}",
+                    'en' => "Hello {{1}}, unfortunately your request for {{2}} on {{3}} could not be fulfilled. Code {{4}}. You can browse other tours here: {{5}}",
                 ],
             ],
             'pending_reminder_owner' => [
@@ -146,7 +146,7 @@ class TemplateRegistry
             ],
             'rejected_customer' => [
                 $reservation->customer_name, $yacht, $dates, $reservation->code,
-                static::url('yachts.index', $locale),
+                static::url('tours.index', $locale),
             ],
             'pending_reminder_owner' => [
                 $yacht, $dates, $reservation->code, $decisionUrl,

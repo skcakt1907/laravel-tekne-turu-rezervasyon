@@ -33,13 +33,13 @@ class SeoTest extends TestCase
         $xml = $response->getContent();
 
         $this->assertStringContainsString('<loc>'.url('/').'</loc>', $xml);
-        $this->assertStringContainsString(url('/yat/'.$this->yacht->slug), $xml);
+        $this->assertStringContainsString(url('/tur/'.$this->yacht->slug), $xml);
         $this->assertStringContainsString(url('/liman/bodrum'), $xml);
         $this->assertStringContainsString(url('/sayfa/kvkk'), $xml);
 
         // Her adres icin EN karsiligi
         $this->assertStringContainsString('hreflang="en"', $xml);
-        $this->assertStringContainsString(url('/en/yat/'.$this->yacht->slug), $xml);
+        $this->assertStringContainsString(url('/en/tur/'.$this->yacht->slug), $xml);
 
         // Gecerli XML olmali
         $this->assertInstanceOf(\SimpleXMLElement::class, simplexml_load_string($xml));
@@ -51,14 +51,14 @@ class SeoTest extends TestCase
 
         $this->get('/sitemap.xml')
             ->assertOk()
-            ->assertDontSee(url('/yat/'.$this->yacht->slug));
+            ->assertDontSee(url('/tur/'.$this->yacht->slug));
     }
 
     public function test_robots_blocks_panels_and_personal_pages(): void
     {
         $robots = file_get_contents(public_path('robots.txt'));
 
-        foreach (['/yonetim', '/yat-sahibi', '/hesabim', '/rezervasyon/', '/onay/'] as $path) {
+        foreach (['/yonetim', '/tur-sahibi', '/hesabim', '/rezervasyon/', '/onay/'] as $path) {
             $this->assertStringContainsString('Disallow: '.$path, $robots);
         }
 
@@ -67,7 +67,7 @@ class SeoTest extends TestCase
 
     public function test_yacht_page_has_product_and_breadcrumb_schema(): void
     {
-        $response = $this->get('/yat/'.$this->yacht->slug);
+        $response = $this->get('/tur/'.$this->yacht->slug);
 
         $response->assertOk();
         $html = $response->getContent();
@@ -117,8 +117,8 @@ class SeoTest extends TestCase
 
             $this->get('/')->assertOk()->assertSee('Mavi Rüzgar');
             $this->get('/')->assertOk()->assertSee('Mavi Rüzgar'); // ikinci istek: varsa onbellekten
-            $this->get('/yatlar')->assertOk();
-            $this->get('/yat/'.$this->yacht->slug)->assertOk();
+            $this->get('/turlar')->assertOk();
+            $this->get('/tur/'.$this->yacht->slug)->assertOk();
         }
     }
 

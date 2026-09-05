@@ -8,7 +8,7 @@
     $cover = $yacht->coverUrl();
 @endphp
 
-<a href="{{ lroute('yachts.show', $yacht->slug) }}"
+<a href="{{ lroute('tours.show', $yacht->slug) }}"
    class="group card flex h-full flex-col overflow-hidden transition duration-300 hover:-translate-y-1 hover:border-brass-300 hover:shadow-xl hover:shadow-sea-900/10">
 
     <div class="relative aspect-4/3 overflow-hidden {{ $cover ? '' : 'bg-placeholder' }}">

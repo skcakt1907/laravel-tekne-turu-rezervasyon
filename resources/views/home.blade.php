@@ -37,7 +37,7 @@
                 </p>
 
                 <div class="mt-8 flex flex-wrap gap-3">
-                    <a href="{{ lroute('yachts.index') }}" class="btn btn-brass">
+                    <a href="{{ lroute('tours.index') }}" class="btn btn-brass">
                         {{ __('site.home.all_yachts') }}<i class="bi bi-arrow-right"></i>
                     </a>
                     <a href="{{ lroute('owner.landing') }}"
@@ -100,7 +100,7 @@
             <h2 class="text-3xl font-bold sm:text-4xl">{{ __('site.home.featured_title') }}</h2>
             <p class="mt-2 max-w-xl text-sea-600">{{ __('site.home.featured_sub') }}</p>
         </div>
-        <a href="{{ lroute('yachts.index') }}" class="btn btn-ghost btn-sm">
+        <a href="{{ lroute('tours.index') }}" class="btn btn-ghost btn-sm">
             {{ __('site.home.all_yachts') }}<i class="bi bi-arrow-right"></i>
         </a>
     </div>
@@ -184,7 +184,7 @@
         <h2 class="mb-5 text-2xl font-bold">{{ __('site.home.types') }}</h2>
         <div class="flex flex-wrap gap-2.5">
             @foreach ($types as $type)
-                <a href="{{ lroute('yachts.index', ['type' => $type['key']]) }}"
+                <a href="{{ lroute('tours.index', ['type' => $type['key']]) }}"
                    class="btn btn-ghost btn-sm">
                     {{ $type['label'] }}
                     <span class="badge badge-soft">{{ $type['count'] }}</span>

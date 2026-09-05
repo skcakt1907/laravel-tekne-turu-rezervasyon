@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
         $owner = User::updateOrCreate(
             ['email' => 'sahip@yatkiralama.com'],
             [
-                'name' => 'Demo Yat Sahibi',
+                'name' => 'Demo Tur Sahibi',
                 'password' => Hash::make('sahip123'),
                 'phone' => '+905001112233',
                 'whatsapp_no' => '+905001112233',
@@ -51,7 +51,7 @@ class DatabaseSeeder extends Seeder
     private function settings(): void
     {
         $defaults = [
-            'site_name' => 'Yat Kiralama',
+            'site_name' => 'Marmaris Tekne Turları',
             'site_email' => 'info@yatkiralama.com',
             'site_phone' => '+90 500 000 00 00',
             'whatsapp_display_number' => '+90 500 000 00 00',
@@ -59,7 +59,7 @@ class DatabaseSeeder extends Seeder
             'default_currency' => 'EUR',
             'estimate_notice_tr' => 'Tahmini tutardır, kesin fiyat onay sırasında netleşir.',
             'estimate_notice_en' => 'This is an estimate; the final price is confirmed upon approval.',
-            'site_description' => 'Türkiye kıyılarında yat kiralama. Ödeme yapmadan rezervasyon talebi gönderin.',
+            'site_description' => 'Marmaris\'te günübirlik tekne turları. Ödeme yapmadan rezervasyon talebi gönderin.',
             'google_analytics_id' => '',
         ];
 
@@ -174,7 +174,7 @@ class DatabaseSeeder extends Seeder
         $faqs = [
             [
                 ['tr' => 'Rezervasyon için ödeme yapmam gerekiyor mu?', 'en' => 'Do I need to pay to book?'],
-                ['tr' => 'Hayır. Site üzerinden ödeme alınmaz; talebiniz yat sahibine iletilir, onaylandıktan sonra ödeme taraflar arasında yapılır.', 'en' => 'No. No payment is taken on the site.'],
+                ['tr' => 'Hayır. Site üzerinden ödeme alınmaz; talebiniz tur sahibine iletilir, onaylandıktan sonra ödeme taraflar arasında yapılır.', 'en' => 'No. No payment is taken on the site.'],
                 'customer',
             ],
             [
@@ -183,8 +183,8 @@ class DatabaseSeeder extends Seeder
                 'customer',
             ],
             [
-                ['tr' => 'Yatımı nasıl yayınlarım?', 'en' => 'How do I list my yacht?'],
-                ['tr' => 'Yat sahibi panelinden kayıt olun, ilanınızı girin. Admin onayından sonra yayına alınır.', 'en' => 'Register in the owner panel and submit your listing.'],
+                ['tr' => 'Turumu nasıl yayınlarım?', 'en' => 'How do I list my tour?'],
+                ['tr' => 'Tur sahibi panelinden kayıt olun, ilanınızı girin. Admin onayından sonra yayına alınır.', 'en' => 'Register in the owner panel and submit your listing.'],
                 'owner',
             ],
         ];
