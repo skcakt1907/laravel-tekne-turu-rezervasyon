@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
         $this->settings();
         $this->features();
         $this->content();
-        $this->demoYachts();
+        $this->demoYacht();
+        $this->tours();
     }
 
     private function users(): void
@@ -148,7 +149,8 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    private function demoYachts(): void
+    /** Test paketinin dayandigi yayinda/fiyatli/kapasiteli sabit demo tur. */
+    private function demoYacht(): void
     {
         $owner = User::where('email', 'sahip@yatkiralama.com')->first();
 
@@ -204,6 +206,70 @@ class DatabaseSeeder extends Seeder
             }
 
             $yacht->features()->sync(Feature::inRandomOrder()->limit(8)->pluck('id'));
+        }
+    }
+
+    /**
+     * Gercek 4 tur ilani — taslak (Draft) olarak girilir. Fiyat, kapasite ve
+     * fotograflar musteriden gelene kadar admin panelden doldurulur.
+     */
+    private function tours(): void
+    {
+        $owner = User::where('email', 'sahip@yatkiralama.com')->first();
+
+        if (! $owner) {
+            return;
+        }
+
+        $tours = [
+            [
+                'slug' => 'dalis-turu',
+                'name' => ['tr' => 'Dalış Turu', 'en' => 'Diving Tour'],
+                'description' => [
+                    'tr' => 'Marmaris\'te günübirlik dalış turu — her şey dahil.',
+                    'en' => 'Full-day diving tour in Marmaris — all-inclusive.',
+                ],
+            ],
+            [
+                'slug' => 'davy-jones-alkollu-tekne-turu',
+                'name' => ['tr' => 'Davy Jones Alkollü Tekne Turu', 'en' => 'Davy Jones Alcoholic Boat Tour'],
+                'description' => [
+                    'tr' => 'Davy Jones alkollü tekne turu — her şey dahil.',
+                    'en' => 'Davy Jones alcoholic boat tour — all-inclusive.',
+                ],
+            ],
+            [
+                'slug' => 'davy-jones-alkolsuz-tekne-turu',
+                'name' => ['tr' => 'Davy Jones Alkolsüz Tekne Turu', 'en' => 'Davy Jones Alcohol-Free Boat Tour'],
+                'description' => [
+                    'tr' => 'Davy Jones alkolsüz tekne turu — her şey dahil.',
+                    'en' => 'Davy Jones alcohol-free boat tour — all-inclusive.',
+                ],
+            ],
+            [
+                'slug' => 'soft-tekne-turu',
+                'name' => ['tr' => 'Soft Tekne Turu', 'en' => 'Soft Boat Tour'],
+                'description' => [
+                    'tr' => 'Sakin ve aile dostu soft tekne turu — her şey dahil.',
+                    'en' => 'Relaxed, family-friendly soft boat tour — all-inclusive.',
+                ],
+            ],
+        ];
+
+        foreach ($tours as $data) {
+            $tour = Yacht::updateOrCreate(
+                ['slug' => $data['slug']],
+                array_merge($data, [
+                    'owner_id' => $owner->id,
+                    'type' => 'tekne',
+                    'with_crew' => true,
+                    'currency' => 'EUR',
+                    'unit_daily' => true,
+                    'is_open' => true,
+                ])
+            );
+
+            $tour->forceFill(['status' => YachtStatus::Draft])->save();
         }
     }
 }
