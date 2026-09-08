@@ -32,10 +32,15 @@ WHATSAPP_PHONE_NUMBER_ID=       # Meta > WhatsApp > API Setup
 WHATSAPP_BUSINESS_ACCOUNT_ID=
 WHATSAPP_ACCESS_TOKEN=          # kalıcı (system user) token kullanın
 WHATSAPP_VERIFY_TOKEN=          # kendi ürettiğiniz rastgele dize
+WHATSAPP_APP_SECRET=            # Meta > App Settings > Basic > App Secret
 ```
 
 Token'ı **geçici** (24 saat) değil, System User üzerinden üretilen kalıcı token
 olarak alın; aksi hâlde ertesi gün tüm gönderimler `failed` düşer.
+
+`WHATSAPP_APP_SECRET` girilmeden webhook hiçbir olayı kabul etmez (imza
+doğrulanamadığı için 403 döner) — bu bilinçli bir güvenlik önlemi, imzasız
+webhook isteği hiçbir zaman işlenmemeli.
 
 ## 4. Webhook
 

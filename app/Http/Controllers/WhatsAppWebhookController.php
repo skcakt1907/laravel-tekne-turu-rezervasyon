@@ -18,7 +18,7 @@ use Throwable;
  *  - `statuses`: gönderdiğimiz mesajın teslim/okundu/hata durumu
  *
  * Rota CSRF'den muaf (bootstrap/app.php). Meta imzayı `X-Hub-Signature-256`
- * ile gönderir; app secret tanımlıysa doğrulanır.
+ * ile gönderir; `whatsapp.app_secret` tanımlı olmalı, aksi halde istek reddedilir.
  */
 class WhatsAppWebhookController extends Controller
 {
@@ -39,6 +39,12 @@ class WhatsAppWebhookController extends Controller
 
     public function handle(Request $request)
     {
+        if (! $this->hasValidSignature($request)) {
+            Log::warning('WhatsApp webhook: imza dogrulamasi basarisiz', ['ip' => $request->ip()]);
+
+            abort(403);
+        }
+
         // Meta yeniden denemesin diye her durumda 200 döneriz; hatayı kendimiz loglarız.
         try {
             foreach ($request->input('entry', []) as $entry) {
@@ -59,6 +65,24 @@ class WhatsAppWebhookController extends Controller
         }
 
         return response()->json(['received' => true]);
+    }
+
+    /**
+     * Meta imzasi (X-Hub-Signature-256: sha256=<hmac>) dogrulanir. app_secret
+     * tanimli degilse istek reddedilir — imzasiz webhook kabul edilmez.
+     */
+    private function hasValidSignature(Request $request): bool
+    {
+        $secret = config('whatsapp.app_secret');
+        $header = (string) $request->header('X-Hub-Signature-256', '');
+
+        if (blank($secret) || ! str_starts_with($header, 'sha256=')) {
+            return false;
+        }
+
+        $expected = hash_hmac('sha256', $request->getContent(), $secret);
+
+        return hash_equals($expected, substr($header, 7));
     }
 
     /** Teslim/okundu/hata bilgisini mesaj kaydına işler. */

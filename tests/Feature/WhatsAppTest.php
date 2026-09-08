@@ -38,7 +38,20 @@ class WhatsAppTest extends TestCase
             'whatsapp.phone_number_id' => '123456',
             'whatsapp.access_token' => 'test-token',
             'whatsapp.verify_token' => 'dogrulama',
+            'whatsapp.app_secret' => 'test-app-secret',
         ]);
+    }
+
+    /** Meta'nin gonderdigi X-Hub-Signature-256 imzasiyla webhook'a POST atar. */
+    private function postSignedWebhook(array $payload)
+    {
+        $body = json_encode($payload);
+        $signature = 'sha256='.hash_hmac('sha256', $body, config('whatsapp.app_secret'));
+
+        return $this->call('POST', '/webhook/whatsapp', [], [], [], [
+            'CONTENT_TYPE' => 'application/json',
+            'HTTP_X-Hub-Signature-256' => $signature,
+        ], $body);
     }
 
     public function test_nothing_is_sent_while_the_channel_is_off(): void
@@ -122,6 +135,27 @@ class WhatsAppTest extends TestCase
             ->assertSee('123');
     }
 
+    public function test_webhook_rejects_events_without_a_valid_signature(): void
+    {
+        $this->enableWhatsApp();
+        $reservation = $this->makeReservation();
+
+        $payload = $this->buttonPayload(TemplateRegistry::BUTTON_APPROVE, 'wamid.FORGED', $reservation->owner->whatsapp_no);
+
+        // Imza hic yok
+        $this->postJson('/webhook/whatsapp', $payload)->assertForbidden();
+
+        // Imza var ama yanlis (baska bir secret ile uretilmis)
+        $badSignature = 'sha256='.hash_hmac('sha256', json_encode($payload), 'yanlis-secret');
+        $this->call('POST', '/webhook/whatsapp', [], [], [], [
+            'CONTENT_TYPE' => 'application/json',
+            'HTTP_X-Hub-Signature-256' => $badSignature,
+        ], json_encode($payload))->assertForbidden();
+
+        // Sahte istek rezervasyonu etkilememis olmali
+        $this->assertSame(ReservationStatus::Pending, $reservation->refresh()->status);
+    }
+
     public function test_owner_button_reply_approves_the_reservation(): void
     {
         $this->enableWhatsApp();
@@ -129,7 +163,7 @@ class WhatsAppTest extends TestCase
 
         $reservation = $this->makeReservation();
 
-        $this->postJson('/webhook/whatsapp', $this->buttonPayload(
+        $this->postSignedWebhook($this->buttonPayload(
             TemplateRegistry::BUTTON_APPROVE,
             'wamid.OWNER',
             '905001112233'
@@ -150,7 +184,7 @@ class WhatsAppTest extends TestCase
 
         $reservation = $this->makeReservation();
 
-        $this->postJson('/webhook/whatsapp', $this->buttonPayload(
+        $this->postSignedWebhook($this->buttonPayload(
             TemplateRegistry::BUTTON_REJECT,
             'wamid.R',
             '905001112233'
@@ -167,8 +201,8 @@ class WhatsAppTest extends TestCase
         $reservation = $this->makeReservation();
         $payload = $this->buttonPayload(TemplateRegistry::BUTTON_APPROVE, 'wamid.D', '905001112233');
 
-        $this->postJson('/webhook/whatsapp', $payload)->assertOk();
-        $this->postJson('/webhook/whatsapp', $payload)->assertOk();
+        $this->postSignedWebhook($payload)->assertOk();
+        $this->postSignedWebhook($payload)->assertOk();
 
         $reservation->refresh();
 
@@ -183,15 +217,15 @@ class WhatsAppTest extends TestCase
 
         $this->makeReservation();
 
-        $this->postJson('/webhook/whatsapp', $this->statusPayload('wamid.S', 'delivered'))->assertOk();
+        $this->postSignedWebhook($this->statusPayload('wamid.S', 'delivered'))->assertOk();
         $log = MessageLog::where('provider_message_id', 'wamid.S')->firstOrFail();
         $this->assertSame('delivered', $log->status);
         $this->assertNotNull($log->delivered_at);
 
-        $this->postJson('/webhook/whatsapp', $this->statusPayload('wamid.S', 'read'))->assertOk();
+        $this->postSignedWebhook($this->statusPayload('wamid.S', 'read'))->assertOk();
         $this->assertSame('read', $log->refresh()->status);
 
-        $this->postJson('/webhook/whatsapp', $this->statusPayload('wamid.S', 'failed'))->assertOk();
+        $this->postSignedWebhook($this->statusPayload('wamid.S', 'failed'))->assertOk();
         $log->refresh();
         $this->assertSame('failed', $log->status);
         $this->assertNotNull($log->error);
@@ -201,9 +235,9 @@ class WhatsAppTest extends TestCase
     {
         $this->enableWhatsApp();
 
-        $this->postJson('/webhook/whatsapp', ['entry' => []])->assertOk();
-        $this->postJson('/webhook/whatsapp', $this->statusPayload('bilinmeyen-id', 'delivered'))->assertOk();
-        $this->postJson('/webhook/whatsapp', [])->assertOk();
+        $this->postSignedWebhook(['entry' => []])->assertOk();
+        $this->postSignedWebhook($this->statusPayload('bilinmeyen-id', 'delivered'))->assertOk();
+        $this->postSignedWebhook([])->assertOk();
     }
 
     public function test_phone_numbers_are_normalised_to_e164_digits(): void

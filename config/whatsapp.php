@@ -14,6 +14,7 @@ return [
     'business_account_id' => env('WHATSAPP_BUSINESS_ACCOUNT_ID'),
     'access_token' => env('WHATSAPP_ACCESS_TOKEN'),
     'verify_token' => env('WHATSAPP_VERIFY_TOKEN'),
+    'app_secret' => env('WHATSAPP_APP_SECRET'), // webhook imza dogrulamasi icin (Meta > App Settings > Basic)
 
     /*
     | Meta'ya onaylatılacak 8 şablon (hepsi Utility kategorisinde).
