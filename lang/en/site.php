@@ -147,6 +147,7 @@ return [
         'per_person' => 'per person',
     ],
     'detail' => [
+        'video' => 'Video',
         'no_photo' => 'No photos yet',
         'specs' => 'Specifications',
         'about' => 'About This Tour',

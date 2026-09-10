@@ -301,7 +301,11 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    /** public/uploads/yachts/<slug> altindaki fotograflari galeriye baglar. */
+    /**
+     * public/uploads/yachts/<slug> altindaki medyayi galeriye baglar.
+     * Videolarin kapak karesi ayni adda .jpg dosyasidir (dalis-turu-v01.mp4
+     * -> dalis-turu-v01.jpg); o jpg galeride ayri bir foto olarak listelenmez.
+     */
     private function tourPhotos(Yacht $tour, string $cover): void
     {
         $dir = public_path("uploads/yachts/{$tour->slug}");
@@ -310,18 +314,30 @@ class DatabaseSeeder extends Seeder
             return;
         }
 
-        $files = collect(glob("{$dir}/*.jpg"))
+        $videos = collect(glob("{$dir}/*.mp4"))
             ->map(fn (string $path) => basename($path))
             ->sort(SORT_NATURAL)
             ->values();
 
-        // Kapak once gelsin
-        $files = $files->reject(fn (string $f) => $f === $cover)->prepend($cover);
+        $posters = $videos->map(fn (string $v) => substr($v, 0, -4).'.jpg');
+
+        $files = collect(glob("{$dir}/*.jpg"))
+            ->map(fn (string $path) => basename($path))
+            ->reject(fn (string $f) => $posters->contains($f)) // video kapak kareleri
+            ->sort(SORT_NATURAL)
+            ->values();
+
+        // Kapak once gelsin, videolar en sona
+        $files = $files->reject(fn (string $f) => $f === $cover)->prepend($cover)->concat($videos);
 
         foreach ($files as $sort => $file) {
+            $isVideo = str_ends_with($file, '.mp4');
+            $poster = $isVideo ? substr($file, 0, -4).'.jpg' : null;
+
             $tour->photos()->updateOrCreate(
                 ['path' => "yachts/{$tour->slug}/{$file}"],
                 [
+                    'poster' => $poster && is_file("{$dir}/{$poster}") ? "yachts/{$tour->slug}/{$poster}" : null,
                     'alt' => ['tr' => $tour->getTranslation('name', 'tr'), 'en' => $tour->getTranslation('name', 'en')],
                     'sort' => $sort,
                     'is_cover' => $file === $cover,

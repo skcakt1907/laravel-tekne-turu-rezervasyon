@@ -44,9 +44,16 @@ class Yacht extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
+    /** Galerinin tamami: fotograflar + videolar. */
     public function photos(): HasMany
     {
         return $this->hasMany(YachtPhoto::class)->orderBy('sort');
+    }
+
+    /** Yalnizca fotograflar — kapak ve foto sayisi kurallari icin. */
+    public function images(): HasMany
+    {
+        return $this->photos()->where('type', YachtPhoto::TYPE_IMAGE);
     }
 
     public function features(): BelongsToMany
@@ -84,9 +91,11 @@ class Yacht extends Model
         return $q->published()->where('is_open', true);
     }
 
+    /** Kapak daima bir FOTOGRAFTIR; video kart gorselinde kullanilamaz. */
     public function coverUrl(): ?string
     {
-        $cover = $this->photos->firstWhere('is_cover', true) ?? $this->photos->first();
+        $images = $this->photos->where('type', YachtPhoto::TYPE_IMAGE);
+        $cover = $images->firstWhere('is_cover', true) ?? $images->first();
 
         return $cover?->url();
     }

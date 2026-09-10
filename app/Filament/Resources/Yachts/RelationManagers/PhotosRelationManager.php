@@ -29,14 +29,23 @@ class PhotosRelationManager extends RelationManager
     {
         return $schema->components([
             FileUpload::make('path')
-                ->label('Görsel')
+                ->label('Fotoğraf veya video')
+                ->helperText('JPG/PNG/WEBP fotoğraf ya da MP4 video. En fazla 30 MB.')
+                ->disk('uploads')
+                ->directory('yachts')
+                ->maxSize(30720)
+                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'video/mp4'])
+                ->required()
+                ->columnSpanFull(),
+            FileUpload::make('poster')
+                ->label('Video kapak karesi')
+                ->helperText('Yalnızca video için: galeride küçük resim olarak görünür. Boş bırakılırsa siyah kutu çıkar.')
                 ->image()
                 ->disk('uploads')
                 ->directory('yachts')
                 ->imageEditor()
                 ->maxSize(6144)
                 ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
-                ->required()
                 ->columnSpanFull(),
             Translatable::tabs(fn (string $locale) => [
                 TextInput::make("alt.{$locale}")
@@ -57,18 +66,24 @@ class PhotosRelationManager extends RelationManager
                 ImageColumn::make('path')
                     ->label('Görsel')
                     ->disk('uploads')
+                    ->getStateUsing(fn (YachtPhoto $record) => $record->isVideo() ? $record->poster : $record->path)
                     ->height(64),
+                TextColumn::make('type')
+                    ->label('Tür')
+                    ->badge()
+                    ->color(fn (string $state) => $state === YachtPhoto::TYPE_VIDEO ? 'info' : 'gray')
+                    ->formatStateUsing(fn (string $state) => $state === YachtPhoto::TYPE_VIDEO ? 'Video' : 'Fotoğraf'),
                 IconColumn::make('is_cover')->label('Kapak')->boolean(),
                 TextColumn::make('sort')->label('Sıra')->sortable(),
             ])
             ->headerActions([
-                CreateAction::make()->label('Fotoğraf ekle'),
+                CreateAction::make()->label('Fotoğraf / video ekle'),
             ])
             ->recordActions([
                 \Filament\Actions\Action::make('makeCover')
                     ->label('Kapak yap')
                     ->icon('heroicon-o-star')
-                    ->visible(fn (YachtPhoto $record) => ! $record->is_cover)
+                    ->visible(fn (YachtPhoto $record) => ! $record->is_cover && ! $record->isVideo())
                     ->action(function (YachtPhoto $record) {
                         $record->yacht->photos()->update(['is_cover' => false]);
                         $record->update(['is_cover' => true]);

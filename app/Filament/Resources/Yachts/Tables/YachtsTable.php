@@ -96,7 +96,7 @@ class YachtsTable
                         ->action(function (Yacht $record) {
                             $min = (int) config('yacht.min_photos', 0);
 
-                            if ($record->photos()->count() < $min) {
+                            if ($record->images()->count() < $min) {
                                 Notification::make()
                                     ->title("İlan yayına alınamadı: en az {$min} fotoğraf gerekiyor.")
                                     ->danger()

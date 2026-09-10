@@ -61,11 +61,31 @@
         @endif
     </div>
 
-    {{-- ---------------- GALERİ ---------------- --}}
-    <div x-data="{ current: '{{ $cover ?? '' }}' }" class="mb-10">
+    {{-- ---------------- GALERİ (fotoğraf + video) ---------------- --}}
+    <div x-data="{
+            current: '{{ $cover ?? '' }}',
+            image: '{{ $cover ?? '' }}',
+            video: '',
+            select(url, isVideo) {
+                this.current = url;
+                if (isVideo) {
+                    this.video = url;
+                } else {
+                    this.image = url;
+                    this.$refs.player?.pause(); // gizlenen video sesi devam etmesin
+                }
+            },
+            get isVideo() { return this.current === this.video && this.video !== ''; },
+         }" class="mb-10">
         <div class="aspect-16/9 overflow-hidden rounded-2xl {{ $cover ? 'bg-sea-100' : 'bg-placeholder' }}">
-            @if ($cover)
-                <img :src="current" src="{{ $cover }}" alt="{{ $name }}" class="h-full w-full object-cover">
+            @if ($cover || $yacht->photos->isNotEmpty())
+                <img :src="image" src="{{ $cover }}" alt="{{ $name }}"
+                     :class="{ 'hidden': isVideo }"
+                     class="h-full w-full object-cover">
+                {{-- Video yalnızca tıklanınca yüklenir (preload=none) --}}
+                <video x-ref="player" :src="video" controls playsinline preload="none"
+                       :class="{ 'hidden': ! isVideo }"
+                       class="hidden h-full w-full bg-sea-950 object-contain"></video>
             @else
                 <div class="flex h-full flex-col items-center justify-center gap-2 text-sea-400">
                     <i class="bi bi-image text-5xl"></i>
@@ -77,11 +97,24 @@
         @if ($yacht->photos->count() > 1)
             <div class="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-8">
                 @foreach ($yacht->photos as $photo)
-                    <button type="button" @click="current = '{{ $photo->url() }}'"
-                            class="aspect-4/3 overflow-hidden rounded-lg border-2 transition"
+                    @php $thumb = $photo->thumbnailUrl(); @endphp
+                    <button type="button"
+                            @click="select('{{ $photo->url() }}', {{ $photo->isVideo() ? 'true' : 'false' }})"
+                            title="{{ $photo->isVideo() ? __('site.detail.video') : ($photo->getTranslation('alt', $locale) ?: $name) }}"
+                            class="relative aspect-4/3 overflow-hidden rounded-lg border-2 transition"
                             :class="current === '{{ $photo->url() }}' ? 'border-brass-500' : 'border-transparent hover:border-sea-300'">
-                        <img src="{{ $photo->url() }}" alt="{{ $photo->getTranslation('alt', $locale) ?: $name }}"
-                             loading="lazy" class="h-full w-full object-cover">
+                        @if ($thumb)
+                            <img src="{{ $thumb }}" alt="{{ $photo->getTranslation('alt', $locale) ?: $name }}"
+                                 loading="lazy" class="h-full w-full object-cover">
+                        @else
+                            <span class="flex h-full w-full items-center justify-center bg-sea-800"></span>
+                        @endif
+
+                        @if ($photo->isVideo())
+                            <span class="absolute inset-0 grid place-items-center bg-sea-950/35 text-white">
+                                <i class="bi bi-play-circle-fill text-2xl drop-shadow"></i>
+                            </span>
+                        @endif
                     </button>
                 @endforeach
             </div>

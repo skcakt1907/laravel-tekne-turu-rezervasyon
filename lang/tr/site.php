@@ -147,6 +147,7 @@ return [
         'per_person' => 'kişi başı',
     ],
     'detail' => [
+        'video' => 'Video',
         'no_photo' => 'Fotoğraf henüz eklenmedi',
         'specs' => 'Teknik Bilgiler',
         'about' => 'Tur Hakkında',

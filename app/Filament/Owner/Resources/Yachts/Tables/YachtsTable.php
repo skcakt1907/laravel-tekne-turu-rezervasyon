@@ -35,9 +35,9 @@ class YachtsTable
                     ->description(fn (Yacht $record) => $record->status === YachtStatus::Rejected
                         ? $record->reject_reason
                         : null),
-                TextColumn::make('photos_count')
+                TextColumn::make('images_count')
                     ->label('Foto')
-                    ->counts('photos')
+                    ->counts('images')
                     ->badge()
                     ->color(fn (int $state) => $state >= config('yacht.min_photos', 4) ? 'success' : 'warning'),
                 TextColumn::make('price_from')
@@ -110,7 +110,7 @@ class YachtsTable
         $missing = [];
         $minPhotos = (int) config('yacht.min_photos', 4);
 
-        if ($yacht->photos()->count() < $minPhotos) {
+        if ($yacht->images()->count() < $minPhotos) {
             $missing[] = "En az {$minPhotos} fotoğraf gerekiyor.";
         }
 
