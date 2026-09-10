@@ -12,9 +12,15 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Kolonlar canliya once SQL dosyasiyla gitmis olabilir — o yuzden guard'li.
         Schema::table('yacht_photos', function (Blueprint $table) {
-            $table->string('type', 10)->default('image')->after('path'); // image | video
-            $table->string('poster')->nullable()->after('type');         // video kapak karesi
+            if (! Schema::hasColumn('yacht_photos', 'type')) {
+                $table->string('type', 10)->default('image')->after('path'); // image | video
+            }
+
+            if (! Schema::hasColumn('yacht_photos', 'poster')) {
+                $table->string('poster')->nullable()->after('type');         // video kapak karesi
+            }
         });
     }
 
