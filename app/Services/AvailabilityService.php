@@ -28,13 +28,21 @@ class AvailabilityService
             return false;
         }
 
-        return $this->remainingSeats($yacht, $date, $ignoreReservationId) >= $requestedGuests;
+        $remaining = $this->remainingSeats($yacht, $date, $ignoreReservationId);
+
+        return $remaining === null || $remaining >= $requestedGuests;
     }
 
-    /** Bu tarihte kalan koltuk sayısı. */
-    public function remainingSeats(Yacht $yacht, CarbonInterface $date, ?int $ignoreReservationId = null): int
+    /**
+     * Bu tarihte kalan koltuk sayısı. Kapasite girilmemişse null döner
+     * (sınırsız) — her talebi zaten tur sahibi elle onaylıyor, kapasite
+     * bilinmiyor diye talep almamak yanlış olur.
+     */
+    public function remainingSeats(Yacht $yacht, CarbonInterface $date, ?int $ignoreReservationId = null): ?int
     {
-        $capacity = (int) ($yacht->capacity ?? 0);
+        if (! $yacht->capacity) {
+            return null;
+        }
 
         $booked = $yacht->reservations()
             ->where('status', ReservationStatus::Approved)
@@ -43,7 +51,7 @@ class AvailabilityService
             ->get()
             ->sum(fn ($r) => $r->adults + $r->children);
 
-        return max(0, $capacity - $booked);
+        return max(0, (int) $yacht->capacity - $booked);
     }
 
     /** Manuel olarak (bakım, özel kullanım) tamamen kapatılmış mı? */

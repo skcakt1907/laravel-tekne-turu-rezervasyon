@@ -31,7 +31,7 @@ class PhotosRelationManager extends RelationManager
             FileUpload::make('path')
                 ->label('Görsel')
                 ->image()
-                ->disk('public')
+                ->disk('uploads')
                 ->directory('yachts')
                 ->imageEditor()
                 ->maxSize(6144)
@@ -56,7 +56,7 @@ class PhotosRelationManager extends RelationManager
             ->columns([
                 ImageColumn::make('path')
                     ->label('Görsel')
-                    ->disk('public')
+                    ->disk('uploads')
                     ->height(64),
                 IconColumn::make('is_cover')->label('Kapak')->boolean(),
                 TextColumn::make('sort')->label('Sıra')->sortable(),

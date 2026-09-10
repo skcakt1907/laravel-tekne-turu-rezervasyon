@@ -24,6 +24,6 @@ class YachtPhoto extends Model
 
     public function url(): string
     {
-        return Storage::disk('public')->url($this->path);
+        return Storage::disk('uploads')->url($this->path);
     }
 }

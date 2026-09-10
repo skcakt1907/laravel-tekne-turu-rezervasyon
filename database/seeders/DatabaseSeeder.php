@@ -208,8 +208,9 @@ class DatabaseSeeder extends Seeder
     }
 
     /**
-     * Gercek 4 tur ilani — taslak (Draft) olarak girilir. Fiyat, kapasite ve
-     * fotograflar musteriden gelene kadar admin panelden doldurulur.
+     * Musterinin gercek 5 turu + fotograflari (public/uploads/yachts/<slug>).
+     * Fiyat ve kapasite BILEREK bos: musteri admin panelden girecek.
+     * Aciklama metinleri taslaktir, musteri onayindan gecmeli.
      */
     private function tours(): void
     {
@@ -219,42 +220,65 @@ class DatabaseSeeder extends Seeder
             return;
         }
 
+        // Eski (birlestirilen/kaldirilan) ilanlar
+        Yacht::whereIn('slug', [
+            'davy-jones-alkollu-tekne-turu',
+            'davy-jones-alkolsuz-tekne-turu',
+            'soft-tekne-turu',
+        ])->each(fn (Yacht $y) => $y->reservations()->doesntExist() ? $y->forceDelete() : null);
+
         $tours = [
             [
                 'slug' => 'dalis-turu',
+                'cover' => 'dalis-turu-01.jpg',
                 'name' => ['tr' => 'Dalış Turu', 'en' => 'Diving Tour'],
                 'description' => [
-                    'tr' => 'Marmaris\'te günübirlik dalış turu — her şey dahil.',
-                    'en' => 'Full-day diving tour in Marmaris — all-inclusive.',
+                    'tr' => '<p>Marmaris koylarında günübirlik dalış turu. Deneyimli eğitmenler eşliğinde, daha önce hiç dalmamış olanlar da dalabilir; ekipman ve eğitim dahildir.</p><p>Öğle yemeği ve içecekler teknede servis edilir.</p>',
+                    'en' => '<p>Full-day diving tour around the bays of Marmaris. Accompanied by experienced instructors — first-time divers are welcome; equipment and training are included.</p><p>Lunch and drinks are served on board.</p>',
                 ],
             ],
             [
-                'slug' => 'davy-jones-alkollu-tekne-turu',
-                'name' => ['tr' => 'Davy Jones Alkollü Tekne Turu', 'en' => 'Davy Jones Alcoholic Boat Tour'],
+                'slug' => 'davy-jones-korsan-tekne-turu',
+                'cover' => 'davy-jones-korsan-tekne-turu-01.jpg',
+                'name' => ['tr' => 'Davy Jones Korsan Tekne Turu', 'en' => 'Davy Jones Pirate Boat Tour'],
                 'description' => [
-                    'tr' => 'Davy Jones alkollü tekne turu — her şey dahil.',
-                    'en' => 'Davy Jones alcoholic boat tour — all-inclusive.',
+                    'tr' => '<p>Korsan temalı Davy Jones teknesiyle günübirlik Marmaris turu. Müzik, köpük partisi ve yüzme molalarıyla hareketli bir gün.</p><p>Her şey dahil: öğle yemeği ve içecekler fiyata dahildir.</p>',
+                    'en' => '<p>A full-day Marmaris cruise aboard the pirate-themed Davy Jones boat. Music, foam party and swimming stops make for a lively day.</p><p>All-inclusive: lunch and drinks are covered.</p>',
                 ],
             ],
             [
-                'slug' => 'davy-jones-alkolsuz-tekne-turu',
-                'name' => ['tr' => 'Davy Jones Alkolsüz Tekne Turu', 'en' => 'Davy Jones Alcohol-Free Boat Tour'],
+                'slug' => 'hersey-dahil-tekne-turu',
+                'cover' => 'hersey-dahil-tekne-turu-01.jpg',
+                'name' => ['tr' => 'Her Şey Dahil Tekne Turu', 'en' => 'All-Inclusive Boat Tour'],
                 'description' => [
-                    'tr' => 'Davy Jones alkolsüz tekne turu — her şey dahil.',
-                    'en' => 'Davy Jones alcohol-free boat tour — all-inclusive.',
+                    'tr' => '<p>Marmaris\'in koylarında sakin, aile dostu günübirlik tekne turu. Berrak sularda yüzme molaları ve güneşlenme güvertesi.</p><p>Her şey dahil: öğle yemeği ve içecekler fiyata dahildir.</p>',
+                    'en' => '<p>A relaxed, family-friendly day cruise around the bays of Marmaris, with swimming stops in crystal-clear water and a sun deck.</p><p>All-inclusive: lunch and drinks are covered.</p>',
                 ],
             ],
             [
-                'slug' => 'soft-tekne-turu',
-                'name' => ['tr' => 'Soft Tekne Turu', 'en' => 'Soft Boat Tour'],
+                'slug' => 'kleopatra-adasi-tekne-turu',
+                'cover' => 'kleopatra-adasi-tekne-turu-01.jpg',
+                'name' => ['tr' => 'Kleopatra Adası Tekne Turu', 'en' => 'Cleopatra Island Boat Tour'],
                 'description' => [
-                    'tr' => 'Sakin ve aile dostu soft tekne turu — her şey dahil.',
-                    'en' => 'Relaxed, family-friendly soft boat tour — all-inclusive.',
+                    'tr' => '<p>Ünlü kumuyla bilinen Kleopatra (Sedir) Adası\'na günübirlik tekne turu. Adada yüzme ve antik kalıntıları gezme fırsatı.</p><p>Her şey dahil: öğle yemeği ve içecekler fiyata dahildir.</p>',
+                    'en' => '<p>A day trip to Cleopatra (Sedir) Island, famous for its unique sand. Time to swim and to walk among the ancient ruins on the island.</p><p>All-inclusive: lunch and drinks are covered.</p>',
+                ],
+            ],
+            [
+                'slug' => 'dalyan-tekne-turu',
+                'cover' => 'dalyan-tekne-turu-07.jpg',
+                'name' => ['tr' => 'Dalyan Tekne Turu', 'en' => 'Dalyan Boat Tour'],
+                'description' => [
+                    'tr' => '<p>Marmaris çıkışlı Dalyan turu: kaya mezarları, İztuzu (Caretta) Plajı ve çamur banyoları.</p><p>Her şey dahil: öğle yemeği ve içecekler fiyata dahildir.</p>',
+                    'en' => '<p>Dalyan tour departing from Marmaris: the rock tombs, İztuzu (Turtle) Beach and the mud baths.</p><p>All-inclusive: lunch and drinks are covered.</p>',
                 ],
             ],
         ];
 
-        foreach ($tours as $data) {
+        foreach ($tours as $i => $data) {
+            $cover = $data['cover'];
+            unset($data['cover']);
+
             $tour = Yacht::updateOrCreate(
                 ['slug' => $data['slug']],
                 array_merge($data, [
@@ -267,7 +291,42 @@ class DatabaseSeeder extends Seeder
                 ])
             );
 
-            $tour->forceFill(['status' => YachtStatus::Draft])->save();
+            $tour->forceFill([
+                'status' => YachtStatus::Published,
+                'published_at' => $tour->published_at ?? now(),
+                'is_featured' => $i < 3,
+            ])->save();
+
+            $this->tourPhotos($tour, $cover);
+        }
+    }
+
+    /** public/uploads/yachts/<slug> altindaki fotograflari galeriye baglar. */
+    private function tourPhotos(Yacht $tour, string $cover): void
+    {
+        $dir = public_path("uploads/yachts/{$tour->slug}");
+
+        if (! is_dir($dir)) {
+            return;
+        }
+
+        $files = collect(glob("{$dir}/*.jpg"))
+            ->map(fn (string $path) => basename($path))
+            ->sort(SORT_NATURAL)
+            ->values();
+
+        // Kapak once gelsin
+        $files = $files->reject(fn (string $f) => $f === $cover)->prepend($cover);
+
+        foreach ($files as $sort => $file) {
+            $tour->photos()->updateOrCreate(
+                ['path' => "yachts/{$tour->slug}/{$file}"],
+                [
+                    'alt' => ['tr' => $tour->getTranslation('name', 'tr'), 'en' => $tour->getTranslation('name', 'en')],
+                    'sort' => $sort,
+                    'is_cover' => $file === $cover,
+                ]
+            );
         }
     }
 }
