@@ -90,8 +90,7 @@ class YachtForm
                             ->label('Günlük tur kapasitesi')
                             ->numeric()
                             ->minValue(1)
-                            ->required()
-                            ->helperText('Turun günlük azami kişi kapasitesi — dolduğunda yeni talep alınamaz.'),
+                            ->helperText('Turun günlük azami kişi kapasitesi — dolduğunda yeni talep alınamaz. Boş bırakılırsa sınır uygulanmaz, her talep onayına düşer.'),
                         TextInput::make('sleep_capacity')
                             ->label('Konaklamalı kapasite')
                             ->numeric()

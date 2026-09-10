@@ -38,6 +38,11 @@ class YachtResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'slug';
 
+    /** Baslikta slug degil, turun adi gorunsun. */
+    public static function getRecordTitle(?Model $record): ?string
+    {
+        return $record?->getTranslation('name', 'tr') ?? parent::getRecordTitle($record);
+    }
 
     /** @return array<int, string> */
     public static function getGloballySearchableAttributes(): array

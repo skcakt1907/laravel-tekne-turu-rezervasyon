@@ -118,10 +118,6 @@ class YachtsTable
             $missing[] = 'En az bir fiyat girmelisiniz.';
         }
 
-        if (! $yacht->capacity) {
-            $missing[] = 'Günlük tur kapasitesi girilmeli.';
-        }
-
         return $missing;
     }
 }

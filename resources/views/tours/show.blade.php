@@ -124,18 +124,20 @@
     <div class="grid gap-8 lg:grid-cols-[1fr_380px]">
         <div class="space-y-6">
 
-            {{-- Teknik bilgiler --}}
-            <section class="panel">
-                <h2 class="mb-4 text-xl font-bold">{{ __('site.detail.specs') }}</h2>
-                <dl class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                    @foreach ($specs as $key => $value)
-                        <div class="rounded-lg bg-sea-50 px-3 py-2.5">
-                            <dt class="text-[10px] uppercase tracking-wider text-sea-500">{{ __('site.detail.'.$key) }}</dt>
-                            <dd class="mt-0.5 font-semibold">{{ $value }}</dd>
-                        </div>
-                    @endforeach
-                </dl>
-            </section>
+            {{-- Teknik bilgiler — hicbiri girilmemisse bos kart gostermeyelim --}}
+            @if ($specs)
+                <section class="panel">
+                    <h2 class="mb-4 text-xl font-bold">{{ __('site.detail.specs') }}</h2>
+                    <dl class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                        @foreach ($specs as $key => $value)
+                            <div class="rounded-lg bg-sea-50 px-3 py-2.5">
+                                <dt class="text-[10px] uppercase tracking-wider text-sea-500">{{ __('site.detail.'.$key) }}</dt>
+                                <dd class="mt-0.5 font-semibold">{{ $value }}</dd>
+                            </div>
+                        @endforeach
+                    </dl>
+                </section>
+            @endif
 
             @if ($yacht->getTranslation('description', $locale))
                 <section class="panel">
