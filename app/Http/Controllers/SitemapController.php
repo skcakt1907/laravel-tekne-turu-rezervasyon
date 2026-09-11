@@ -22,7 +22,6 @@ class SitemapController extends Controller
         foreach ([
             ['home', [], '1.0', 'daily'],
             ['tours.index', [], '0.9', 'daily'],
-            ['owner.landing', [], '0.6', 'monthly'],
             ['contact', [], '0.5', 'monthly'],
             ['reservation.lookup', [], '0.4', 'yearly'],
         ] as [$name, $params, $priority, $freq]) {

@@ -86,10 +86,6 @@
                     </a>
                 @endforeach
             </span>
-
-            <a href="{{ lroute('owner.landing') }}" class="btn btn-brass btn-sm ml-1">
-                {{ __('site.nav.list_your_yacht') }}
-            </a>
         </nav>
 
         <button type="button" @click="open = !open"
@@ -115,7 +111,6 @@
                        class="rounded px-2 py-1 text-xs uppercase {{ app()->getLocale() === $code ? 'bg-brass-100 font-semibold text-brass-700' : 'bg-sea-100 text-sea-600' }}">{{ $code }}</a>
                 @endforeach
             </div>
-            <a href="{{ lroute('owner.landing') }}" class="btn btn-brass btn-sm w-full">{{ __('site.nav.list_your_yacht') }}</a>
         </div>
     </div>
 </header>
@@ -175,16 +170,6 @@
                             </a>
                         </li>
                     @endforeach
-                </ul>
-            </div>
-
-            <div>
-                <h2 class="mb-3 font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-white">
-                    {{ __('site.footer.owners') }}
-                </h2>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="{{ lroute('owner.landing') }}" class="transition hover:text-white">{{ __('site.nav.list_your_yacht') }}</a></li>
-                    <li><a href="/tur-sahibi" class="transition hover:text-white">{{ __('site.footer.owner_login') }}</a></li>
                     <li><a href="{{ lroute('reservation.lookup') }}" class="transition hover:text-white">{{ __('site.nav.lookup') }}</a></li>
                 </ul>
             </div>

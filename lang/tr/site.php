@@ -69,13 +69,10 @@ return [
         'yachts' => 'Turlar',
         'lookup' => 'Rezervasyon Sorgula',
         'contact' => 'İletişim',
-        'list_your_yacht' => 'Turunu Yayınla',
     ],
     'footer' => [
         'tagline' => 'Doğrudan tur sahibinden kiralama. Sitede ödeme alınmaz; talebiniz onaylandıktan sonra ödeme taraflar arasında yapılır.',
         'company' => 'Kurumsal',
-        'owners' => 'Tur Sahipleri',
-        'owner_login' => 'Tur Sahibi Girişi',
         'cancel_request' => 'İptal talebi gönder',
         'cancel_reason' => 'İptal sebebiniz',
         'cancel_sent' => 'İptal talebiniz tur sahibine iletildi.',
@@ -220,16 +217,5 @@ return [
         'message' => 'Mesajınız',
         'submit' => 'Gönder',
         'sent' => 'Mesajınız alındı. En kısa sürede dönüş yapacağız.',
-    ],
-    'owner_landing' => [
-        'title' => 'Turunuzu yayınlayın, talepler size gelsin',
-        'sub' => 'Komisyon yalnızca gerçekleşen rezervasyonlardan alınır. Ön ödeme yok, aidat yok.',
-        'cta' => 'Ücretsiz Kayıt Ol',
-    ],
-    'owner_benefits' => [
-        ['Takvim derdi yok', 'Turunuz için tek bir açık/kapalı şalteri yeter. Onayladığınız tarihler otomatik kapanır.'],
-        ['WhatsApp ile onay', 'Gelen talebi panele girmeden, WhatsApp mesajındaki butondan onaylayın.'],
-        ['Kendi fiyatınız', 'Saatlik, günlük, haftalık; sezon fiyatı ve ek ücretler tamamen sizin kontrolünüzde.'],
-        ['Şeffaf hakediş', 'Aylık ciro, komisyon ve tahsilat durumu panelinizde tek ekranda.'],
     ],
 ];

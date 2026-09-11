@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 | Site onyuzu
 |--------------------------------------------------------------------------
 | Turkce oneksiz, Ingilizce /en/ onekiyle (yol haritasi bolum 10).
-| Panel rotalari Filament tarafindan uretilir: /yonetim ve /tur-sahibi
+| Panel rotalari Filament tarafindan uretilir: /yonetim
 */
 
 $site = function () {
@@ -62,7 +62,6 @@ $site = function () {
         ->name('reservation.cancel-request');
 
     // Kurumsal
-    Route::get('/tur-sahibi-ol', [PageController::class, 'ownerLanding'])->name('owner.landing');
     Route::get('/iletisim', [PageController::class, 'contact'])->name('contact');
     Route::post('/iletisim', [PageController::class, 'contactStore'])->name('contact.store');
     Route::get('/sayfa/{slug}', [PageController::class, 'show'])->name('pages.show');

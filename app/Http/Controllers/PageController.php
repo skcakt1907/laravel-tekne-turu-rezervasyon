@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\ContactMessage;
-use App\Models\Faq;
 use App\Models\Page;
 use Illuminate\Http\Request;
 
@@ -34,16 +33,5 @@ class PageController extends Controller
         ContactMessage::create($data + ['ip' => $request->ip()]);
 
         return back()->with('status', __('site.contact.sent'));
-    }
-
-    /** "Yat sahibi ol" tanitim sayfasi. */
-    public function ownerLanding()
-    {
-        return view('pages.owner-landing', [
-            'faqs' => Faq::where('is_active', true)
-                ->where('audience', 'owner')
-                ->orderBy('sort')
-                ->get(),
-        ]);
     }
 }

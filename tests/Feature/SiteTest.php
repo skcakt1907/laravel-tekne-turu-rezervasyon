@@ -30,7 +30,6 @@ class SiteTest extends TestCase
         $this->get('/')->assertOk()->assertSee('Mavi Rüzgar');
         $this->get('/turlar')->assertOk();
         $this->get('/tur/'.$this->yacht->slug)->assertOk()->assertSee('Rezervasyon Talebi');
-        $this->get('/tur-sahibi-ol')->assertOk();
         $this->get('/iletisim')->assertOk();
         $this->get('/sayfa/kvkk')->assertOk();
         $this->get('/rezervasyon-sorgula')->assertOk();

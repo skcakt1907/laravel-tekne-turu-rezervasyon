@@ -40,10 +40,6 @@
                     <a href="{{ lroute('tours.index') }}" class="btn btn-brass">
                         {{ __('site.home.all_yachts') }}<i class="bi bi-arrow-right"></i>
                     </a>
-                    <a href="{{ lroute('owner.landing') }}"
-                       class="btn border border-white/25 text-white hover:bg-white/10">
-                        {{ __('site.nav.list_your_yacht') }}
-                    </a>
                 </div>
 
                 <dl class="mt-10 grid max-w-sm grid-cols-2 gap-6 border-t border-white/15 pt-6">

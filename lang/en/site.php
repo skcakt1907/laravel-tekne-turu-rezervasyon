@@ -69,13 +69,10 @@ return [
         'yachts' => 'Tours',
         'lookup' => 'Find My Booking',
         'contact' => 'Contact',
-        'list_your_yacht' => 'List Your Tour',
     ],
     'footer' => [
         'tagline' => 'Charter directly from the tour owner. No payment is taken on this site; once your request is approved, payment is arranged between you and the owner.',
         'company' => 'Company',
-        'owners' => 'Tour Owners',
-        'owner_login' => 'Owner Login',
         'cancel_request' => 'Request cancellation',
         'cancel_reason' => 'Reason for cancelling',
         'cancel_sent' => 'Your cancellation request has been sent to the tour owner.',
@@ -220,16 +217,5 @@ return [
         'message' => 'Your message',
         'submit' => 'Send',
         'sent' => 'Your message has been received. We will get back to you shortly.',
-    ],
-    'owner_landing' => [
-        'title' => 'List your tour, let the requests come to you',
-        'sub' => 'Commission is charged only on completed bookings. No upfront fees, no subscription.',
-        'cta' => 'Sign Up Free',
-    ],
-    'owner_benefits' => [
-        ['No calendar chores', 'A single open/closed switch per tour is enough. Approved dates close automatically.'],
-        ['Approve via WhatsApp', 'Approve incoming requests straight from the WhatsApp message — no panel login needed.'],
-        ['Your own pricing', 'Hourly, daily, weekly; seasonal rates and extras are entirely under your control.'],
-        ['Transparent payouts', 'Monthly revenue, commission and collection status on one screen.'],
     ],
 ];

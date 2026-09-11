@@ -57,7 +57,7 @@ class SeoTest extends TestCase
     {
         $robots = file_get_contents(public_path('robots.txt'));
 
-        foreach (['/yonetim', '/tur-sahibi', '/hesabim', '/rezervasyon/', '/onay/'] as $path) {
+        foreach (['/yonetim', '/hesabim', '/rezervasyon/', '/onay/'] as $path) {
             $this->assertStringContainsString('Disallow: '.$path, $robots);
         }
 
