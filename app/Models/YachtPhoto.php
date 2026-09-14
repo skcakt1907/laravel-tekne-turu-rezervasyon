@@ -38,7 +38,16 @@ class YachtPhoto extends Model
                 : self::TYPE_IMAGE;
 
             if ($media->isVideo()) {
-                $media->is_cover = false; // video kart gorseli olamaz
+                /*
+                 * Video kapak OLABILIR ama yalnizca poster karesi varsa.
+                 * Postersiz video kartta bos bir kare birakir: mobilde ve
+                 * yavas baglantida video hic inmiyor, gosterilecek tek sey
+                 * poster. Poster yoksa kapakligi dusuruyoruz ki kart
+                 * fotografa geri dussun.
+                 */
+                if (! $media->poster) {
+                    $media->is_cover = false;
+                }
             } else {
                 $media->poster = null;    // fotografin kapak karesi olmaz
             }

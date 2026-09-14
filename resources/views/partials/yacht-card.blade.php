@@ -5,14 +5,48 @@
         'week' => 'site.card.per_week',
         default => 'site.card.per_day',
     };
-    $cover = $yacht->coverUrl();
+    $coverMedia = $yacht->coverMedia();
+    $coverVideo = $coverMedia?->isVideo() ? $coverMedia : null;
+    $cover = $yacht->coverUrl();   // video kapakta poster karesi doner
 @endphp
 
 <a href="{{ lroute('tours.show', $yacht->slug) }}"
    class="group card flex h-full flex-col overflow-hidden transition duration-300 hover:-translate-y-1 hover:border-brass-300 hover:shadow-xl hover:shadow-sea-900/10">
 
     <div class="relative aspect-4/3 overflow-hidden {{ $cover ? '' : 'bg-placeholder' }}">
-        @if ($cover)
+        @if ($coverVideo)
+            {{-- VIDEO KAPAK
+                 Sayfa acilirken video INMEZ: preload="none" ve poster karesi
+                 sayesinde ilk gorunen tek sey resim. Video ancak fare uzerine
+                 gelince yukleniyor -- listede sekiz tur varsa sekiz video
+                 birden inmesin diye. Dokunmatikte hover yok, poster kalir.
+
+                 muted + playsinline olmadan tarayici otomatik oynatmaz;
+                 hareketi azalt ayari aciksa hic oynatmiyoruz. --}}
+            <video class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                   poster="{{ $cover }}" muted loop playsinline preload="none"
+                   x-data="{
+                       ustunde: false,
+                       /* preload=none oldugu icin play() cagrisi kendi
+                          tetikledigi yuklemeye takilip iptal olabiliyor;
+                          o yuzden canplay'de bir kez daha deneniyor. */
+                       oynat() {
+                           if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+                           this.$el.play().catch(() => {});
+                       },
+                   }"
+                   x-on:mouseenter="ustunde = true; oynat()"
+                   x-on:canplay="if (ustunde) oynat()"
+                   x-on:mouseleave="ustunde = false; $el.pause(); $el.currentTime = 0">
+                <source src="{{ $coverVideo->url() }}" type="video/mp4">
+            </video>
+
+            {{-- Videolu oldugu duruyorken de belli olsun --}}
+            <span class="pointer-events-none absolute right-3 top-3 flex h-7 w-7 items-center justify-center
+                         rounded-full bg-black/45 text-white backdrop-blur transition group-hover:opacity-0">
+                <i class="bi bi-play-fill text-sm"></i>
+            </span>
+        @elseif ($cover)
             <img src="{{ $cover }}" alt="{{ $yacht->getTranslation('name', $locale) }}" loading="lazy"
                  class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
         @else

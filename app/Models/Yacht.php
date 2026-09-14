@@ -91,12 +91,32 @@ class Yacht extends Model
         return $q->published()->where('is_open', true);
     }
 
-    /** Kapak daima bir FOTOGRAFTIR; video kart gorselinde kullanilamaz. */
+    /**
+     * Kartta gosterilecek kapak medyasi -- fotograf ya da video olabilir.
+     * Video kapak icin poster karesi sart (bkz. YachtPhoto::booted).
+     */
+    public function coverMedia(): ?YachtPhoto
+    {
+        $kapak = $this->photos->firstWhere('is_cover', true);
+
+        return $kapak ?? $this->photos->firstWhere('type', YachtPhoto::TYPE_IMAGE);
+    }
+
+    /**
+     * Kapagin GORSEL adresi -- her zaman bir resim dondurur.
+     *
+     * og:image, yapisal veri ve panel listesi buradan besleniyor; oralara
+     * mp4 verilemez. Kapak videoysa poster karesi kullanilir.
+     */
     public function coverUrl(): ?string
     {
-        $images = $this->photos->where('type', YachtPhoto::TYPE_IMAGE);
-        $cover = $images->firstWhere('is_cover', true) ?? $images->first();
+        $kapak = $this->coverMedia();
 
-        return $cover?->url();
+        if ($kapak?->isVideo()) {
+            return $kapak->thumbnailUrl()
+                ?? $this->photos->firstWhere('type', YachtPhoto::TYPE_IMAGE)?->url();
+        }
+
+        return $kapak?->url();
     }
 }

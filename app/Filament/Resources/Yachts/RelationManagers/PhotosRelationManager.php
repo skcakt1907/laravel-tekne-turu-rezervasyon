@@ -39,7 +39,7 @@ class PhotosRelationManager extends RelationManager
                 ->columnSpanFull(),
             FileUpload::make('poster')
                 ->label('Video kapak karesi')
-                ->helperText('Yalnızca video için: galeride küçük resim olarak görünür. Boş bırakılırsa siyah kutu çıkar.')
+                ->helperText('Yalnızca video için: galeride küçük resim olarak görünür ve videoyu kapak yapabilmenin şartıdır. Boş bırakılırsa siyah kutu çıkar.')
                 ->image()
                 ->disk('uploads')
                 ->directory('yachts')
@@ -80,10 +80,19 @@ class PhotosRelationManager extends RelationManager
                 CreateAction::make()->label('Fotoğraf / video ekle'),
             ])
             ->recordActions([
+                /*
+                 * Video da kapak olabilir -- ama poster karesi sart.
+                 * Postersiz videoda kartta gosterilecek hicbir sey yok:
+                 * mobilde ve yavas baglantida video zaten indirilmiyor.
+                 */
                 \Filament\Actions\Action::make('makeCover')
                     ->label('Kapak yap')
                     ->icon('heroicon-o-star')
-                    ->visible(fn (YachtPhoto $record) => ! $record->is_cover && ! $record->isVideo())
+                    ->visible(fn (YachtPhoto $record) => ! $record->is_cover)
+                    ->disabled(fn (YachtPhoto $record) => $record->isVideo() && ! $record->poster)
+                    ->tooltip(fn (YachtPhoto $record) => $record->isVideo() && ! $record->poster
+                        ? 'Videoyu kapak yapmak için önce kapak karesi yükleyin.'
+                        : null)
                     ->action(function (YachtPhoto $record) {
                         $record->yacht->photos()->update(['is_cover' => false]);
                         $record->update(['is_cover' => true]);
