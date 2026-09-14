@@ -24,6 +24,7 @@ class YachtForm
         return $schema
             ->components([
                 Section::make('İlan İçeriği')
+                    ->columnSpanFull()
                     ->description('Türkçe zorunlu. İngilizce boş bırakılırsa sitede Türkçe metin gösterilir.')
                     ->schema([
                         Translatable::tabs(fn (string $locale, bool $isDefault) => [
@@ -55,6 +56,8 @@ class YachtForm
                     ]),
 
                 Section::make('Tur Bilgileri')
+
+                    ->columnSpanFull()
                     ->columns(2)
                     ->schema([
                         Select::make('type')
@@ -67,6 +70,8 @@ class YachtForm
                     ]),
 
                 Section::make('Teknik Bilgiler')
+
+                    ->columnSpanFull()
                     ->columns(4)
                     ->collapsible()
                     ->schema([
@@ -90,6 +95,8 @@ class YachtForm
                     ]),
 
                 Section::make('Tur Saatleri')
+
+                    ->columnSpanFull()
                     ->description('Günde tek sefer — tarih müşteri tarafından seçilir, saat sabittir. Fiyatları "Fiyatlar" sekmesinden girin.')
                     ->columns(3)
                     ->schema([
@@ -109,6 +116,8 @@ class YachtForm
                     ]),
 
                 Section::make('Özellikler')
+
+                    ->columnSpanFull()
                     ->schema([
                         Select::make('features')
                             ->label('Tekne özellikleri')
@@ -120,6 +129,8 @@ class YachtForm
                     ]),
 
                 Section::make('Yayın Durumu')
+
+                    ->columnSpanFull()
                     ->columns(3)
                     ->schema([
                         Select::make('status')

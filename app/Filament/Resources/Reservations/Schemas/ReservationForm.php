@@ -20,6 +20,7 @@ class ReservationForm
     {
         return $schema->components([
             Section::make('Rezervasyon')
+                ->columnSpanFull()
                 ->columns(3)
                 ->schema([
                     TextInput::make('code')->label('Kod')->disabled(),
@@ -34,6 +35,8 @@ class ReservationForm
                 ]),
 
             Section::make('Musteri')
+
+                ->columnSpanFull()
                 ->columns(2)
                 ->schema([
                     TextInput::make('customer_name')->label('Ad soyad')->disabled(),
@@ -44,6 +47,8 @@ class ReservationForm
                 ]),
 
             Section::make('Tutar ve Komisyon')
+
+                ->columnSpanFull()
                 ->columns(4)
                 ->schema([
                     TextInput::make('base_amount')->label('Kiralama')->disabled(),
@@ -53,6 +58,8 @@ class ReservationForm
                 ]),
 
             Section::make('Yonetim')
+
+                ->columnSpanFull()
                 ->schema([
                     Textarea::make('admin_note')
                         ->label('Yonetici notu')

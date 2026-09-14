@@ -16,6 +16,7 @@ class UserForm
     {
         return $schema->components([
             Section::make('Hesap')
+                ->columnSpanFull()
                 ->columns(2)
                 ->schema([
                     TextInput::make('name')->label('Ad soyad')->required()->maxLength(120),
@@ -37,6 +38,8 @@ class UserForm
                 ]),
 
             Section::make('İletişim')
+
+                ->columnSpanFull()
                 ->columns(3)
                 ->schema([
                     TextInput::make('phone')->label('Telefon')->tel()->maxLength(32),
@@ -52,6 +55,8 @@ class UserForm
                 ]),
 
             Section::make('Yetki')
+
+                ->columnSpanFull()
                 ->columns(3)
                 ->schema([
                     Toggle::make('is_approved')
