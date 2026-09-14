@@ -66,18 +66,6 @@
                 {{ __('site.nav.contact') }}
             </a>
 
-            @auth
-                <a href="{{ lroute('account') }}"
-                   class="rounded-lg px-3 py-2 text-sm font-medium transition hover:text-brass-500">
-                    <i class="bi bi-person-circle"></i> {{ __('site.account.title') }}
-                </a>
-            @else
-                <a href="{{ lroute('account.login') }}"
-                   class="rounded-lg px-3 py-2 text-sm font-medium transition hover:text-brass-500">
-                    {{ __('site.account.login') }}
-                </a>
-            @endauth
-
             <span class="mx-1 flex items-center gap-1 text-xs">
                 @foreach (config('yacht.locales') as $code => $cfg)
                     <a href="{{ locale_url($code) }}" hreflang="{{ $code }}"
@@ -100,11 +88,6 @@
             <a href="{{ lroute('tours.index') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.yachts') }}</a>
             <a href="{{ lroute('reservation.lookup') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.lookup') }}</a>
             <a href="{{ lroute('contact') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.contact') }}</a>
-            @auth
-                <a href="{{ lroute('account') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.account.title') }}</a>
-            @else
-                <a href="{{ lroute('account.login') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.account.login') }}</a>
-            @endauth
             <div class="flex items-center gap-2 px-3 py-2">
                 @foreach (config('yacht.locales') as $code => $cfg)
                     <a href="{{ locale_url($code) }}"

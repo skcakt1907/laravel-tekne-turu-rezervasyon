@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Setting;
-use App\Models\User;
 use App\Models\Yacht;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -78,12 +77,15 @@ class SeoTest extends TestCase
         $this->assertStringContainsString('PreOrder', $html);
     }
 
+    /**
+     * Kisiye ozel sayfalar arama motoruna kapali olmali.
+     *
+     * Uyelik kalktiktan sonra tek kisisel ekran rezervasyon sorgulama --
+     * musteri kendi kaydini kod/e-posta ile burada goruyor.
+     */
     public function test_personal_pages_are_noindex(): void
     {
-        $user = User::factory()->create();
-
-        $this->actingAs($user)
-            ->get('/hesabim')
+        $this->get('/rezervasyon-sorgula')
             ->assertOk()
             ->assertSee('content="noindex, nofollow"', false);
 

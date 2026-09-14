@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Controllers\AccountController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
-use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\WhatsAppWebhookController;
@@ -36,26 +34,12 @@ $site = function () {
     Route::get('/onay/{code}/{token}', [ReservationController::class, 'ownerDecision'])->name('reservation.decision');
     Route::post('/onay/{code}/{token}', [ReservationController::class, 'ownerDecide'])->name('reservation.decide');
 
-    // Musteri hesabi (uyelik istege bagli)
-    Route::middleware('guest')->group(function () {
-        Route::get('/giris', [AccountController::class, 'loginForm'])->name('account.login');
-        Route::post('/giris', [AccountController::class, 'login'])->name('account.login.submit');
-        Route::get('/kayit', [AccountController::class, 'registerForm'])->name('account.register');
-        Route::post('/kayit', [AccountController::class, 'register'])->name('account.register.submit');
-
-        // Sifremi unuttum
-        Route::get('/sifremi-unuttum', [PasswordResetController::class, 'requestForm'])->name('password.request');
-        Route::post('/sifremi-unuttum', [PasswordResetController::class, 'sendLink'])->name('password.email');
-        Route::get('/sifre-sifirla/{token}', [PasswordResetController::class, 'resetForm'])->name('password.reset');
-        Route::post('/sifre-sifirla', [PasswordResetController::class, 'reset'])->name('password.update');
-    });
-
-    Route::middleware('auth')->group(function () {
-        Route::get('/hesabim', [AccountController::class, 'index'])->name('account');
-        Route::get('/hesabim/profil', [AccountController::class, 'profile'])->name('account.profile');
-        Route::post('/hesabim/profil', [AccountController::class, 'updateProfile'])->name('account.profile.update');
-        Route::post('/cikis', [AccountController::class, 'logout'])->name('account.logout');
-    });
+    /*
+     * UYELIK YOK. Musteri hesap acmadan rezervasyon yapiyor; kim oldugu
+     * `customers` tablosunda tutuluyor (bkz. CustomerResource). Rezervasyonunu
+     * takip etmek icin giris degil, asagidaki `reservation.lookup` ekrani
+     * kullaniliyor -- kod + e-posta ile.
+     */
 
     // Musteri iptal talebi (karari yat sahibi verir)
     Route::post('/rezervasyon/{code}/iptal-talebi', [ReservationController::class, 'requestCancellation'])

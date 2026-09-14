@@ -16,9 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'setlocale' => \App\Http\Middleware\SetLocale::class,
         ]);
 
-        // Auth middleware varsayilan olarak route('login') arar; bizim rota adi farkli.
-        $middleware->redirectGuestsTo(fn () => lroute('account.login'));
-        $middleware->redirectUsersTo(fn () => lroute('account'));
+        // Site tarafinda uyelik yok; auth/guest yonlendirmesi gereken tek yer
+        // yonetim paneli ve onu Filament kendi icinde hallediyor.
 
         // Meta WhatsApp webhook'u CSRF'den muaf (Faz 4)
         $middleware->validateCsrfTokens(except: [
