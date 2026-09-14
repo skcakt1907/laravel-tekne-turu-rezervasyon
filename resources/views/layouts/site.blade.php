@@ -46,9 +46,16 @@
             : 'bg-transparent border-transparent text-white'"
         class="fixed inset-x-0 top-0 z-40 border-b transition-colors duration-300">
     <div class="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6">
-        <a href="{{ lroute('home') }}" class="flex items-center gap-2 font-serif text-lg font-bold">
-            <i class="bi bi-life-preserver text-brass-500"></i>
-            {{ setting('site_name', config('app.name')) }}
+        {{-- LOGO
+             Rozet yuvarlak ve icinde bes ayri fotograf var; 44px'te
+             "MARMARIS TEKNE TURLARI" yazisi okunmaz. Bu yuzden logo
+             MARKA ISARETI olarak kullaniliyor, adi yaninda yazili
+             kaliyor. rounded-full: dosyanin kose bosluklarini kirpar. --}}
+        <a href="{{ lroute('home') }}" class="flex items-center gap-2.5 font-serif text-lg font-bold">
+            <img src="{{ asset('images/logo.jpg') }}"
+                 alt="{{ setting('site_name', config('app.name')) }}"
+                 class="h-11 w-11 shrink-0 rounded-full object-cover shadow-sm ring-1 ring-white/25">
+            <span>{{ setting('site_name', config('app.name')) }}</span>
         </a>
 
         <nav class="ml-auto hidden items-center gap-1 lg:flex">
@@ -142,8 +149,12 @@
     <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6">
         <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
             <div>
-                <div class="mb-3 flex items-center gap-2 font-serif text-lg font-bold text-white">
-                    <i class="bi bi-life-preserver text-brass-500"></i>
+                {{-- Footer'da logo buyuk: burada yer var, rozetin icindeki
+                     tur adlari ve adres okunabiliyor. --}}
+                <img src="{{ asset('images/logo.jpg') }}"
+                     alt="{{ setting('site_name', config('app.name')) }}"
+                     class="mb-4 h-28 w-28 rounded-full object-cover shadow-lg ring-1 ring-white/15">
+                <div class="mb-3 font-serif text-lg font-bold text-white">
                     {{ setting('site_name', config('app.name')) }}
                 </div>
                 <p class="text-sm leading-relaxed">{{ __('site.footer.tagline') }}</p>
