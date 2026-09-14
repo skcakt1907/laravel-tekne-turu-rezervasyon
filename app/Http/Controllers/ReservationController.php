@@ -9,8 +9,10 @@ use App\Models\Yacht;
 use App\Services\AvailabilityService;
 use App\Services\NotificationService;
 use App\Services\ReservationService;
+use App\Support\FormKorumasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -42,6 +44,40 @@ class ReservationController extends Controller
             'kvkk' => ['accepted'],
             'whatsapp_consent' => ['accepted'], // Meta + KVKK zorunlu açık rıza
         ]);
+
+        /*
+         * SAYI SINIRI — aynı IP saatte 5 rezervasyon.
+         *
+         * İletişim formundan yüksek tutuldu: bir ailenin aynı oturumda
+         * iki-üç tur için form doldurması normal. Beşten fazlası değil.
+         */
+        $anahtar = 'rezervasyon:'.$request->ip();
+
+        if (RateLimiter::tooManyAttempts($anahtar, 5)) {
+            throw ValidationException::withMessages([
+                'customer_email' => __('site.booking.too_many', [
+                    'dakika' => max(1, (int) ceil(RateLimiter::availableIn($anahtar) / 60)),
+                ]),
+            ]);
+        }
+
+        RateLimiter::hit($anahtar, 3600);
+
+        /*
+         * BOT KORUMASI.
+         *
+         * İletişim formundan farklı olarak burada sessizce "başarılı"
+         * diyemiyoruz: akış, oluşturulan rezervasyonun sayfasına
+         * yönlendiriyor, ortada gösterilecek bir kayıt yok. Bunun yerine
+         * nötr bir hata veriliyor — bot zaten okumuyor; formu 12 saatten
+         * uzun açık bırakmış gerçek bir kullanıcı ise ne yapacağını
+         * buradan anlıyor.
+         */
+        if (FormKorumasi::botMu($request, (string) ($data['message'] ?? ''))) {
+            throw ValidationException::withMessages([
+                'customer_email' => __('site.booking.retry'),
+            ]);
+        }
 
         $yacht = Yacht::bookable()->findOrFail($data['yacht_id']);
         $date = Carbon::parse($data['date'])->startOfDay();

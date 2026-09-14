@@ -368,6 +368,16 @@
                                 {{ __('site.booking.estimate_note') }}
                             </p>
 
+                            {{-- BOT KORUMASI — gerçek müşteri bu ikisini hiç görmez.
+                                 Ayrıntı: App\Support\FormKorumasi --}}
+                            <div class="sr-only" aria-hidden="true">
+                                <label for="b-website">Bu alanı boş bırakın</label>
+                                <input type="text" name="{{ \App\Support\FormKorumasi::TUZAK }}" id="b-website"
+                                       tabindex="-1" autocomplete="off" value="">
+                            </div>
+                            <input type="hidden" name="{{ \App\Support\FormKorumasi::ZAMAN }}"
+                                   value="{{ \App\Support\FormKorumasi::zamanDamgasi() }}">
+
                             <button type="submit" class="btn btn-brass w-full">
                                 {{ __('site.booking.submit') }}<i class="bi bi-arrow-right"></i>
                             </button>

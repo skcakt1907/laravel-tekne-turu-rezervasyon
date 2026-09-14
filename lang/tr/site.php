@@ -173,6 +173,8 @@ return [
         'whatsapp_consent' => 'Rezervasyonumla ilgili WhatsApp üzerinden bilgilendirilmeyi kabul ediyorum.',
         'submit' => 'Rezervasyon Yap',
         'no_payment' => 'Bu adımda ödeme alınmaz.',
+        'too_many' => 'Çok fazla rezervasyon denemesi yapıldı. Lütfen :dakika dakika sonra tekrar deneyin.',
+        'retry' => 'Talebiniz alınamadı. Lütfen sayfayı yenileyip tekrar deneyin.',
     ],
     'lookup' => [
         'title' => 'Rezervasyon Sorgula',

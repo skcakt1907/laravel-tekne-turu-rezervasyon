@@ -13,10 +13,12 @@ use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use Tests\FormKorumasiVerisi;
 use Tests\TestCase;
 
 class WhatsAppTest extends TestCase
 {
+    use FormKorumasiVerisi;
     use RefreshDatabase;
 
     private Yacht $yacht;
@@ -324,7 +326,7 @@ class WhatsAppTest extends TestCase
             'customer_phone' => '+905551112233',
             'kvkk' => '1',
             'whatsapp_consent' => '1',
-        ]);
+        ] + $this->korumaAlanlari());
 
         return Reservation::latest('id')->firstOrFail();
     }

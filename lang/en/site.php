@@ -173,6 +173,8 @@ return [
         'whatsapp_consent' => 'I agree to receive updates about my booking via WhatsApp.',
         'submit' => 'Send Request',
         'no_payment' => 'No payment is taken at this step.',
+        'too_many' => 'Too many booking attempts. Please try again in :dakika minutes.',
+        'retry' => 'We could not take your booking. Please refresh the page and try again.',
     ],
     'lookup' => [
         'title' => 'Find My Booking',

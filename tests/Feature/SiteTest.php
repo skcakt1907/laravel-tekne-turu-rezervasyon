@@ -9,10 +9,12 @@ use App\Models\Reservation;
 use App\Models\Yacht;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\FormKorumasiVerisi;
 use Tests\TestCase;
 
 class SiteTest extends TestCase
 {
+    use FormKorumasiVerisi;
     use RefreshDatabase;
 
     private Yacht $yacht;
@@ -102,7 +104,7 @@ class SiteTest extends TestCase
             'customer_phone' => '+905551112233',
             'kvkk' => '1',
             'whatsapp_consent' => '1',
-        ]);
+        ] + $this->korumaAlanlari());
 
         $reservation = Reservation::firstOrFail();
 
@@ -212,7 +214,7 @@ class SiteTest extends TestCase
             'customer_phone' => '+905551112233',
             'kvkk' => '1',
             'whatsapp_consent' => '1',
-        ]);
+        ] + $this->korumaAlanlari());
 
         return Reservation::latest('id')->firstOrFail();
     }
