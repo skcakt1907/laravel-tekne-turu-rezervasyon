@@ -2,12 +2,12 @@
 
 return [
     'subjects' => [
-        'request_received_customer' => 'Talebiniz alındı — :code',
+        'request_received_customer' => 'Rezervasyonunuz alındı — :code',
         'request_new_owner' => 'Yeni rezervasyon talebi — :yacht (:code)',
         'request_new_admin' => '[Yeni talep] :yacht — :code',
         'approved_customer' => 'Rezervasyonunuz onaylandı — :code',
         'approved_owner' => 'Rezervasyon kesinleşti — :code',
-        'rejected_customer' => 'Talebiniz karşılanamadı — :code',
+        'rejected_customer' => 'Rezervasyonunuz karşılanamadı — :code',
         'cancelled_customer' => 'Rezervasyonunuz iptal edildi — :code',
         'cancelled_owner' => 'Rezervasyon iptal edildi — :code',
         'cancel_requested_owner' => 'Müşteri iptal talebi gönderdi — :code',
@@ -31,23 +31,23 @@ return [
         'yacht' => 'Tur',
         'dates' => 'Tarih',
         'guests' => 'Kişi',
-        'estimate' => 'Tahmini tutar',
+        'estimate' => 'Tutar',
         'customer' => 'Müşteri',
         'phone' => 'Telefon',
         'email' => 'E-posta',
         'note' => 'Not',
-        'estimate_notice' => 'Tahmini tutardır, kesin fiyat onay sırasında netleşir.',
-        'no_payment' => 'Sitemiz üzerinden ödeme alınmaz. Ödeme, onaydan sonra doğrudan tur sahibiyle yapılır.',
+        'estimate_notice' => 'Fiyatlar sabittir, değişmez.',
+        'no_payment' => 'Sitemiz üzerinden ödeme alınmaz. Ödeme, tur günü doğrudan teknede yapılır.',
         'view_reservation' => 'Rezervasyonu görüntüle',
         'qr_hint' => 'Bu QR kodu göstererek rezervasyonunuzu hızlıca doğrulatabilirsiniz.',
-        'respond' => 'Talebi yanıtla',
+        'respond' => 'Rezervasyonu yanıtla',
         'regards' => 'İyi yolculuklar,',
         'footer_auto' => 'Bu e-posta :site tarafından otomatik gönderilmiştir.',
     ],
 
     'request_received_customer' => [
-        'intro' => 'Rezervasyon talebiniz bize ulaştı ve tur sahibine iletildi.',
-        'body' => 'Tur sahibi talebinizi değerlendirip onaylayınca size tekrar yazacağız. Bu aşamada herhangi bir ödeme yapmanız gerekmiyor ve takvimde tarih henüz kapanmadı.',
+        'intro' => 'Rezervasyonunuz bize ulaştı.',
+        'body' => 'Teyit edip en kısa sürede size döneceğiz. Bu aşamada herhangi bir ödeme yapmanız gerekmiyor; ödemeyi tur günü teknede yapacaksınız.',
     ],
     'request_new_owner' => [
         'intro' => 'Turunuz için yeni bir rezervasyon talebi var.',
@@ -55,11 +55,11 @@ return [
     ],
     'request_new_admin' => [
         'intro' => 'Sisteme yeni bir rezervasyon talebi düştü.',
-        'body' => 'Tur sahibi 4 saat içinde yanıt vermezse hatırlatma gider, 12 saat sonra talep yönetim ekranında işaretlenir.',
+        'body' => 'Rezervasyon 4 saat içinde yanıtlanmazsa hatırlatma gider, 12 saat sonra yönetim ekranında işaretlenir.',
     ],
     'approved_customer' => [
         'intro' => 'Rezervasyonunuz onaylandı.',
-        'body' => 'Seçtiğiniz tarih sizin adınıza kapatıldı. Ödeme ve teslim detayları için tur sahibi sizinle iletişime geçecek.',
+        'body' => 'Seçtiğiniz tarih sizin adınıza kapatıldı. Buluşma detayları için sizinle iletişime geçeceğiz. Ödemeyi tur günü doğrudan teknede yapacaksınız.',
     ],
     'approved_owner' => [
         'intro' => 'Rezervasyon kesinleşti, tarih takviminizde kapatıldı.',
@@ -67,11 +67,11 @@ return [
     ],
     'rejected_customer' => [
         'intro' => 'Talebiniz maalesef karşılanamadı.',
-        'body' => 'Başka tarihler veya farklı bir tur için yeniden talep gönderebilirsiniz.',
+        'body' => 'Başka tarihler veya farklı bir tur için yeniden rezervasyon yapabilirsiniz.',
     ],
     'cancelled_customer' => [
         'intro' => 'Rezervasyonunuz iptal edildi.',
-        'body' => 'Dilerseniz aynı tur için yeni bir talep gönderebilirsiniz.',
+        'body' => 'Dilerseniz aynı tur için yeniden rezervasyon yapabilirsiniz.',
     ],
     'cancelled_owner' => [
         'intro' => 'Bir rezervasyon iptal edildi.',
@@ -83,18 +83,18 @@ return [
     ],
     'cancel_requested_admin' => [
         'intro' => 'Bir rezervasyon için müşteri iptal talebi geldi.',
-        'body' => 'Tur sahibi karar vermezse yönetim panelinden siz de iptal edebilirsiniz.',
+        'body' => 'Kararı yönetim panelinden verebilirsiniz.',
     ],
     'pending_reminder_owner' => [
         'intro' => 'Yanıtlanmayı bekleyen bir talebiniz var.',
-        'body' => 'Müşteriler hızlı dönüş yapılan ilanları tercih ediyor. Talebi onaylamak veya reddetmek için aşağıdaki bağlantıyı kullanabilirsiniz.',
+        'body' => 'Müşteri yanıt bekliyor. Onaylamak veya reddetmek için aşağıdaki bağlantıyı kullanabilirsiniz.',
     ],
     'escalated_admin' => [
-        'intro' => 'Tur sahibi bu talebi 12 saattir yanıtlamadı.',
+        'intro' => 'Bu rezervasyon 12 saattir yanıtlanmadı.',
         'body' => 'Yönetim panelinden talebi siz onaylayabilir veya reddedebilirsiniz.',
     ],
     'trip_reminder_customer' => [
         'intro' => 'Gidişinize 3 gün kaldı.',
-        'body' => 'İyi bir yolculuk için hazırlıklarınızı tamamlamayı ve tur sahibiyle buluşma detaylarını teyit etmeyi unutmayın.',
+        'body' => 'İyi bir yolculuk için hazırlıklarınızı tamamlamayı ve buluşma detaylarını bizimle teyit etmeyi unutmayın. Ödemeyi teknede yapacaksınız.',
     ],
 ];
