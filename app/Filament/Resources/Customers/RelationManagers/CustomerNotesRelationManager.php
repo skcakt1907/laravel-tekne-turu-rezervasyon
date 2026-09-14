@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Users\RelationManagers;
+namespace App\Filament\Resources\Customers\RelationManagers;
 
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -14,7 +14,7 @@ use Filament\Tables\Table;
 /** Müşteri/lead takibi: telefonla arayan, soru soran müşteriler için serbest not. */
 class CustomerNotesRelationManager extends RelationManager
 {
-    protected static string $relationship = 'customerNotes';
+    protected static string $relationship = 'notes';
 
     protected static ?string $title = 'Notlar';
 

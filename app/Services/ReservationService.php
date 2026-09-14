@@ -64,8 +64,23 @@ class ReservationService
             'message' => $data['message'] ?? null,
         ]);
 
+        /*
+         * CRM kaydi: musteri e-postasina gore bulunur ya da acilir.
+         * Uyelik olmadigi icin musteriyi birbirine baglayan tek sey bu.
+         * forceFill icinde -- customer_id disaridan gelen bir alan degil,
+         * yalnizca sunucu tarafinda yazilir.
+         */
+        $musteri = \App\Models\Customer::bulVeyaAc([
+            'name' => $data['customer_name'],
+            'email' => $data['customer_email'],
+            'phone' => $data['customer_phone'],
+            'whatsapp' => $data['customer_whatsapp'] ?? $data['customer_phone'],
+            'locale' => $data['customer_locale'] ?? app()->getLocale(),
+        ]);
+
         $reservation->forceFill([
             'code' => Reservation::generateCode(),
+            'customer_id' => $musteri->id,
             'owner_id' => $yacht->owner_id,
             'status' => ReservationStatus::Pending,
             'base_amount' => $quote['base'],

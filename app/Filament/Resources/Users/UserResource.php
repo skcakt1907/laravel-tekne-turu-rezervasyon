@@ -5,8 +5,6 @@ namespace App\Filament\Resources\Users;
 use App\Filament\Resources\Users\Pages\CreateUser;
 use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
-use App\Filament\Resources\Users\RelationManagers\CustomerNotesRelationManager;
-use App\Filament\Resources\Users\RelationManagers\ReservationsRelationManager;
 use App\Filament\Resources\Users\Schemas\UserForm;
 use App\Filament\Resources\Users\Tables\UsersTable;
 use App\Models\User;
@@ -66,12 +64,13 @@ class UserResource extends Resource
         return UsersTable::configure($table);
     }
 
+    /**
+     * Musteri notlari ve rezervasyonlar artik CustomerResource'ta --
+     * uyelik kalkiyor, musteri CRM'i `customers` tablosunda tutuluyor.
+     */
     public static function getRelations(): array
     {
-        return [
-            CustomerNotesRelationManager::class,
-            ReservationsRelationManager::class,
-        ];
+        return [];
     }
 
     public static function getPages(): array

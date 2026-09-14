@@ -11,11 +11,11 @@ class CustomerNote extends Model
      * admin_id formda gösterilmez, RelationManager mutateFormDataUsing ile
      * sunucu tarafından set edilir (Yacht.owner_id ile aynı desen).
      */
-    protected $fillable = ['user_id', 'admin_id', 'title', 'body'];
+    protected $fillable = ['customer_id', 'admin_id', 'title', 'body'];
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Customer::class);
     }
 
     public function admin(): BelongsTo

@@ -45,6 +45,12 @@ class Reservation extends Model
         'cancel_requested_at' => 'datetime',
     ];
 
+    /** CRM kaydi -- uyelik yok, musteri bu tabloda tutulur */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
     public function yacht(): BelongsTo
     {
         return $this->belongsTo(Yacht::class);

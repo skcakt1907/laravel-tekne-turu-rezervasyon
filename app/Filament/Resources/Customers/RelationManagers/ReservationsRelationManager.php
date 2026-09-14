@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Users\RelationManagers;
+namespace App\Filament\Resources\Customers\RelationManagers;
 
 use App\Enums\ReservationStatus;
 use App\Models\Reservation;
@@ -8,7 +8,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-/** Bu müşterinin üyeliğine bağlı geçmiş/mevcut rezervasyonları — salt okunur. */
+/** Bu müşterinin geçmiş/mevcut rezervasyonları — salt okunur. */
 class ReservationsRelationManager extends RelationManager
 {
     protected static string $relationship = 'reservations';
