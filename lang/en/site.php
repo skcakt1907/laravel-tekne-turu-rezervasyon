@@ -67,7 +67,6 @@ return [
         'featured_sub' => '',
         'how' => 'How It Works',
         'how_sub' => 'Three steps, zero upfront payment.',
-        'types' => 'Boat Types',
         'faq' => 'Frequently Asked Questions',
         'all_yachts' => 'Our tours',
     ],

@@ -28,14 +28,6 @@ class HomeController extends Controller
                 ->orderByDesc('published_at')
                 ->limit(6)
                 ->get(),
-            'types' => collect(config('yacht.types'))
-                ->map(fn ($label, $key) => [
-                    'key' => $key,
-                    'label' => yacht_type_label($key),
-                    'count' => Yacht::bookable()->where('type', $key)->count(),
-                ])
-                ->filter(fn ($t) => $t['count'] > 0)
-                ->values(),
             'faqs' => Faq::where('is_active', true)
                 ->where('audience', 'customer')
                 ->orderBy('sort')

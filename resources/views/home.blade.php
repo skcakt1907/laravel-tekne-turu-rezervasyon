@@ -121,21 +121,8 @@
     </div>
 </section>
 
-{{-- ---------------- YAT TİPLERİ ---------------- --}}
-@if ($types->isNotEmpty())
-    <section class="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
-        <h2 class="mb-5 text-2xl font-bold">{{ __('site.home.types') }}</h2>
-        <div class="flex flex-wrap gap-2.5">
-            @foreach ($types as $type)
-                <a href="{{ lroute('tours.index', ['type' => $type['key']]) }}"
-                   class="btn btn-ghost btn-sm">
-                    {{ $type['label'] }}
-                    <span class="badge badge-soft">{{ $type['count'] }}</span>
-                </a>
-            @endforeach
-        </div>
-    </section>
-@endif
+{{-- Tekne tipleri bolumu kaldirildi: butun turlar ayni tipte
+     ("Tekne"), tek bir rozet gosteren bolumun bilgi degeri yok. --}}
 
 {{-- ---------------- SSS ---------------- --}}
 @if ($faqs->isNotEmpty())

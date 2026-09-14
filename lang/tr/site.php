@@ -67,7 +67,6 @@ return [
         'featured_sub' => '',
         'how' => 'Nasıl Çalışır?',
         'how_sub' => 'Üç adım, tek kuruş ön ödeme yok.',
-        'types' => 'Tekne Tipleri',
         'faq' => 'Sık Sorulan Sorular',
         'all_yachts' => 'Turlarımız',
     ],

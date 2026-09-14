@@ -4,7 +4,8 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "build:canli": "vite build --base=/build/"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.3.3",
