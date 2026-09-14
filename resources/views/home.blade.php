@@ -26,11 +26,15 @@
             <div class="text-white">
                 {{-- "Ödeme yok" sayfanın en görünür ikinci öğesi: müşteri
                      sitede kart bilgisi istenmeyeceğini başlıktan önce görmeli. --}}
-                <p class="mb-4 flex items-baseline gap-2">
+                <p class="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
                     <span class="font-serif text-3xl font-bold uppercase tracking-wide text-brass-300 sm:text-4xl">
                         {{ __('site.home.eyebrow') }}
                     </span>
-                    <span class="text-sm text-sea-300">{{ __('site.home.eyebrow_sub') }}</span>
+                    {{-- Devami da sari: iki parca tek bir cumle gibi okunsun,
+                         "odeme yok" ile "teknede odenir" birbirinden kopmasin. --}}
+                    <span class="text-lg font-semibold text-brass-200 sm:text-xl">
+                        {{ __('site.home.eyebrow_sub') }}
+                    </span>
                 </p>
 
                 <h1 class="text-4xl font-bold leading-[1.05] sm:text-5xl lg:text-6xl">
@@ -72,9 +76,7 @@
 
 {{-- ---------------- TURLARIMIZ ---------------- --}}
 <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6">
-    <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
-        <h2 class="text-3xl font-bold sm:text-4xl">{{ __('site.home.featured_title') }}</h2>
-    </div>
+    <h2 class="mb-8 text-center text-3xl font-bold sm:text-4xl">{{ __('site.home.featured_title') }}</h2>
 
     @if ($featured->isEmpty())
         <div class="panel py-16 text-center text-sea-500">
@@ -99,14 +101,17 @@
             <p class="mt-3 text-sea-600">{{ __('site.home.how_sub') }}</p>
         </div>
 
-        <ol class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <ol class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             @foreach (__('site.steps') as $i => $step)
-                <li class="relative">
-                    <div class="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-brass-100 font-serif text-lg font-bold text-brass-700">
+                <li class="relative text-center">
+                    <div class="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-brass-100 font-serif text-lg font-bold text-brass-700">
                         {{ $i + 1 }}
                     </div>
+                    {{-- Baglanti cizgisi: daire ortalandigi icin bir sonraki
+                         dairenin merkezine kadar uzaniyor. 1.375rem = daire
+                         yaricapi, 1.5rem = gap-6. --}}
                     @if (! $loop->last)
-                        <span class="pointer-events-none absolute left-11 top-5 hidden h-px w-[calc(100%-2.75rem)] bg-sea-200 lg:block"></span>
+                        <span class="pointer-events-none absolute left-[calc(50%+1.375rem)] top-5 hidden h-px w-[calc(100%-1.25rem)] bg-sea-200 lg:block"></span>
                     @endif
                     <h3 class="mb-1.5 font-sans text-base font-semibold">{{ $step[0] }}</h3>
                     <p class="text-sm leading-relaxed text-sea-600">{{ $step[1] }}</p>

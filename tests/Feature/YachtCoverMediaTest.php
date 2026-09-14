@@ -115,14 +115,53 @@ class YachtCoverMediaTest extends TestCase
     {
         $this->video(['is_cover' => true]);
 
-        $cevap = $this->get('/turlar');
-
-        $cevap->assertOk()
+        $this->get('/turlar')
+            ->assertOk()
             ->assertSee('tanitim.mp4', false)
-            // Sayfa açılırken video İNMEMELİ; sekiz turlu listede sekiz
-            // video birden indirilmesin diye hover'a bağlı.
-            ->assertSee('preload="none"', false)
             ->assertSee('poster="', false);
+    }
+
+    /**
+     * SESSIZ OTOMATIK OYNATMANIN SARTLARI.
+     *
+     * muted ve playsinline olmadan tarayici videoyu kendiliginden
+     * oynatmaz -- iOS'ta tam ekrana gecer. Biri silinirse kapak videosu
+     * sessizce calismaz hale gelir, o yuzden test ediliyor.
+     */
+    public function test_video_sessiz_ve_dongulu_oynatiliyor(): void
+    {
+        $this->video(['is_cover' => true]);
+
+        $this->get('/turlar')
+            ->assertOk()
+            ->assertSee('muted loop playsinline', false);
+    }
+
+    /**
+     * Sayfa acilirken video INMEMELI.
+     *
+     * Listede alti tur varsa altisinin videosu birden inerse sayfa
+     * kullanilamaz hale gelir. Iki sey birlikte bunu engelliyor:
+     * preload="none" ve videoyu ancak ekrana girince baslatan gozlemci.
+     */
+    public function test_video_sayfa_acilirken_indirilmiyor(): void
+    {
+        $this->video(['is_cover' => true]);
+
+        $this->get('/turlar')
+            ->assertOk()
+            ->assertSee('preload="none"', false)
+            ->assertSee('IntersectionObserver', false);
+    }
+
+    /** Hareketi azalt ayari acikken oynatma hic denenmemeli */
+    public function test_hareket_azaltma_ayari_gozetiliyor(): void
+    {
+        $this->video(['is_cover' => true]);
+
+        $this->get('/turlar')
+            ->assertOk()
+            ->assertSee('prefers-reduced-motion', false);
     }
 
     public function test_fotograf_kapakli_kartta_video_etiketi_yok(): void
