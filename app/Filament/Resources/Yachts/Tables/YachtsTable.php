@@ -38,11 +38,6 @@ class YachtsTable
                     ->description(fn (Yacht $record) => config('yacht.types')[$record->type] ?? $record->type)
                     ->searchable(query: fn ($query, string $search) => $query->where('name', 'like', "%{$search}%"))
                     ->sortable(),
-                TextColumn::make('owner.name')
-                    ->label('Sahibi')
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(),
                 TextColumn::make('capacity')
                     ->label('Kapasite')
                     ->placeholder('—')
@@ -73,11 +68,6 @@ class YachtsTable
                     ->label('Durum')
                     ->options(collect(YachtStatus::cases())
                         ->mapWithKeys(fn (YachtStatus $s) => [$s->value => $s->label()])->all()),
-                SelectFilter::make('owner')
-                    ->label('Tur sahibi')
-                    ->relationship('owner', 'name')
-                    ->searchable()
-                    ->preload(),
                 SelectFilter::make('type')
                     ->label('Tekne tipi')
                     ->options(config('yacht.types')),

@@ -3,16 +3,13 @@
 return [
     'subjects' => [
         'request_received_customer' => 'We received your booking — :code',
-        'request_new_owner' => 'New booking request — :yacht (:code)',
-        'request_new_admin' => '[New request] :yacht — :code',
+                'request_new_admin' => '[New request] :yacht — :code',
         'approved_customer' => 'Your booking is confirmed — :code',
-        'approved_owner' => 'Booking confirmed — :code',
-        'rejected_customer' => 'Your booking could not be fulfilled — :code',
+                'rejected_customer' => 'Your booking could not be fulfilled — :code',
         'cancelled_customer' => 'Your booking has been cancelled — :code',
-        'cancelled_owner' => 'A booking has been cancelled — :code',
-        'cancel_requested_owner' => 'The guest requested a cancellation — :code',
-        'cancel_requested_admin' => '[Cancellation request] :yacht — :code',
-        'pending_reminder_owner' => 'You have a request awaiting reply — :code',
+        'cancelled_admin' => 'A booking has been cancelled — :code',
+                'cancel_requested_admin' => '[Cancellation request] :yacht — :code',
+        'pending_reminder_admin' => 'Unanswered booking — :code',
         'escalated_admin' => '[Action needed] Unanswered request — :code',
         'trip_reminder_customer' => '3 days until departure — :code',
     ],
@@ -49,10 +46,6 @@ return [
         'intro' => 'Your booking has reached us.',
         'body' => 'We will confirm it and get back to you shortly. No payment is required at this stage; you will pay on board on the day of the tour.',
     ],
-    'request_new_owner' => [
-        'intro' => 'There is a new booking request for your tour.',
-        'body' => 'You can approve or decline it from the link below without logging into the panel. The dates are blocked only once you approve.',
-    ],
     'request_new_admin' => [
         'intro' => 'A new booking request has arrived.',
         'body' => 'If the booking is not answered within 4 hours a reminder is sent; after 12 hours it is flagged in the admin panel.',
@@ -60,10 +53,6 @@ return [
     'approved_customer' => [
         'intro' => 'Your booking has been approved.',
         'body' => 'The dates are now reserved for you. We will contact you about the meeting details. You will pay directly on board on the day of the tour.',
-    ],
-    'approved_owner' => [
-        'intro' => 'The booking is confirmed and the dates are blocked on your calendar.',
-        'body' => 'Customer contact details are below.',
     ],
     'rejected_customer' => [
         'intro' => 'Unfortunately your request could not be fulfilled.',
@@ -73,19 +62,15 @@ return [
         'intro' => 'Your booking has been cancelled.',
         'body' => 'You can book the same tour again if you wish.',
     ],
-    'cancelled_owner' => [
+    'cancelled_admin' => [
         'intro' => 'A booking has been cancelled.',
         'body' => 'Those dates are open for booking again on your calendar.',
-    ],
-    'cancel_requested_owner' => [
-        'intro' => 'The guest has requested to cancel this booking.',
-        'body' => 'The decision is yours. If you accept, use "Cancel" in the panel; the dates go back on sale.',
     ],
     'cancel_requested_admin' => [
         'intro' => 'A guest has requested a cancellation.',
         'body' => 'You can decide from the admin panel.',
     ],
-    'pending_reminder_owner' => [
+    'pending_reminder_admin' => [
         'intro' => 'You have a request awaiting your reply.',
         'body' => 'The guest is waiting for a reply. Use the link below to approve or decline.',
     ],

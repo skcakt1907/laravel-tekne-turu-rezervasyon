@@ -28,7 +28,6 @@ class ReservationService
     public function __construct(
         private PricingService $pricing,
         private AvailabilityService $availability,
-        private CommissionService $commission,
     ) {}
 
     /** Adım 1 — talep. Kapasiteden hiçbir şey düşmez, sadece ONAY düşer. */
@@ -142,7 +141,6 @@ class ReservationService
             }
 
             $from = $fresh->status;
-            $this->commission->freeze($fresh);
 
             $fresh->forceFill([
                 'status' => ReservationStatus::Approved,

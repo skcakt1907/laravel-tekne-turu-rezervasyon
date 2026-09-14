@@ -22,7 +22,6 @@ class AdminOverview extends StatsOverviewWidget
             ->whereNotNull('escalated_at')
             ->count();
         $pendingYachts = Yacht::where('status', YachtStatus::Pending)->count();
-        $pendingOwners = User::where('role', UserRole::Owner)->where('is_approved', false)->count();
 
         $monthly = Reservation::whereIn('status', [ReservationStatus::Approved, ReservationStatus::Completed])
             ->whereYear('starts_at', now()->year)
@@ -37,12 +36,8 @@ class AdminOverview extends StatsOverviewWidget
                 ->description('Yayına alınmayı bekliyor')
                 ->color($pendingYachts ? 'warning' : 'success'),
 
-            Stat::make('Onay bekleyen yat sahibi', $pendingOwners)
-                ->description('Panele erişimi açılmadı')
-                ->color($pendingOwners ? 'warning' : 'success'),
-
             Stat::make('Bu ay ciro', number_format((float) $monthly->clone()->sum('estimated_total'), 0, ',', '.'))
-                ->description('Komisyon: '.number_format((float) $monthly->clone()->sum('commission_amount'), 0, ',', '.'))
+                ->description('Onaylanan rezervasyonlarin toplami')
                 ->color('info'),
         ];
     }

@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Schedule;
 
 /*
 | Rezervasyon otomasyonu saat basi calisir:
-| - 4 saat yanitsiz talep -> yat sahibine hatirlatma
-| - 12 saat yanitsiz talep -> admin devralir
+| - 4 saat yanitsiz rezervasyon -> hatirlatma
+| - 12 saat yanitsiz rezervasyon -> yonetim ekraninda isaretlenir
 | - Gidis tarihi gecen onayli rezervasyon -> tamamlandi
 | - Kalkisa 3 gun kala -> musteriye hatirlatma
 |
@@ -17,9 +17,6 @@ Schedule::command('reservations:process')
     ->runInBackground();
 
 /*
-| Aylik hakedis dokumu: her ayin 1'inde, kapanmis onceki ay icin uretilir.
-| Tahsil edilmis donemler yeniden hesaplanmaz.
+| Aylik hakedis dokumu kaldirildi: komisyon/tahsilat pazar yeri modelinin
+| parcasiydi, tek firmada karsiligi yok.
 */
-Schedule::command('collections:build')
-    ->monthlyOn(1, '03:00')
-    ->withoutOverlapping();

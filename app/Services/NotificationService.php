@@ -24,18 +24,17 @@ class NotificationService
 {
     public function __construct(private WhatsAppClient $whatsapp) {}
 
-    /** Adım 2 — talep geldi: müşteri + yat sahibi + admin. */
+    /** Adım 2 — rezervasyon geldi: müşteri + yönetim. */
     public function reservationRequested(Reservation $reservation): void
     {
         $this->toCustomer($reservation, 'request_received_customer');
-        $this->toOwner($reservation, 'request_new_owner');
         $this->toAdmins($reservation, 'request_new_admin');
     }
 
     public function reservationApproved(Reservation $reservation): void
     {
+        // Onayı zaten yönetim veriyor; ayrıca kendine haber vermesi gereksiz.
         $this->toCustomer($reservation, 'approved_customer');
-        $this->toOwner($reservation, 'approved_owner');
     }
 
     public function reservationRejected(Reservation $reservation): void
@@ -46,29 +45,28 @@ class NotificationService
     public function reservationCancelled(Reservation $reservation): void
     {
         $this->toCustomer($reservation, 'cancelled_customer');
-        $this->toOwner($reservation, 'cancelled_owner');
+        $this->toAdmins($reservation, 'cancelled_admin');
     }
 
-    /** Müşteri iptal talebi gönderdi — kararı yat sahibi verir. */
+    /** Müşteri iptal talebi gönderdi — kararı yönetim verir. */
     public function cancellationRequested(Reservation $reservation): void
     {
-        $this->toOwner($reservation, 'cancel_requested_owner');
         $this->toAdmins($reservation, 'cancel_requested_admin');
     }
 
-    /** 4 saat yanıtsız kalan talep. */
+    /** 4 saat yanıtsız kalan rezervasyon. */
     public function pendingReminder(Reservation $reservation): void
     {
-        $this->toOwner($reservation, 'pending_reminder_owner');
+        $this->toAdmins($reservation, 'pending_reminder_admin');
     }
 
-    /** 12 saat sonra admin devralır. */
+    /** 12 saat sonra yönetim ekranında işaretlenir. */
     public function escalated(Reservation $reservation): void
     {
         $this->toAdmins($reservation, 'escalated_admin');
     }
 
-    /** Kalkıştan 3 gün önce. */
+    /** Kalkisa 3 gun kala musteriye hatirlatma. */
     public function tripReminder(Reservation $reservation): void
     {
         $this->toCustomer($reservation, 'trip_reminder_customer');
@@ -86,20 +84,6 @@ class NotificationService
             $locale,
             null
         );
-    }
-
-    private function toOwner(Reservation $reservation, string $template): void
-    {
-        $owner = $reservation->owner;
-
-        if (! $owner?->email) {
-            return;
-        }
-
-        $locale = $owner->locale ?: config('app.locale');
-
-        $this->send($reservation, $template, $owner->email, $locale, $owner);
-        $this->sendWhatsApp($reservation, $template, $owner->notificationPhone(), $locale, $owner);
     }
 
     private function toAdmins(Reservation $reservation, string $template): void

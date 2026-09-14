@@ -65,7 +65,7 @@ class WhatsAppTest extends TestCase
         $this->assertSame(0, MessageLog::where('channel', 'whatsapp')->count());
     }
 
-    public function test_request_sends_templates_to_customer_owner_and_admin(): void
+    public function test_request_sends_templates_to_customer_and_admin(): void
     {
         $this->enableWhatsApp();
         Http::fake(['graph.facebook.com/*' => Http::response(['messages' => [['id' => 'wamid.TEST']]])]);
@@ -74,7 +74,8 @@ class WhatsAppTest extends TestCase
 
         $logs = MessageLog::where('channel', 'whatsapp')->where('related_id', $reservation->id)->get();
 
-        $this->assertCount(3, $logs);
+        // Tur sahibi diye ayri bir taraf kalmadi: musteri + yonetim
+        $this->assertCount(2, $logs);
         $this->assertTrue($logs->every(fn (MessageLog $l) => $l->status === 'sent' && $l->provider_message_id === 'wamid.TEST'));
 
         // Meta'ya giden yuk: onayli sablon adi + dogru dil
@@ -84,7 +85,7 @@ class WhatsAppTest extends TestCase
             return $body['type'] === 'template'
                 && $body['template']['language']['code'] === 'tr'
                 && in_array($body['template']['name'], [
-                    'talep_alindi_musteri', 'yeni_talep_sahip', 'yeni_talep_admin',
+                    'talep_alindi_musteri', 'yeni_talep_admin',
                 ], true);
         });
     }
@@ -100,12 +101,17 @@ class WhatsAppTest extends TestCase
         Consent::where('subject_id', $reservation->id)->where('type', Consent::TYPE_WHATSAPP)->delete();
         MessageLog::query()->delete();
 
-        app(\App\Services\NotificationService::class)->reservationApproved($reservation);
+        // Onay bildirimi artik yalnizca musteriye gidiyor; "rizasi yoksa
+        // musteriye gitmez ama personele gider" kurali, personele de giden
+        // bir bildirim uzerinden sinaniyor.
+        app(\App\Services\NotificationService::class)->reservationRequested($reservation);
 
         $recipients = MessageLog::where('channel', 'whatsapp')->pluck('recipient');
 
         $this->assertNotContains($reservation->customer_phone, $recipients);
-        $this->assertContains($reservation->owner->whatsapp_no, $recipients); // yat sahibi personeldir
+
+        $yonetici = \App\Models\User::where('email', 'admin@yatkiralama.com')->firstOrFail();
+        $this->assertContains($yonetici->notificationPhone(), $recipients); // personel rizaya bagli degil
     }
 
     public function test_send_failure_is_logged_and_does_not_break_the_flow(): void

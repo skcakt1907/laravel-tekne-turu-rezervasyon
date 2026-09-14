@@ -2,13 +2,11 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
-use App\Enums\UserRole;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Hash;
 
@@ -27,13 +25,6 @@ class UserForm
                         ->required()
                         ->unique(ignoreRecord: true)
                         ->maxLength(190),
-                    Select::make('role')
-                        ->label('Rol')
-                        ->options(collect(UserRole::cases())
-                            ->mapWithKeys(fn (UserRole $r) => [$r->value => $r->label()])->all())
-                        ->default(UserRole::Customer->value)
-                        ->required()
-                        ->live(),
                     TextInput::make('password')
                         ->label('Şifre')
                         ->password()
@@ -58,19 +49,6 @@ class UserForm
                         ->label('Dil')
                         ->options(collect(config('yacht.locales'))->map(fn ($l) => $l['name'])->all())
                         ->default('tr'),
-                ]),
-
-            Section::make('Firma Bilgileri')
-                ->description('Komisyon faturası için gerekli.')
-                ->columns(2)
-                ->collapsible()
-                ->visible(fn (Get $get) => $get('role') === UserRole::Owner->value)
-                ->schema([
-                    TextInput::make('company_name')->label('Firma ünvanı')->maxLength(190),
-                    TextInput::make('tax_office')->label('Vergi dairesi')->maxLength(120),
-                    TextInput::make('tax_number')->label('Vergi / TC no')->maxLength(32),
-                    TextInput::make('iban')->label('IBAN')->maxLength(40),
-                    Textarea::make('address')->label('Adres')->rows(3)->columnSpanFull(),
                 ]),
 
             Section::make('Yetki')

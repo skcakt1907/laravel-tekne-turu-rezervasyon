@@ -17,22 +17,20 @@ return [
     'app_secret' => env('WHATSAPP_APP_SECRET'), // webhook imza dogrulamasi icin (Meta > App Settings > Basic)
 
     /*
-    | Meta'ya onaylatılacak 8 şablon (hepsi Utility kategorisinde).
+    | Meta'ya onaylatılacak şablonlar (hepsi Utility kategorisinde).
     | Anahtar = sistem içi ad, değer = Meta'daki şablon adı.
     */
     'templates' => [
         'request_received_customer' => 'talep_alindi_musteri',
-        'request_new_owner' => 'yeni_talep_sahip',       // Onayla / Reddet butonlu
         'request_new_admin' => 'yeni_talep_admin',
         'approved_customer' => 'rezervasyon_onaylandi_musteri',
-        'approved_owner' => 'rezervasyon_kesinlesti_sahip',
         'rejected_customer' => 'talep_karsilanamadi_musteri',
-        'pending_reminder_owner' => 'bekleyen_talep_sahip',
+        'pending_reminder_admin' => 'bekleyen_talep_admin',
         'trip_reminder_customer' => 'gidis_hatirlatma_musteri',
     ],
 
     /*
-    | Rezervasyon otomasyonu: tur sahibi yanıt vermezse.
+    | Rezervasyon otomasyonu: rezervasyon yanıtsız kalırsa.
     */
     'reminder_hours' => (int) env('RESERVATION_REMINDER_HOURS', 4),
     'escalate_hours' => (int) env('RESERVATION_ESCALATE_HOURS', 12),

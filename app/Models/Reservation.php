@@ -32,8 +32,6 @@ class Reservation extends Model
         'base_amount' => 'decimal:2',
         'extras_amount' => 'decimal:2',
         'estimated_total' => 'decimal:2',
-        'commission_rate' => 'decimal:2',
-        'commission_amount' => 'decimal:2',
         'price_breakdown' => 'array',
         'selected_extras' => 'array',
         'responded_at' => 'datetime',
@@ -64,11 +62,6 @@ class Reservation extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function collection(): BelongsTo
-    {
-        return $this->belongsTo(Collection::class);
     }
 
     public function logs(): HasMany

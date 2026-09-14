@@ -39,21 +39,13 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             return false;
         }
 
-        return match ($panel->getId()) {
-            'admin' => $this->isAdmin(),
-            'owner' => $this->isOwner() && $this->is_approved,
-            default => false,
-        };
+        // Tek panel kaldi: tur sahibi paneli kaldirildi.
+        return $panel->getId() === 'admin' && $this->isAdmin();
     }
 
     public function isAdmin(): bool
     {
         return $this->role === UserRole::Admin;
-    }
-
-    public function isOwner(): bool
-    {
-        return $this->role === UserRole::Owner;
     }
 
     public function yachts(): HasMany
@@ -75,11 +67,6 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function customerNotes(): HasMany
     {
         return $this->hasMany(CustomerNote::class, 'user_id')->latest();
-    }
-
-    public function collections(): HasMany
-    {
-        return $this->hasMany(Collection::class, 'owner_id');
     }
 
     public function notificationPhone(): ?string

@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Enums\UserRole;
 use App\Enums\YachtStatus;
-use App\Models\CommissionSetting;
 use App\Models\Faq;
 use App\Models\Feature;
 use App\Models\Setting;
@@ -66,11 +65,6 @@ class DatabaseSeeder extends Seeder
             Setting::updateOrCreate(['key' => $key], ['value' => $value, 'group' => 'general']);
         }
         Setting::flush();
-
-        CommissionSetting::updateOrCreate(
-            ['scope' => CommissionSetting::SCOPE_GLOBAL, 'target_id' => null],
-            ['rate' => config('yacht.default_commission_rate', 10), 'note' => 'Varsayılan genel oran']
-        );
     }
 
     private function features(): void

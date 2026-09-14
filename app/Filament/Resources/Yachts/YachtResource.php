@@ -59,7 +59,6 @@ class YachtResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return array_filter([
-            'Sahibi' => $record->owner?->name,
             'Liman' => $record->location?->getTranslation('name', 'tr'),
             'Durum' => $record->status->label(),
         ]);

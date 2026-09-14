@@ -32,7 +32,6 @@ class ReservationsTable
                 TextColumn::make('yacht.slug')
                     ->label('Tur')
                     ->getStateUsing(fn (Reservation $record) => $record->yacht->getTranslation('name', 'tr'))
-                    ->description(fn (Reservation $record) => $record->owner?->name)
                     ->searchable(query: fn (Builder $query, string $search) => $query->whereHas(
                         'yacht',
                         fn (Builder $query) => $query->where('name', 'like', "%{$search}%")
@@ -52,11 +51,8 @@ class ReservationsTable
                     ->formatStateUsing(fn (RentalUnit $state) => $state->label())
                     ->toggleable(),
                 TextColumn::make('estimated_total')
-                    ->label('Tahmini')
+                    ->label('Tutar')
                     ->money(fn (Reservation $record) => $record->currency)
-                    ->description(fn (Reservation $record) => $record->commission_amount
-                        ? 'Kom. %'.rtrim(rtrim((string) $record->commission_rate, '0'), '.')
-                        : null)
                     ->sortable(),
                 TextColumn::make('status')
                     ->label('Durum')
@@ -88,11 +84,6 @@ class ReservationsTable
                     ->label('Durum')
                     ->options(ReservationStatus::options())
                     ->multiple(),
-                SelectFilter::make('owner')
-                    ->label('Tur sahibi')
-                    ->relationship('owner', 'name')
-                    ->searchable()
-                    ->preload(),
                 Filter::make('needs_attention')
                     ->label('Müdahale gerekiyor')
                     ->query(fn (Builder $query) => $query

@@ -48,13 +48,8 @@ class ReservationForm
                 ->schema([
                     TextInput::make('base_amount')->label('Kiralama')->disabled(),
                     TextInput::make('extras_amount')->label('Ek ucret')->disabled(),
-                    TextInput::make('estimated_total')->label('Tahmini toplam')->disabled(),
+                    TextInput::make('estimated_total')->label('Toplam')->disabled(),
                     TextInput::make('currency')->label('Para birimi')->disabled(),
-                    TextInput::make('commission_rate')
-                        ->label('Komisyon orani (%)')
-                        ->helperText('Onay aninda donduruldu.')
-                        ->disabled(),
-                    TextInput::make('commission_amount')->label('Komisyon tutari')->disabled(),
                 ]),
 
             Section::make('Yonetim')

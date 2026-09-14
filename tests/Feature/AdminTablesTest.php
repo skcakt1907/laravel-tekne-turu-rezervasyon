@@ -4,8 +4,6 @@ namespace Tests\Feature;
 
 use App\Enums\ReservationStatus;
 use App\Enums\YachtStatus;
-use App\Filament\Resources\Collections\Pages\ListCollections;
-use App\Filament\Resources\CommissionSettings\Pages\ListCommissionSettings;
 use App\Filament\Resources\ContactMessages\Pages\ListContactMessages;
 use App\Filament\Resources\Features\Pages\ListFeatures;
 use App\Filament\Resources\MessageLogs\Pages\ListMessageLogs;
@@ -55,12 +53,8 @@ class AdminTablesTest extends TestCase
 
     public function test_yacht_filters_work(): void
     {
-        $owner = User::where('email', 'sahip@yatkiralama.com')->firstOrFail();
-
         Livewire::test(ListYachts::class)
             ->filterTable('status', YachtStatus::Published->value)
-            ->assertOk()
-            ->filterTable('owner', $owner->id)
             ->assertOk()
             ->filterTable('type', 'gulet')
             ->assertOk()
@@ -70,12 +64,8 @@ class AdminTablesTest extends TestCase
 
     public function test_reservation_filters_work(): void
     {
-        $owner = User::where('email', 'sahip@yatkiralama.com')->firstOrFail();
-
         Livewire::test(ListReservations::class)
             ->filterTable('status', [ReservationStatus::Pending->value])
-            ->assertOk()
-            ->filterTable('owner', $owner->id)
             ->assertOk()
             ->filterTable('needs_attention', true)
             ->assertOk()
@@ -88,9 +78,7 @@ class AdminTablesTest extends TestCase
     public function test_other_admin_tables_filter_without_error(): void
     {
         Livewire::test(ListUsers::class)
-            ->filterTable('role', 'owner')
             ->assertOk()
-            ->filterTable('is_approved', true)
             ->assertOk();
 
         Livewire::test(ListFeatures::class)
@@ -105,14 +93,6 @@ class AdminTablesTest extends TestCase
 
         Livewire::test(ListContactMessages::class)
             ->filterTable('read_at', true)
-            ->assertOk();
-
-        Livewire::test(ListCollections::class)
-            ->filterTable('status', 'pending')
-            ->assertOk();
-
-        Livewire::test(ListCommissionSettings::class)
-            ->filterTable('scope', 'global')
             ->assertOk();
     }
 

@@ -28,7 +28,7 @@ class NotificationTest extends TestCase
         $this->yacht = Yacht::where('slug', 'demo-gulet-mavi-ruzgar')->firstOrFail();
     }
 
-    public function test_request_notifies_customer_owner_and_admin(): void
+    public function test_request_notifies_customer_and_admin(): void
     {
         Mail::fake();
 
@@ -36,14 +36,12 @@ class NotificationTest extends TestCase
 
         Mail::assertSent(ReservationMail::class, fn ($mail) => $mail->template === 'request_received_customer'
             && $mail->hasTo('test@example.com'));
-        Mail::assertSent(ReservationMail::class, fn ($mail) => $mail->template === 'request_new_owner'
-            && $mail->hasTo('sahip@yatkiralama.com'));
         Mail::assertSent(ReservationMail::class, fn ($mail) => $mail->template === 'request_new_admin'
             && $mail->hasTo('admin@yatkiralama.com'));
 
-        // Her gonderim kayit altinda
+        // Tur sahibi diye ayri bir taraf kalmadi: musteri + yonetim, iki mail
         $logs = MessageLog::where('related_id', $reservation->id)->get();
-        $this->assertCount(3, $logs);
+        $this->assertCount(2, $logs);
         $this->assertTrue($logs->every(fn (MessageLog $log) => $log->channel === 'mail' && $log->status === 'sent'));
     }
 
@@ -55,7 +53,8 @@ class NotificationTest extends TestCase
         $service->approve($this->makeReservation());
 
         Mail::assertSent(ReservationMail::class, fn ($mail) => $mail->template === 'approved_customer');
-        Mail::assertSent(ReservationMail::class, fn ($mail) => $mail->template === 'approved_owner');
+        // Onayi zaten yonetim veriyor; kendine ayrica mail gitmiyor
+        Mail::assertNotSent(ReservationMail::class, fn ($mail) => $mail->template === 'approved_owner');
 
         $service->reject($this->makeReservation('ikinci@example.com', 60), 'Yat bakimda');
 
@@ -101,11 +100,11 @@ class NotificationTest extends TestCase
 
         $reservation->refresh();
         $this->assertNotNull($reservation->reminded_at);
-        Mail::assertSent(ReservationMail::class, fn ($mail) => $mail->template === 'pending_reminder_owner');
+        Mail::assertSent(ReservationMail::class, fn ($mail) => $mail->template === 'pending_reminder_admin');
 
         // Ikinci calistirmada tekrar gondermemeli
         $this->artisan('reservations:process', ['--only' => 'remind'])->assertSuccessful();
-        $this->assertSame(1, MessageLog::where('template', 'pending_reminder_owner')->count());
+        $this->assertSame(1, MessageLog::where('template', 'pending_reminder_admin')->count());
 
         // 12 saat -> admin devralir
         $reservation->forceFill(['created_at' => now()->subHours(13)])->save();
@@ -133,7 +132,6 @@ class NotificationTest extends TestCase
         $this->assertNotNull($reservation->completed_at);
 
         // Komisyon onay aninda dondurulmustu, tamamlanmada degismemeli
-        $this->assertNotNull($reservation->commission_amount);
     }
 
     public function test_trip_reminder_is_sent_once(): void

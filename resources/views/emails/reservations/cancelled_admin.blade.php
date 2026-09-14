@@ -2,8 +2,8 @@
 
 @section('body')
     @include('emails.partials.body', [
-        'greetName' => $reservation->owner?->name ?? '',
-        'template' => 'cancelled_owner',
+        'greetName' => setting('site_name', config('app.name')),
+        'template' => 'cancelled_admin',
         'showCustomer' => true,
         'notice' => false,
         'buttonUrl' => url('/yonetim'),

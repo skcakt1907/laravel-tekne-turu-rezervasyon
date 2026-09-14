@@ -54,17 +54,9 @@ class YachtForm
                             ->helperText('Sitede /tur/{slug} adresinde görünür.'),
                     ]),
 
-                Section::make('Sahip ve Konum')
+                Section::make('Tur Bilgileri')
                     ->columns(2)
                     ->schema([
-                        Select::make('owner_id')
-                            ->label('Tur sahibi')
-                            ->options(fn () => User::where('role', UserRole::Owner)
-                                ->orderBy('name')
-                                ->pluck('name', 'id'))
-                            ->searchable()
-                            ->preload()
-                            ->required(),
                         Select::make('type')
                             ->label('Tekne tipi')
                             ->options(config('yacht.types'))
