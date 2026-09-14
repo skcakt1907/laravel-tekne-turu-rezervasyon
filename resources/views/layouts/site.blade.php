@@ -66,6 +66,16 @@
                 {{ __('site.nav.contact') }}
             </a>
 
+            {{-- İLETİŞİM — sitede ödeme alınmadığı için insanlar arayarak
+                 teyit etmek istiyor; numara menüde, aramadan bulunur olmalı.
+                 Ayar boşsa hiç basılmıyor, boş bir ikon görünmesin diye. --}}
+            @if (setting('site_phone'))
+                <a href="tel:{{ preg_replace('/[^0-9+]/', '', setting('site_phone')) }}"
+                   class="ml-2 rounded-lg px-3 py-2 text-sm font-semibold text-brass-500 transition hover:text-brass-400">
+                    <i class="bi bi-telephone-fill mr-1"></i>{{ setting('site_phone') }}
+                </a>
+            @endif
+
             <span class="mx-1 flex items-center gap-1 text-xs">
                 @foreach (config('yacht.locales') as $code => $cfg)
                     <a href="{{ locale_url($code) }}" hreflang="{{ $code }}"
@@ -88,6 +98,12 @@
             <a href="{{ lroute('tours.index') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.yachts') }}</a>
             <a href="{{ lroute('reservation.lookup') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.lookup') }}</a>
             <a href="{{ lroute('contact') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.contact') }}</a>
+            @if (setting('site_phone'))
+                <a href="tel:{{ preg_replace('/[^0-9+]/', '', setting('site_phone')) }}"
+                   class="block rounded-lg px-3 py-2 text-sm font-semibold text-brass-600 hover:bg-sea-50">
+                    <i class="bi bi-telephone-fill mr-1"></i>{{ setting('site_phone') }}
+                </a>
+            @endif
             <div class="flex items-center gap-2 px-3 py-2">
                 @foreach (config('yacht.locales') as $code => $cfg)
                     <a href="{{ locale_url($code) }}"

@@ -21,11 +21,9 @@
             </div>
         @endif
 
-        @if ($yacht->is_featured)
-            <span class="absolute left-3 top-3 badge badge-brass shadow-sm">
-                <i class="bi bi-star-fill text-[9px]"></i>{{ __('site.card.featured') }}
-            </span>
-        @endif
+        {{-- "Öne çıkan" rozeti kaldırıldı: tek firma olduğumuz için turların
+             hepsi bizim, birini diğerinden ayırmanın anlamı kalmadı.
+             is_featured alanı panelde duruyor, sıralama için kullanılıyor. --}}
 
         @if ($yacht->price_from)
             <div class="absolute bottom-3 right-3 rounded-lg bg-white/95 px-3 py-1.5 text-right shadow-sm backdrop-blur">

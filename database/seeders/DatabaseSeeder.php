@@ -126,18 +126,18 @@ class DatabaseSeeder extends Seeder
         $faqs = [
             [
                 ['tr' => 'Rezervasyon için ödeme yapmam gerekiyor mu?', 'en' => 'Do I need to pay to book?'],
-                ['tr' => 'Hayır. Site üzerinden ödeme alınmaz; talebiniz tur sahibine iletilir, onaylandıktan sonra ödeme taraflar arasında yapılır.', 'en' => 'No. No payment is taken on the site.'],
+                ['tr' => 'Hayır. Site üzerinden ödeme alınmaz. Rezervasyonunuzu yaparsınız, ödemeyi tur günü doğrudan teknede yaparsınız.', 'en' => 'No. No payment is taken on the site. You book online and pay directly on board on the day of the tour.'],
                 'customer',
             ],
             [
                 ['tr' => 'Fiyatlar kesin mi?', 'en' => 'Are the prices final?'],
-                ['tr' => 'Sitede gördüğünüz tutar tahminidir; kesin fiyat onay sırasında netleşir.', 'en' => 'The amount shown is an estimate.'],
+                ['tr' => 'Evet. Sitede gördüğünüz fiyat sabittir, değişmez.', 'en' => 'Yes. The price shown on the site is fixed and never changes.'],
                 'customer',
             ],
             [
-                ['tr' => 'Turumu nasıl yayınlarım?', 'en' => 'How do I list my tour?'],
-                ['tr' => 'Tur sahibi panelinden kayıt olun, ilanınızı girin. Admin onayından sonra yayına alınır.', 'en' => 'Register in the owner panel and submit your listing.'],
-                'owner',
+                ['tr' => 'Üye olmam gerekiyor mu?', 'en' => 'Do I need an account?'],
+                ['tr' => 'Hayır. Üyelik yok; formu doldurmanız yeterli. Rezervasyonunuzu daha sonra kodunuzla sorgulayabilirsiniz.', 'en' => 'No. There is no membership; just fill in the form. You can look up your booking later with your code.'],
+                'customer',
             ],
         ];
 

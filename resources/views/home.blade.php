@@ -15,7 +15,7 @@
 @section('content')
 
 {{-- ---------------- HERO ---------------- --}}
-<section class="bg-hero relative overflow-hidden pt-28 pb-40 sm:pt-32 lg:pt-40 lg:pb-48">
+<section class="bg-hero relative overflow-hidden pt-28 pb-20 sm:pt-32 lg:pt-40 lg:pb-28">
     {{-- ince ızgara dokusu --}}
     <div class="pointer-events-none absolute inset-0 opacity-[0.07]"
          style="background-image:linear-gradient(rgba(255,255,255,.6) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.6) 1px,transparent 1px);background-size:72px 72px"></div>
@@ -24,8 +24,13 @@
         <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
 
             <div class="text-white">
-                <p class="eyebrow mb-4 text-brass-300">
-                    <i class="bi bi-shield-check mr-1"></i>{{ __('site.home.eyebrow') }}
+                {{-- "Ödeme yok" sayfanın en görünür ikinci öğesi: müşteri
+                     sitede kart bilgisi istenmeyeceğini başlıktan önce görmeli. --}}
+                <p class="mb-4 flex items-baseline gap-2">
+                    <span class="font-serif text-3xl font-bold uppercase tracking-wide text-brass-300 sm:text-4xl">
+                        {{ __('site.home.eyebrow') }}
+                    </span>
+                    <span class="text-sm text-sea-300">{{ __('site.home.eyebrow_sub') }}</span>
                 </p>
 
                 <h1 class="text-4xl font-bold leading-[1.05] sm:text-5xl lg:text-6xl">
@@ -36,23 +41,6 @@
                     {{ __('site.home.hero_sub') }}
                 </p>
 
-                <div class="mt-8 flex flex-wrap gap-3">
-                    <a href="{{ lroute('tours.index') }}" class="btn btn-brass">
-                        {{ __('site.home.all_yachts') }}<i class="bi bi-arrow-right"></i>
-                    </a>
-                </div>
-
-                <dl class="mt-10 grid max-w-sm grid-cols-2 gap-6 border-t border-white/15 pt-6">
-                    @foreach ([
-                        ['value' => $stats['yachts'], 'label' => __('site.home.stat_yachts')],
-                        ['value' => '0 ₺', 'label' => __('site.home.stat_upfront')],
-                    ] as $stat)
-                        <div>
-                            <dt class="font-serif text-2xl font-bold text-white">{{ $stat['value'] }}</dt>
-                            <dd class="mt-1 text-xs uppercase tracking-wider text-sea-300">{{ $stat['label'] }}</dd>
-                        </div>
-                    @endforeach
-                </dl>
             </div>
 
             {{-- fotoğraf yelpazesi --}}
@@ -82,22 +70,10 @@
     </div>
 </section>
 
-{{-- ---------------- ARAMA ---------------- --}}
-<div class="relative z-10 mx-auto -mt-28 max-w-6xl px-4 sm:px-6">
-    @include('partials.search-form')
-</div>
-
-{{-- ---------------- ÖNE ÇIKAN YATLAR ---------------- --}}
+{{-- ---------------- TURLARIMIZ ---------------- --}}
 <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6">
     <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
-        <div>
-            <p class="eyebrow mb-2">{{ __('site.home.featured') }}</p>
-            <h2 class="text-3xl font-bold sm:text-4xl">{{ __('site.home.featured_title') }}</h2>
-            <p class="mt-2 max-w-xl text-sea-600">{{ __('site.home.featured_sub') }}</p>
-        </div>
-        <a href="{{ lroute('tours.index') }}" class="btn btn-ghost btn-sm">
-            {{ __('site.home.all_yachts') }}<i class="bi bi-arrow-right"></i>
-        </a>
+        <h2 class="text-3xl font-bold sm:text-4xl">{{ __('site.home.featured_title') }}</h2>
     </div>
 
     @if ($featured->isEmpty())

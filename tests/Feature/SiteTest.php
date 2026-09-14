@@ -37,7 +37,7 @@ class SiteTest extends TestCase
 
     public function test_english_pages_load_with_translations(): void
     {
-        $this->get('/en')->assertOk()->assertSee('Your blue voyage is one request away');
+        $this->get('/en')->assertOk()->assertSee('The boat tour you want is one click away');
         $this->get('/en/turlar')->assertOk()->assertSee('tours found', false);
         $this->get('/en/tur/'.$this->yacht->slug)->assertOk()->assertSee('Booking Request');
     }
@@ -216,8 +216,8 @@ class SiteTest extends TestCase
     public function test_locale_is_decided_by_url_not_session(): void
     {
         // Once EN sayfasi gezilse bile oneksiz adres TR donmeli
-        $this->get('/en')->assertOk()->assertSee('Your blue voyage is one request away');
-        $this->get('/')->assertOk()->assertSee('Mavi yolculuğunuz bir talep uzağınızda');
+        $this->get('/en')->assertOk()->assertSee('The boat tour you want is one click away');
+        $this->get('/')->assertOk()->assertSee('İstediğiniz tekne turunuz bir tıklama uzağınızda');
         $this->get('/')->assertSee('<html lang="tr"', false);
         $this->get('/en')->assertSee('<html lang="en"', false);
     }
