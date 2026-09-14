@@ -16,36 +16,39 @@
     <div class="relative aspect-4/3 overflow-hidden {{ $cover ? '' : 'bg-placeholder' }}">
         @if ($coverVideo)
             {{-- VIDEO KAPAK
-                 Sayfa acilirken video INMEZ: preload="none" ve poster karesi
-                 sayesinde ilk gorunen tek sey resim. Video ancak fare uzerine
-                 gelince yukleniyor -- listede sekiz tur varsa sekiz video
-                 birden inmesin diye. Dokunmatikte hover yok, poster kalir.
+                 Sessizce, kendiliginden oynar. Ama hemen degil: video ancak
+                 kart EKRANA GIRINCE yukleniyor ve basliyor, ekrandan cikinca
+                 duruyor. Listede alti tur varsa altisinin videosu birden
+                 inmesin diye -- preload="none" + IntersectionObserver.
 
-                 muted + playsinline olmadan tarayici otomatik oynatmaz;
-                 hareketi azalt ayari aciksa hic oynatmiyoruz. --}}
+                 muted + playsinline olmadan tarayici otomatik oynatmaz.
+                 "Hareketi azalt" ayari aciksa hic oynatilmiyor, poster kalir. --}}
             <video class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                    poster="{{ $cover }}" muted loop playsinline preload="none"
                    x-data="{
-                       ustunde: false,
-                       /* preload=none oldugu icin play() cagrisi kendi
-                          tetikledigi yuklemeye takilip iptal olabiliyor;
-                          o yuzden canplay'de bir kez daha deneniyor. */
+                       init() {
+                           /* Video ancak kart EKRANA GIRINCE yukleniyor ve
+                              basliyor, ekrandan cikinca duruyor. Gozlemci
+                              x-init ifadesinde degil burada kuruluyor --
+                              orada kurulunca calismiyordu. */
+                           new IntersectionObserver((girisler) => {
+                               girisler.forEach((giris) => {
+                                   giris.isIntersecting ? this.oynat() : this.$el.pause();
+                               });
+                           }, { threshold: 0.25 }).observe(this.$el);
+                       },
                        oynat() {
                            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+                           /* preload=none oldugu icin play() kendi tetikledigi
+                              yuklemeye takilip iptal olabiliyor; canplay'de
+                              bir kez daha deneniyor (asagidaki x-on). */
                            this.$el.play().catch(() => {});
                        },
                    }"
-                   x-on:mouseenter="ustunde = true; oynat()"
-                   x-on:canplay="if (ustunde) oynat()"
-                   x-on:mouseleave="ustunde = false; $el.pause(); $el.currentTime = 0">
+                   x-on:canplay="oynat()">
                 <source src="{{ $coverVideo->url() }}" type="video/mp4">
             </video>
 
-            {{-- Videolu oldugu duruyorken de belli olsun --}}
-            <span class="pointer-events-none absolute right-3 top-3 flex h-7 w-7 items-center justify-center
-                         rounded-full bg-black/45 text-white backdrop-blur transition group-hover:opacity-0">
-                <i class="bi bi-play-fill text-sm"></i>
-            </span>
         @elseif ($cover)
             <img src="{{ $cover }}" alt="{{ $yacht->getTranslation('name', $locale) }}" loading="lazy"
                  class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
