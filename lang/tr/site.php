@@ -190,5 +190,6 @@ return [
         'message' => 'Mesajınız',
         'submit' => 'Gönder',
         'sent' => 'Mesajınız alındı. En kısa sürede dönüş yapacağız.',
+        'too_many' => 'Çok fazla mesaj gönderildi. Lütfen :dakika dakika sonra tekrar deneyin.',
     ],
 ];

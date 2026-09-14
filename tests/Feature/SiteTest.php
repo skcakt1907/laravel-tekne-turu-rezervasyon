@@ -185,10 +185,14 @@ class SiteTest extends TestCase
 
     public function test_contact_form_stores_message(): void
     {
+        // Bot korumasinin bekledigi alanlar da gonderiliyor; korumanin
+        // ayrintili testleri IletisimSpamTest'te.
         $this->post('/iletisim', [
             'name' => 'Test',
             'email' => 'test@example.com',
             'message' => 'Merhaba',
+            \App\Support\FormKorumasi::TUZAK => '',
+            \App\Support\FormKorumasi::ZAMAN => \Illuminate\Support\Facades\Crypt::encryptString((string) (time() - 30)),
         ])->assertRedirect();
 
         $this->assertDatabaseHas('contact_messages', ['email' => 'test@example.com']);

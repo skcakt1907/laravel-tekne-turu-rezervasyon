@@ -31,6 +31,18 @@
                 <label class="label" for="c-message">{{ __('site.contact.message') }}</label>
                 <textarea name="message" id="c-message" rows="6" class="field" required>{{ old('message') }}</textarea>
             </div>
+            {{-- BOT KORUMASI -- gercek musteri bu ikisini hic gormez.
+                 Tuzak alan: ekranda yok, klavyeyle de ulasilamaz; formu
+                 otomatik dolduran bot buraya da yazar ve ele verir.
+                 Zaman damgasi: formun acildigi an, sifreli. --}}
+            <div class="sr-only" aria-hidden="true">
+                <label for="c-website">Bu alani bos birakin</label>
+                <input type="text" name="{{ \App\Support\FormKorumasi::TUZAK }}" id="c-website"
+                       tabindex="-1" autocomplete="off" value="">
+            </div>
+            <input type="hidden" name="{{ \App\Support\FormKorumasi::ZAMAN }}"
+                   value="{{ \App\Support\FormKorumasi::zamanDamgasi() }}">
+
             <button type="submit" class="btn btn-brass">{{ __('site.contact.submit') }}</button>
         </form>
 

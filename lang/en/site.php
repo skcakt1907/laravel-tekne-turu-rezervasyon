@@ -190,5 +190,6 @@ return [
         'message' => 'Your message',
         'submit' => 'Send',
         'sent' => 'Your message has been received. We will get back to you shortly.',
+        'too_many' => 'Too many messages sent. Please try again in :dakika minutes.',
     ],
 ];
