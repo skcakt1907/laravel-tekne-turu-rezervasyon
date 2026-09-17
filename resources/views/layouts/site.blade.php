@@ -75,15 +75,9 @@
                 {{ __('site.nav.contact') }}
             </a>
 
-            {{-- İLETİŞİM — sitede ödeme alınmadığı için insanlar arayarak
-                 teyit etmek istiyor; numara menüde, aramadan bulunur olmalı.
-                 Ayar boşsa hiç basılmıyor, boş bir ikon görünmesin diye. --}}
-            @if (setting('site_phone'))
-                <a href="tel:{{ preg_replace('/[^0-9+]/', '', setting('site_phone')) }}"
-                   class="ml-2 rounded-lg px-3 py-2 text-sm font-semibold text-brass-500 transition hover:text-brass-400">
-                    <i class="bi bi-telephone-fill mr-1"></i>{{ setting('site_phone') }}
-                </a>
-            @endif
+            {{-- Telefon numarasi ust menuden KALDIRILDI (17.09.2026).
+                 Iletisim icin menude WhatsApp butonu var; numara alt
+                 bilgide ve Iletisim sayfasinda duruyor. --}}
 
             {{-- WhatsApp: numara cozulemezse hic link basilmaz.
                  Boyutlar satir ici -- blade tek basina yuklense de
@@ -120,12 +114,6 @@
             <a href="{{ lroute('tours.index') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.yachts') }}</a>
             <a href="{{ lroute('reservation.lookup') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.lookup') }}</a>
             <a href="{{ lroute('contact') }}" class="block rounded-lg px-3 py-2 text-sm hover:bg-sea-50">{{ __('site.nav.contact') }}</a>
-            @if (setting('site_phone'))
-                <a href="tel:{{ preg_replace('/[^0-9+]/', '', setting('site_phone')) }}"
-                   class="block rounded-lg px-3 py-2 text-sm font-semibold text-brass-600 hover:bg-sea-50">
-                    <i class="bi bi-telephone-fill mr-1"></i>{{ setting('site_phone') }}
-                </a>
-            @endif
             @if ($waLink = \App\Support\WhatsAppLinki::sitedeki())
                 <a href="{{ $waLink }}" target="_blank" rel="noopener"
                    style="display:flex;align-items:center;gap:8px;margin:4px 0;padding:10px 12px;
