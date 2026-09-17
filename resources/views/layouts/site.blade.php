@@ -85,6 +85,19 @@
                 </a>
             @endif
 
+            {{-- WhatsApp: numara cozulemezse hic link basilmaz.
+                 Boyutlar satir ici -- blade tek basina yuklense de
+                 (CSS derlenmeden) dogru gorunsun diye. --}}
+            @if ($waLink = \App\Support\WhatsAppLinki::sitedeki())
+                <a href="{{ $waLink }}" target="_blank" rel="noopener"
+                   aria-label="WhatsApp"
+                   style="display:inline-flex;align-items:center;gap:6px;margin-left:4px;padding:7px 12px;
+                          border-radius:9999px;background:#25D366;color:#fff;font-size:13px;font-weight:600;
+                          text-decoration:none;white-space:nowrap">
+                    <i class="bi bi-whatsapp"></i><span>WhatsApp</span>
+                </a>
+            @endif
+
             <span class="mx-1 flex items-center gap-1 text-xs">
                 @foreach (config('yacht.locales') as $code => $cfg)
                     <a href="{{ locale_url($code) }}" hreflang="{{ $code }}"
@@ -111,6 +124,14 @@
                 <a href="tel:{{ preg_replace('/[^0-9+]/', '', setting('site_phone')) }}"
                    class="block rounded-lg px-3 py-2 text-sm font-semibold text-brass-600 hover:bg-sea-50">
                     <i class="bi bi-telephone-fill mr-1"></i>{{ setting('site_phone') }}
+                </a>
+            @endif
+            @if ($waLink = \App\Support\WhatsAppLinki::sitedeki())
+                <a href="{{ $waLink }}" target="_blank" rel="noopener"
+                   style="display:flex;align-items:center;gap:8px;margin:4px 0;padding:10px 12px;
+                          border-radius:10px;background:#25D366;color:#fff;font-size:14px;
+                          font-weight:600;text-decoration:none">
+                    <i class="bi bi-whatsapp"></i>WhatsApp'tan yaz
                 </a>
             @endif
             <div class="flex items-center gap-2 px-3 py-2">
@@ -166,8 +187,24 @@
                     @if (setting('site_phone'))
                         <p><i class="bi bi-telephone mr-2 text-brass-500"></i>{{ setting('site_phone') }}</p>
                     @endif
+                    @if ($waLink = \App\Support\WhatsAppLinki::sitedeki())
+                        <p>
+                            <a href="{{ $waLink }}" target="_blank" rel="noopener"
+                               style="color:#25D366;text-decoration:none">
+                                <i class="bi bi-whatsapp" style="margin-right:8px"></i>WhatsApp
+                            </a>
+                        </p>
+                    @endif
                     @if (setting('site_email'))
                         <p><i class="bi bi-envelope mr-2 text-brass-500"></i>{{ setting('site_email') }}</p>
+                    @endif
+                    {{-- Adres panelde vardi ama sitede hicbir yerde
+                         gosterilmiyordu; buraya eklendi. --}}
+                    @if (setting('address'))
+                        <p style="display:flex;gap:8px;align-items:flex-start">
+                            <i class="bi bi-geo-alt" style="color:#c9a227;margin-top:2px"></i>
+                            <span>{!! nl2br(e(setting('address'))) !!}</span>
+                        </p>
                     @endif
                 </div>
             </div>
@@ -198,5 +235,47 @@
 
 @include('partials.cookie-consent')
 @stack('scripts')
+{{-- ══ SABİT WHATSAPP BUTONU ═══════════════════════════════════
+     Sitede odeme alinmadigi icin insanlar teyit etmek istiyor; sag
+     altta her sayfada duruyor. Tum boyut ve renkler satir ici --
+     blade tek basina yuklense de (CSS derlenmeden) dogru gorunur.
+     z-index 40: ust menu de 40'ta, cerez bandi daha ustte kaliyor. --}}
+@if ($waLink = \App\Support\WhatsAppLinki::sitedeki())
+    {{-- Cerez bandi acikken buton onun arkasinda kaliyordu. Band
+         #cookie-banner ve butondan ONCE geliyor; kardes seciciyle
+         band gorunurken buton yukari kayiyor. JS gerekmiyor. --}}
+    <a id="wa-sabit" href="{{ $waLink }}" target="_blank" rel="noopener" aria-label="WhatsApp"
+       style="position:fixed;right:18px;bottom:18px;z-index:40;
+              display:inline-flex;align-items:center;justify-content:center;
+              width:56px;height:56px;border-radius:9999px;background:#25D366;color:#fff;
+              box-shadow:0 6px 20px rgba(0,0,0,.25);text-decoration:none;font-size:27px;
+              line-height:1">
+        <i class="bi bi-whatsapp"></i>
+    </a>
+
+    {{-- Cerez bandi acikken buton onun arkasinda kaliyordu. Sabit bir
+         deger yazmak kirilgan: band yuksekligi ekran genisligine VE dile
+         gore degisiyor (TR 105px, dar ekranda 165px). Bu yuzden yukseklik
+         olculup buton o kadar yukari aliniyor; band kapatilinca eski
+         yerine doner. --}}
+    <script>
+    (function () {
+        var band = document.getElementById('cookie-banner');
+        var buton = document.getElementById('wa-sabit');
+        if (!band || !buton) return;
+
+        function ayarla() {
+            var acik = !band.classList.contains('hidden');
+            buton.style.bottom = acik ? (band.offsetHeight + 12) + 'px' : '18px';
+        }
+
+        ayarla();
+        window.addEventListener('resize', ayarla);
+        // Band kapatilinca 'hidden' sinifi ekleniyor
+        new MutationObserver(ayarla).observe(band, { attributes: true, attributeFilter: ['class'] });
+    })();
+    </script>
+@endif
+
 </body>
 </html>

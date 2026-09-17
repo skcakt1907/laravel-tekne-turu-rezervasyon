@@ -63,7 +63,10 @@ class SiteSettings extends Page
                         TextInput::make('whatsapp_display_number')
                             ->label('Sitede gorunen WhatsApp')
                             ->maxLength(40)
-                            ->helperText('Gonderim numarasi .env icinde; bu yalnizca gorunum.'),
+                            ->helperText('Ust menudeki, alt bilgideki ve sag alttaki sabit butonun '
+                                . 'yonlendirdigi numara. Bos birakilirsa yukaridaki Telefon kullanilir. '
+                                . 'Yurt disi numara icin basina + koyun. Mesaj GONDERIM numarasi '
+                                . 'ayridir, .env icinde tanimli.'),
                         Textarea::make('address')->label('Adres')->rows(2)->columnSpanFull(),
                         Textarea::make('site_description')
                             ->label('SEO aciklamasi')
