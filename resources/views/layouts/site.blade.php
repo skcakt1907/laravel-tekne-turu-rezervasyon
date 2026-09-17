@@ -54,7 +54,9 @@
         <a href="{{ lroute('home') }}" class="flex items-center gap-2.5 font-serif text-lg font-bold">
             <img src="{{ asset('images/logo.jpg') }}"
                  alt="{{ setting('site_name', config('app.name')) }}"
-                 class="h-11 w-11 shrink-0 rounded-full object-cover shadow-sm ring-1 ring-white/25">
+                 width="44" height="44"
+                 style="width:44px;height:44px;border-radius:9999px;object-fit:cover;flex:none"
+                 class="shrink-0 rounded-full object-cover shadow-sm ring-1 ring-white/25">
             <span>{{ setting('site_name', config('app.name')) }}</span>
         </a>
 
@@ -153,7 +155,9 @@
                      tur adlari ve adres okunabiliyor. --}}
                 <img src="{{ asset('images/logo.jpg') }}"
                      alt="{{ setting('site_name', config('app.name')) }}"
-                     class="mb-4 h-28 w-28 rounded-full object-cover shadow-lg ring-1 ring-white/15">
+                     width="112" height="112"
+                     style="width:112px;height:112px;border-radius:9999px;object-fit:cover;display:block;margin-bottom:1rem"
+                     class="mb-4 rounded-full object-cover shadow-lg ring-1 ring-white/15">
                 <div class="mb-3 font-serif text-lg font-bold text-white">
                     {{ setting('site_name', config('app.name')) }}
                 </div>
