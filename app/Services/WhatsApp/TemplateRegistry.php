@@ -32,32 +32,32 @@ class TemplateRegistry
                 'name' => 'talep_alindi_musteri',
                 'buttons' => [],
                 'body' => [
-                    'tr' => "Merhaba {{1}}, {{2}} için {{3}} tarihli rezervasyon talebiniz alındı. Rezervasyon kodunuz: {{4}}. Tur sahibi onayladığında size bilgi vereceğiz. Durumu buradan takip edebilirsiniz: {{5}}",
-                    'en' => "Hello {{1}}, we received your booking request for {{2}} on {{3}}. Your booking code is {{4}}. We will let you know once the tour owner approves. You can track it here: {{5}}",
+                    'tr' => "Merhaba {{1}}, {{2}} için {{3}} tarihli rezervasyon talebiniz alındı. Rezervasyon kodunuz: {{4}}. Tur sahibi onayladığında size bilgi vereceğiz. Durumu buradan takip edebilirsiniz: {{5}}.",
+                    'en' => "Hello {{1}}, we received your booking request for {{2}} on {{3}}. Your booking code is {{4}}. We will let you know once the tour owner approves. You can track it here: {{5}}.",
                 ],
             ],
             'request_new_owner' => [
                 'name' => 'yeni_talep_sahip',
                 'buttons' => [self::BUTTON_APPROVE, self::BUTTON_REJECT],
                 'body' => [
-                    'tr' => "{{1}} için yeni rezervasyon talebi: {{2}}, {{3}} kişi, tahmini {{4}}. Talep kodu {{5}}. Aşağıdaki butonlarla yanıtlayabilir veya bağlantıyı kullanabilirsiniz: {{6}}",
-                    'en' => "New booking request for {{1}}: {{2}}, {{3}} guests, estimated {{4}}. Request code {{5}}. Reply with the buttons below or use this link: {{6}}",
+                    'tr' => "{{1}} için yeni rezervasyon talebi: {{2}}, {{3}} kişi, tahmini {{4}}. Talep kodu {{5}}. Aşağıdaki butonlarla yanıtlayabilir veya bağlantıyı kullanabilirsiniz: {{6}}.",
+                    'en' => "New booking request for {{1}}: {{2}}, {{3}} guests, estimated {{4}}. Request code {{5}}. Reply with the buttons below or use this link: {{6}}.",
                 ],
             ],
             'request_new_admin' => [
                 'name' => 'yeni_talep_admin',
                 'buttons' => [],
                 'body' => [
-                    'tr' => "Yeni talep: {{1}} — {{2}} — {{3}}. Kod {{4}}. Yönetim paneli: {{5}}",
-                    'en' => "New request: {{1}} — {{2}} — {{3}}. Code {{4}}. Admin panel: {{5}}",
+                    'tr' => "Yeni talep: {{1}} — {{2}} — {{3}}. Kod {{4}}. Yönetim paneli: {{5}}.",
+                    'en' => "New request: {{1}} — {{2}} — {{3}}. Code {{4}}. Admin panel: {{5}}.",
                 ],
             ],
             'approved_customer' => [
                 'name' => 'rezervasyon_onaylandi_musteri',
                 'buttons' => [],
                 'body' => [
-                    'tr' => "Merhaba {{1}}, {{2}} için {{3}} tarihli rezervasyonunuz onaylandı. Kod: {{4}}. Detaylar: {{5}}",
-                    'en' => "Hello {{1}}, your booking for {{2}} on {{3}} has been approved. Code: {{4}}. Details: {{5}}",
+                    'tr' => "Merhaba {{1}}, {{2}} için {{3}} tarihli rezervasyonunuz onaylandı. Kod: {{4}}. Detaylar: {{5}}.",
+                    'en' => "Hello {{1}}, your booking for {{2}} on {{3}} has been approved. Code: {{4}}. Details: {{5}}.",
                 ],
             ],
             'approved_owner' => [
@@ -72,24 +72,24 @@ class TemplateRegistry
                 'name' => 'talep_karsilanamadi_musteri',
                 'buttons' => [],
                 'body' => [
-                    'tr' => "Merhaba {{1}}, {{2}} için {{3}} tarihli talebiniz maalesef karşılanamadı. Kod {{4}}. Diğer turlara buradan bakabilirsiniz: {{5}}",
-                    'en' => "Hello {{1}}, unfortunately your request for {{2}} on {{3}} could not be fulfilled. Code {{4}}. You can browse other tours here: {{5}}",
+                    'tr' => "Merhaba {{1}}, {{2}} için {{3}} tarihli talebiniz maalesef karşılanamadı. Kod {{4}}. Diğer turlara buradan bakabilirsiniz: {{5}}.",
+                    'en' => "Hello {{1}}, unfortunately your request for {{2}} on {{3}} could not be fulfilled. Code {{4}}. You can browse other tours here: {{5}}.",
                 ],
             ],
             'pending_reminder_owner' => [
                 'name' => 'bekleyen_talep_sahip',
                 'buttons' => [self::BUTTON_APPROVE, self::BUTTON_REJECT],
                 'body' => [
-                    'tr' => "Hatırlatma: {{1}} için {{2}} tarihli talep hâlâ yanıt bekliyor. Kod {{3}}. Yanıtlamak için: {{4}}",
-                    'en' => "Reminder: the request for {{1}} on {{2}} is still awaiting your reply. Code {{3}}. Respond here: {{4}}",
+                    'tr' => "Hatırlatma: {{1}} için {{2}} tarihli talep hâlâ yanıt bekliyor. Kod {{3}}. Yanıtlamak için: {{4}}.",
+                    'en' => "Reminder: the request for {{1}} on {{2}} is still awaiting your reply. Code {{3}}. Respond here: {{4}}.",
                 ],
             ],
             'trip_reminder_customer' => [
                 'name' => 'gidis_hatirlatma_musteri',
                 'buttons' => [],
                 'body' => [
-                    'tr' => "Merhaba {{1}}, {{2}} ile yolculuğunuza 3 gün kaldı. Kalkış {{3}}. Kod {{4}}. Detaylar: {{5}}",
-                    'en' => "Hello {{1}}, only 3 days until your trip with {{2}}. Departure {{3}}. Code {{4}}. Details: {{5}}",
+                    'tr' => "Merhaba {{1}}, {{2}} ile yolculuğunuza 3 gün kaldı. Kalkış {{3}}. Kod {{4}}. Detaylar: {{5}}.",
+                    'en' => "Hello {{1}}, only 3 days until your trip with {{2}}. Departure {{3}}. Code {{4}}. Details: {{5}}.",
                 ],
             ],
         ];
