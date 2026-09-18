@@ -8,8 +8,14 @@ use App\Models\Reservation;
  * Sistem içi şablon anahtarı ↔ Meta şablonu eşlemesi.
  *
  * Her şablon Utility kategorisinde; metinler kısa ve tamamen bilgilendirici
- * (pazarlama dili numaranın kısıtlanmasına yol açar). Onay butonu yalnızca
- * tur sahibine giden şablonda var; yedek yol olarak güvenli bağlantı gövdede.
+ * (pazarlama dili numaranın kısıtlanmasına yol açar). Onay butonu yöneticiye
+ * giden şablonlarda; yedek yol olarak token'lı karar bağlantısı gövdede —
+ * telefondan panele giriş yapmadan da yanıtlanabilsin diye.
+ *
+ * TUR SAHİBİ KAVRAMI KALDIRILDI (18.09.2026): site tek firma, sahip =
+ * firmanın kendisi = yönetici. Pazaryeri döneminden kalan üç 'sahip'
+ * şablonu hiçbir zaman gönderilmiyordu (NotificationService'te toOwner
+ * yok), silindi. Butonlar yöneticiye taşındı.
  *
  * `php artisan whatsapp:templates` bu tanımları Meta'ya yüklenecek JSON olarak basar.
  */
@@ -36,20 +42,27 @@ class TemplateRegistry
                     'en' => "Hello {{1}}, we received your booking request for {{2}} on {{3}}. Your booking code is {{4}}. We will let you know once the tour owner approves. You can track it here: {{5}}.",
                 ],
             ],
-            'request_new_owner' => [
-                'name' => 'yeni_talep_sahip',
-                'buttons' => [self::BUTTON_APPROVE, self::BUTTON_REJECT],
-                'body' => [
-                    'tr' => "{{1}} için yeni rezervasyon talebi: {{2}}, {{3}} kişi, tahmini {{4}}. Talep kodu {{5}}. Aşağıdaki butonlarla yanıtlayabilir veya bağlantıyı kullanabilirsiniz: {{6}}.",
-                    'en' => "New booking request for {{1}}: {{2}}, {{3}} guests, estimated {{4}}. Request code {{5}}. Reply with the buttons below or use this link: {{6}}.",
-                ],
-            ],
             'request_new_admin' => [
                 'name' => 'yeni_talep_admin',
-                'buttons' => [],
+                'buttons' => [self::BUTTON_APPROVE, self::BUTTON_REJECT],
                 'body' => [
-                    'tr' => "Yeni talep: {{1}} — {{2}} — {{3}}. Kod {{4}}. Yönetim paneli: {{5}}.",
-                    'en' => "New request: {{1}} — {{2}} — {{3}}. Code {{4}}. Admin panel: {{5}}.",
+                    'tr' => "{{1}} için yeni rezervasyon talebi: {{2}}, {{3}} kişi, tahmini {{4}}. Müşteri {{5}}, kod {{6}}. Aşağıdaki butonlarla yanıtlayabilir veya bağlantıyı kullanabilirsiniz: {{7}}.",
+                    'en' => "New booking request for {{1}}: {{2}}, {{3}} guests, estimated {{4}}. Guest {{5}}, code {{6}}. Reply with the buttons below or use this link: {{7}}.",
+                ],
+            ],
+
+            /*
+             * Bekleyen talep hatırlatması. NotificationService bunu zaten
+             * göndermeye çalışıyordu ama şablon TANIMLI DEĞİLDİ; has() false
+             * döndüğü için WhatsApp sessizce atlanıyor, yalnızca mail
+             * gidiyordu. Butonlu: hatırlatmaya da yerinde yanıt verilebilsin.
+             */
+            'pending_reminder_admin' => [
+                'name' => 'bekleyen_talep_admin',
+                'buttons' => [self::BUTTON_APPROVE, self::BUTTON_REJECT],
+                'body' => [
+                    'tr' => "Hatırlatma: {{1}} için {{2}} tarihli talep hâlâ yanıt bekliyor. Müşteri {{3}}, kod {{4}}. Yanıtlamak için: {{5}}.",
+                    'en' => "Reminder: the request for {{1}} on {{2}} is still awaiting a reply. Guest {{3}}, code {{4}}. Respond here: {{5}}.",
                 ],
             ],
             'approved_customer' => [
@@ -60,28 +73,12 @@ class TemplateRegistry
                     'en' => "Hello {{1}}, your booking for {{2}} on {{3}} has been approved. Code: {{4}}. Details: {{5}}.",
                 ],
             ],
-            'approved_owner' => [
-                'name' => 'rezervasyon_kesinlesti_sahip',
-                'buttons' => [],
-                'body' => [
-                    'tr' => "{{1}} için {{2}} tarihli rezervasyon kesinleşti. Müşteri: {{3}}, telefon {{4}}. Kod {{5}}.",
-                    'en' => "The booking for {{1}} on {{2}} is confirmed. Guest: {{3}}, phone {{4}}. Code {{5}}.",
-                ],
-            ],
             'rejected_customer' => [
                 'name' => 'talep_karsilanamadi_musteri',
                 'buttons' => [],
                 'body' => [
                     'tr' => "Merhaba {{1}}, {{2}} için {{3}} tarihli talebiniz maalesef karşılanamadı. Kod {{4}}. Diğer turlara buradan bakabilirsiniz: {{5}}.",
                     'en' => "Hello {{1}}, unfortunately your request for {{2}} on {{3}} could not be fulfilled. Code {{4}}. You can browse other tours here: {{5}}.",
-                ],
-            ],
-            'pending_reminder_owner' => [
-                'name' => 'bekleyen_talep_sahip',
-                'buttons' => [self::BUTTON_APPROVE, self::BUTTON_REJECT],
-                'body' => [
-                    'tr' => "Hatırlatma: {{1}} için {{2}} tarihli talep hâlâ yanıt bekliyor. Kod {{3}}. Yanıtlamak için: {{4}}.",
-                    'en' => "Reminder: the request for {{1}} on {{2}} is still awaiting your reply. Code {{3}}. Respond here: {{4}}.",
                 ],
             ],
             'trip_reminder_customer' => [
@@ -132,24 +129,19 @@ class TemplateRegistry
             'request_received_customer' => [
                 $reservation->customer_name, $yacht, $dates, $reservation->code, $customerUrl,
             ],
-            'request_new_owner' => [
-                $yacht, $dates, (string) $reservation->guests, $total, $reservation->code, $decisionUrl,
-            ],
             'request_new_admin' => [
-                $yacht, $dates, $reservation->customer_name, $reservation->code, url('/yonetim/reservations'),
+                $yacht, $dates, (string) $reservation->guests, $total,
+                $reservation->customer_name, $reservation->code, $decisionUrl,
+            ],
+            'pending_reminder_admin' => [
+                $yacht, $dates, $reservation->customer_name, $reservation->code, $decisionUrl,
             ],
             'approved_customer' => [
                 $reservation->customer_name, $yacht, $dates, $reservation->code, $customerUrl,
             ],
-            'approved_owner' => [
-                $yacht, $dates, $reservation->customer_name, $reservation->customer_phone, $reservation->code,
-            ],
             'rejected_customer' => [
                 $reservation->customer_name, $yacht, $dates, $reservation->code,
                 static::url('tours.index', $locale),
-            ],
-            'pending_reminder_owner' => [
-                $yacht, $dates, $reservation->code, $decisionUrl,
             ],
             'trip_reminder_customer' => [
                 $reservation->customer_name, $yacht,

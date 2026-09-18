@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MessageLog;
 use App\Models\Reservation;
+use App\Models\User;
 use App\Services\ReservationService;
 use App\Services\WhatsApp\TemplateRegistry;
 use Illuminate\Http\Request;
@@ -134,11 +135,16 @@ class WhatsAppWebhookController extends Controller
             return;
         }
 
+        // Butona basan yonetici. Bulunamazsa islem yine yapilir, kayda
+        // yalnizca kanal ('whatsapp') yazilir -- numara taninmadi diye
+        // onayi dusurmek yoneticiyi panele mahkum ederdi.
+        $yanitlayan = $this->yoneticiBul($message['from'] ?? null);
+
         try {
             if ($decision === 'approve') {
-                $this->reservations->approve($reservation, $reservation->owner, 'whatsapp');
+                $this->reservations->approve($reservation, $yanitlayan, 'whatsapp');
             } else {
-                $this->reservations->reject($reservation, null, $reservation->owner, 'whatsapp');
+                $this->reservations->reject($reservation, null, $yanitlayan, 'whatsapp');
             }
         } catch (Throwable $e) {
             // Tarih kapanmışsa veya talep zaten yanıtlanmışsa: sessizce logla.
@@ -166,15 +172,42 @@ class WhatsAppWebhookController extends Controller
             return null;
         }
 
-        $pending = Reservation::pending()
-            ->whereHas('owner', fn ($q) => $q->whereRaw(
-                "replace(replace(replace(coalesce(whatsapp_no, phone), '+', ''), ' ', ''), '-', '') = ?",
-                [$from]
-            ))
-            ->latest('id')
-            ->get();
+        // Numara bir yoneticiye ait degilse hicbir sey yapilmaz.
+        if (! $this->yoneticiBul($from)) {
+            return null;
+        }
+
+        /*
+         * Baglam kaybolmussa (Meta context.id gondermediyse) yalnizca TEK
+         * bir bekleyen talep varsa ona uygulanir. Birden fazlaysa hangisi
+         * oldugu bilinemez; yanlis talebi onaylamaktansa hicbir sey
+         * yapmamak dogru.
+         */
+        $pending = Reservation::pending()->latest('id')->get();
 
         return $pending->count() === 1 ? $pending->first() : null;
+    }
+
+    /**
+     * WhatsApp numarasindan yoneticiyi bulur.
+     *
+     * Tur sahibi kavrami kaldirildi (site tek firma); onayi verebilecek
+     * kisi yoneticidir. Karsilastirma +, bosluk ve tire temizlenerek
+     * yapilir -- panele "+90 532 ..." girilmis olabilir, Meta ise
+     * "90532..." gonderir.
+     */
+    private function yoneticiBul(?string $from): ?User
+    {
+        if (blank($from)) {
+            return null;
+        }
+
+        return User::where('role', 'admin')
+            ->whereRaw(
+                "replace(replace(replace(coalesce(whatsapp_no, phone), '+', ''), ' ', ''), '-', '') = ?",
+                [preg_replace('/\D+/', '', $from)]
+            )
+            ->first();
     }
 
     private function decisionFrom(string $payload): ?string
